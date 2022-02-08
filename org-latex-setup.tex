@@ -1,0 +1,91 @@
+#+LaTeX_CLASS: org-plain-latex
+
+#+LATEX_COMPILER: xelatex
+
+#+AUTHOR: Κωνσταντίνος Χούσος
+
+#+LATEX_HEADER_EXTRA: \usepackage{amsmath}
+#+LATEX_HEADER_EXTRA: \usepackage{amsthm}
+#+LATEX_HEADER_EXTRA: \usepackage{amssymb}
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra}
+#+LATEX_HEADER_EXTRA: \usepackage{xgreek}
+#+LATEX_HEADER_EXTRA: \usepackage{microtype}
+
+#+LATEX_HEADER_EXTRA: \usepackage{minted}
+#+LaTeX_HEADER_EXTRA: \usemintedstyle{vs}
+
+% % Page geometry
+% #+LATEX_HEADER_EXTRA: \usepackage[top=1in, bottom=1.25in, left=1.55in, right=1.55in]{geometry}
+%% #+LATEX_HEADER_EXTRA: \usepackage[margin=1.2in]{geometry}
+
+% % Line spacing
+#+LATEX_HEADER_EXTRA: \renewcommand{\baselinestretch}{1.15}
+
+% #+LATEX_HEADER_EXTRA: \usepackage[T1]{fontenc}
+% #+LATEX_HEADER_EXTRA: \usepackage[AUTO]{inputenc}
+% #+LATEX_HEADER_EXTRA: \usepackage{graphicx}
+% #+LATEX_HEADER_EXTRA: \usepackage[table, xcdraw]{xcolor}
+
+% Colorizing links in a nicer way.
+% #+LATEX_HEADER_EXTRA: \definecolor{bblue}{HTML}{0645AD}
+#+LATEX_HEADER_EXTRA: \usepackage[colorlinks]{hyperref}
+#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks, linkcolor=blue, urlcolor=blue}
+
+% % Moving up the title.
+% #+LATEX_HEADER_EXTRA: \usepackage{titling}
+% #+LATEX_HEADER_EXTRA: \setlength{\droptitle}{-6em}
+
+% #+LATEX_HEADER_EXTRA: \setlength{\parindent}{0pt}
+% #+LATEX_HEADER_EXTRA: \setlength{\parskip}{1em}
+% #+LATEX_HEADER_EXTRA: \usepackage[stretch=10]{microtype}
+% #+LATEX_HEADER_EXTRA: \usepackage{hyphenat}
+% #+LATEX_HEADER_EXTRA: \usepackage{ragged2e}
+% #+LATEX_HEADER_EXTRA: \usepackage{subfig} % Subfigures (not needed in Org I think)
+% #+LATEX_HEADER_EXTRA: \usepackage{hyperref} % Links
+% #+LATEX_HEADER_EXTRA: \usepackage{listings} % Code highlighting
+% % Disables flush alighment on the right side. Personal preference.
+% # #+LATEX_HEADER_EXTRA: \RaggedRight
+
+% % Page numbering - this disables it
+% # #+LATEX_HEADER_EXTRA: \pagenumbering{gobble}
+
+% % Spacing, titling, text setting.
+% #+LATEX_HEADER_EXTRA: \usepackage[explicit]{titlesec}
+
+% % Title customization
+% #+LATEX_HEADER_EXTRA: \pretitle{\begin{center}\fontsize{20pt}{20pt}\selectfont}
+% #+LATEX_HEADER_EXTRA: \posttitle{\par\end{center}}
+% #+LATEX_HEADER_EXTRA: \preauthor{\begin{center}\vspace{-6bp}\fontsize{14pt}{14pt}\selectfont}
+% #+LATEX_HEADER_EXTRA: \postauthor{\par\end{center}\vspace{-25bp}}
+
+% #+LATEX_HEADER_EXTRA: \predate{\begin{center}\fontsize{12pt}{12pt}\selectfont}
+% #+LATEX_HEADER_EXTRA: \postdate{\par\end{center}\vspace{0em}}
+
+
+% % Section/subsection headings:
+
+% %Section
+% #+LATEX_HEADER_EXTRA: \titlespacing\section{0pt}{5pt}{5pt} % left margin, space before section header, space after section header
+
+% %Subsection
+% #+LATEX_HEADER_EXTRA: \titlespacing\subsection{0pt}{5pt}{-2pt} % left margin, space before subsection header, space after subsection header
+
+% %Subsubsection
+% #+LATEX_HEADER_EXTRA: \titlespacing\subsubsection{0pt}{5pt}{-2pt} % left margin, space before subsection header, space after subsection header 
+
+% % List spacing
+% #+LATEX_HEADER_EXTRA: \usepackage{enumitem}
+% #+LATEX_HEADER_EXTRA: \setlist{itemsep=-2pt} % or \setlist{noitemsep} to leave space around whole list
+
+
+% # %Section
+% # #+LATEX_HEADER_EXTRA: \titleformat{\section} {\Large}{\thesection}{1em}{\textbf{#1}} % Section header formatting
+% # #+LATEX_HEADER_EXTRA: \titlespacing\section{0pt}{5pt}{-5pt} % left margin, space before section header, space after section header
+
+% # %Subsection
+% # #+LATEX_HEADER_EXTRA: \titleformat{\subsection} {\large}{\thesubsection}{1em}{\textbf{#1}}
+% \titlespacing\subsection{0pt}{5pt}{-5pt} % left margin, space before subsection header, space after subsection header
+
+% # %Subsubsection
+% # #+LATEX_HEADER_EXTRA: \titleformat{\subsubsection} {\large}{\thesubsubsection}{1em}{#1}
+% \titlespacing\subsubsection{0pt}{5pt}{-5pt} % left margin, space before subsection header, space after subsection header

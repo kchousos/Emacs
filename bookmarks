@@ -1,0 +1,15 @@
+;;;; Emacs Bookmark Format Version 1 ;;;; -*- coding: utf-8-emacs -*-
+;;; This format is meant to be slightly human-readable;
+;;; nevertheless, you probably don't want to edit it.
+;;; -*- End Of Bookmark File Format Version Stamp -*-
+(("TODO.org"
+ (filename . "~/Textfiles/TODO.org")
+ (front-context-string . " #+TAGS: ΓΕΝΙΚΑ(")
+ (rear-context-string)
+ (position . 1))
+("Emacs.org"
+ (filename . "~/Repos/Dotfiles/.emacs.d/Emacs.org")
+ (front-context-string . "* QOL Stuff\n** _")
+ (rear-context-string)
+ (position . 1))
+)

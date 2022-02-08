@@ -1,0 +1,16 @@
+*.gz
+*~
+
+.cache/
+auto/
+auto-save-list/
+eclipse.jdt.ls/
+elpa/
+transient/
+workspace/
+.dap-breakpoints
+.lsp-session-v1
+history
+init.el
+places
+recentf
