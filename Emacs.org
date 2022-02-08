@@ -62,9 +62,8 @@
 
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
-;; (set-fringe-mode -1)         ; Give some breathing room
+(set-fringe-mode 1)         ; Give some breathing room
 (menu-bar-mode -1)          ; Disable the menu bar
-;; (window-divider-mode -1)
 
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
@@ -107,8 +106,9 @@
 ** Scrolling and Scrollbars
 #+begin_src emacs-lisp
 
-(scroll-bar-mode 1)
-(window-divider-mode 1)
+(global-set-key (kbd "M-<f1>") 'scroll-bar-mode)
+(scroll-bar-mode 0)
+(window-divider-mode 0)
 
 (setq scroll-bar-adjust-thumb-portion t)
 
@@ -304,13 +304,13 @@
         modus-themes-subtle-line-numbers t
         modus-themes-deuteranopia nil
 
-        modus-themes-fringes '(nil) ; {nil,'subtle,'intense}
+        modus-themes-fringes '(subtle) ; {nil,'subtle,'intense}
 
         ;; Options for `modus-themes-mode-line' are either nil, or a list
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented'.  The variable's doc string shows all possible
         ;; combinations.
-        modus-themes-mode-line '(nil)
+        modus-themes-mode-line '(accented moody)
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -661,6 +661,8 @@
 (use-package lsp-treemacs
 	:ensure t)
 
+(lsp-treemacs-sync-mode 1)
+
 #+end_src
 
 *** DAP-mode
@@ -723,6 +725,52 @@
 (setq highlight-indent-guides-responsive 'top)
 (setq highlight-indent-guides-delay 0)
 
+#+end_src
+
+*** Treemacs
+#+begin_src emacs-lisp
+(use-package treemacs
+  :ensure t
+  :init
+  :config
+  (progn
+    (setq treemacs-display-in-side-window          t
+          treemacs-expand-after-init               t
+          treemacs-find-workspace-method           'find-for-file-or-pick-first
+          treemacs-indentation                     2
+          treemacs-show-cursor                     nil
+          treemacs-show-hidden-files               nil
+          treemacs-silent-filewatch                nil
+          treemacs-silent-refresh                  nil
+          treemacs-sorting                         'alphabetic-asc
+          treemacs-select-when-already-in-treemacs 'move-back
+          treemacs-space-between-root-nodes        t
+          treemacs-tag-follow-cleanup              t
+          treemacs-text-scale                      nil
+          treemacs-user-mode-line-format           nil
+          treemacs-user-header-line-format         nil
+          treemacs-wide-toggle-width               70
+          treemacs-width                           35
+          treemacs-width-increment                 1
+          treemacs-width-is-initially-locked       t
+          treemacs-workspace-switch-cleanup        nil)
+		
+    (treemacs-follow-mode nil)
+    (treemacs-filewatch-mode nil)
+    (treemacs-fringe-indicator-mode 'always)
+
+    (treemacs-hide-gitignored-files-mode nil))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t t"   . treemacs)))
+#+end_src
+
+**** Treemacs-Icons-Dired
+#+begin_src emacs-lisp
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once)
+  :ensure t)
 #+end_src
 
 ** Ricing
@@ -805,16 +853,17 @@
 
 #+end_src
 
-**** Mood-Line
+**** Moody
 #+begin_src emacs-lisp
+(use-package moody
+	:ensure t
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
 
-;; (use-package mood-line
-;; 	:ensure t)
-
-;; (mood-line-mode)
-
-;; (set-fontset-font t 'symbol "Symbola" nil)
-
+(setq moody-mode-line-height 35)
 #+end_src
 
 *** Beacon-Mode
