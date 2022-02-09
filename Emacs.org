@@ -292,7 +292,7 @@
         (t . (1.1))))
 
 
-;; (setq modus-themes-operandi-color-overrides nil)
+;; (setq modus-themes-operandi-color-overrides '(nil))
 
 (use-package modus-themes
   :ensure t
@@ -528,7 +528,13 @@
 (use-package openwith
   :load-path "/home/kchou/.emacs.d/elpa/openwith.el"
   :config
-  (setq openwith-associations '(("\\.pdf\\'" "evince" (file))))
+  (setq openwith-associations '(("\\.pdf\\'" "evince" (file))
+																("\\.html\\'" "firefox" (file))
+																("\\.mp4\\'" "mpv" (file))
+																("\\.mkv\\'" "mpv" (file))
+																;; ("\\.png\\'" "eog" (file))
+																;; ("\\.jpg\\'" "eog" (file))
+																))
   (openwith-mode t))
 
 #+end_src
