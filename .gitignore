@@ -8,10 +8,10 @@ eclipse.jdt.ls/
 elpa/
 transient/
 workspace/
+bookmarks/
 .dap-breakpoints
 .lsp-session-v1
 history
 init.el
 places
 recentf
-bookmarks

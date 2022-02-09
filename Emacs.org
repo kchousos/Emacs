@@ -62,7 +62,7 @@
 
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
-(set-fringe-mode 1)         ; Give some breathing room
+(fringe-mode 4)         ; Give some breathing room
 (menu-bar-mode -1)          ; Disable the menu bar
 
 (set-language-environment "UTF-8")
@@ -85,7 +85,7 @@
 ** Blink Cursor
 #+begin_src emacs-lisp
 
-(setq blink-cursor-mode t)
+(blink-cursor-mode 1)
 
 #+end_src
 
@@ -322,7 +322,7 @@
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line '(intense-background)
+        modus-themes-hl-line '(intense)
 
         modus-themes-paren-match '(subtle-bold) ; {nil,'subtle-bold,'intense,'intense-bold}
 
@@ -866,6 +866,17 @@
 (setq moody-mode-line-height 35)
 #+end_src
 
+**** Telephone-line
+#+begin_src emacs-lisp
+;; (use-package telephone-line
+;; 	:ensure t)
+;; (setq telephone-line-primary-left-separator 'telephone-line-tan-left
+;;       telephone-line-secondary-left-separator 'telephone-line-tan-hollow-left
+;;       telephone-line-primary-right-separator 'telephone-line-tan-right
+;;       telephone-line-secondary-right-separator 'telephone-line-tan-hollow-right)
+;; (telephone-line-mode)
+#+end_src
+
 *** Beacon-Mode
 #+begin_src emacs-lisp
 (use-package beacon
@@ -1294,10 +1305,16 @@
 ** Git
 *** Magit
 #+begin_src emacs-lisp
-
 (use-package magit
+	:ensure t
   :commands magit-status)
+#+end_src
 
+*** Diff-Hl
+#+begin_src emacs-lisp
+(use-package diff-hl
+	:ensure t)
+(global-diff-hl-mode)
 #+end_src
 
 ** Dired
