@@ -62,7 +62,7 @@
 
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
-(fringe-mode 4)         ; Give some breathing room
+(fringe-mode 2)         ; Give some breathing room
 (menu-bar-mode -1)          ; Disable the menu bar
 
 (set-language-environment "UTF-8")
@@ -203,7 +203,10 @@
   (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 160)
 
   ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "GFS Didot" :height 170 :weight 'regular))
+  (set-face-attribute 'variable-pitch nil :font "GFS Didot" :height 170 :weight 'regular)
+
+  ;; Set the emoji face
+  (set-fontset-font t 'symbol (font-spec :family "JoyPixels" :size 24)))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -322,7 +325,7 @@
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line '(intense)
+        modus-themes-hl-line '(intense accented)
 
         modus-themes-paren-match '(subtle-bold) ; {nil,'subtle-bold,'intense,'intense-bold}
 
@@ -363,7 +366,7 @@
 #+end_src
 
 ** Essentials
-*** Navigation
+*** Window Navigation
 **** Ace-Window
 #+begin_src emacs-lisp
 
@@ -399,6 +402,11 @@
 (use-package resize-window
   :ensure t)
 
+#+end_src
+
+**** Winner Mode
+#+begin_src emacs-lisp
+(winner-mode)
 #+end_src
 
 *** File History
@@ -448,30 +456,38 @@
 **** Company
 ***** Company
 #+begin_src emacs-lisp
-
 (use-package company
   :ensure t
   :custom
   (company-minimum-prefix-length 1)
   (company-idle-delay 0.0))
-(add-hook 'after-init-hook 'global-company-mode)
 
+(global-company-mode)
 #+end_src
 
 ***** Company-Quickhelp
 #+begin_src emacs-lisp
-
 (use-package company-quickhelp
-  :hook (company-mode . company-quickhelp-mode))
-
+	:ensure t)
+(add-hook 'company-mode-hook 'company-quickhelp-mode)
+(company-quickhelp-mode)
 #+end_src
 
 ***** Company-Box
 #+begin_src emacs-lisp
-
 (use-package company-box
-  :hook (company-mode . company-box-mode))
+	:ensure t)
 
+(add-hook 'company-mode-hook 'company-box-mode)
+#+end_src
+
+***** Company-Posframe
+#+begin_src emacs-lisp
+;; (use-package company-posframe
+;; 	:ensure t)
+
+;; (add-hook 'company-mode-hook 'company-posframe-mode)
+;; (company-posframe-mode)
 #+end_src
 
 *** M-x Buffer
@@ -496,8 +512,19 @@
 #+begin_src emacs-lisp
 
 (use-package savehist
+	:ensure t
   :init
   (savehist-mode))
+
+#+end_src
+
+***** Vertico-Posframe
+#+begin_src emacs-lisp
+
+(use-package vertico-posframe
+	:ensure t
+  :init
+  (vertico-posframe-mode))
 
 #+end_src
 
@@ -709,7 +736,17 @@
 *** Mips-Mode
 #+begin_src emacs-lisp
 
-(use-package mips-mode :mode "\\.s$")
+(use-package mips-mode
+	:ensure t
+	:mode "\\.s$")
+
+#+end_src
+
+*** Fish-Mode
+#+begin_src emacs-lisp
+
+(use-package fish-mode
+	:ensure t)
 
 #+end_src
 
@@ -718,8 +755,7 @@
 
 (use-package hl-todo
 	:ensure t)
-(global-hl-todo-mode)
-
+(add-hook 'prog-mode-hook (lambda () (hl-todo-mode 1)))
 #+end_src
 
 *** Highlight-Indent-Guides
@@ -786,6 +822,11 @@
 (defun org-icons ()
   "Beautify org mode keywords."
 	(setq prettify-symbols-alist '(
+																 ("[ ]" . "☐")
+																 ("[-]" . "⧄")
+																 ("[X]" . "☑")
+																 ;; ("TODO" . "🟥")
+																 ;; ("DONE" . "✅")
 																 ("#+begin_src" . "»")
 																 ("#+end_src" . "«")
 																 ))
@@ -855,7 +896,7 @@
   :ensure t
   :config (minions-mode 1))
 
-(setq minions-mode-line-lighter ";")
+(setq minions-mode-line-lighter nil)
 
 #+end_src
 
@@ -869,7 +910,7 @@
   (moody-replace-vc-mode)
   (moody-replace-eldoc-minibuffer-message-function))
 
-(setq moody-mode-line-height 35)
+(setq moody-mode-line-height 40)
 #+end_src
 
 **** Telephone-line
@@ -889,6 +930,17 @@
 	:ensure t)
 
 (beacon-mode)
+#+end_src
+
+*** Emojify
+#+begin_src emacs-lisp
+(use-package emojify
+	:ensure t)
+
+(setq emojify-display-style 'unicode)
+
+(global-emojify-mode)
+
 #+end_src
 
 ** PDF Reading
@@ -1222,10 +1274,8 @@
 
 *** Org-Bullets
 #+begin_src emacs-lisp
-
 (use-package org-bullets
   :hook (org-mode . org-bullets-mode))
-
 #+end_src
 
 *** Org-Pretty-Table
@@ -1251,14 +1301,17 @@
 #+begin_src emacs-lisp
 
 (defun efs/org-mode-visual-fill ()
-  (setq visual-fill-column-width 100
+  (setq visual-fill-column-width 110
         visual-fill-column-center-text t)
   (visual-fill-column-mode 1))
 
 (use-package visual-fill-column
   :hook
   (org-mode . efs/org-mode-visual-fill)
-  (TeX-mode . efs/org-mode-visual-fill))
+  (TeX-mode . efs/org-mode-visual-fill)
+  (LaTeX-mode . efs/org-mode-visual-fill)
+  (latex-mode . efs/org-mode-visual-fill)
+	)
 
 #+end_src
 
@@ -1288,6 +1341,29 @@
 
 (setq org-html-validation-link nil)
 
+#+end_src
+
+*** Org-Roam
+#+begin_src emacs-lisp
+(use-package org-roam
+  :ensure t
+  :init
+  (setq org-roam-v2-ack t)
+  :custom
+  (org-roam-directory (file-truename "~/Textfiles/RoamNotes"))
+  (org-roam-completion-everywhere t)
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n c" . org-roam-capture)
+         :map org-mode-map
+         ("C-M-i"    . completion-at-point))
+  :config
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (org-roam-db-autosync-mode)
+  (org-roam-setup))
 #+end_src
 
 ** Writing
@@ -1327,6 +1403,7 @@
 #+begin_src emacs-lisp
 
 (put 'dired-find-alternate-file 'disabled nil)
+(add-hook 'dired-mode-hook (lambda () (hl-line-mode 1)))
 
 #+end_src
 

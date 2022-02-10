@@ -15,3 +15,6 @@ init.el
 places
 recentf
 bookmarks
+/emojis/
+/tramp
+/org-roam.db
