@@ -62,13 +62,13 @@
 
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
-(fringe-mode 2)         ; Give some breathing room
+;; (fringe-mode 10)         ; Give some breathing room
 (menu-bar-mode -1)          ; Disable the menu bar
 
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
 
-(setq truncate-lines 1)
+;; (setq truncate-lines t)
 
 (setq x-select-enable-clipboard t)
 
@@ -80,6 +80,15 @@
 
 (setq column-number-mode t)
 
+#+end_src
+
+** Fringes
+#+begin_src emacs-lisp
+;; Remove the line-wrap fringe indicators
+(setq-default fringe-indicator-alist (assq-delete-all 'truncation fringe-indicator-alist))
+
+(setq left-fringe-width 10)
+(setq right-fringe-width 0)
 #+end_src
 
 ** Blink Cursor
@@ -137,12 +146,12 @@
 ** Tab Configuration
 #+begin_src emacs-lisp
 
-(setq-default tab-width 2)
-(setq-default standard-indent 2)
+(setq-default tab-width 4)
+(setq-default standard-indent 4)
 (setq c-basic-offset tab-width)
 (setq-default electric-indent-inhibit t)
 (setq-default indent-tabs-mode t)
-(setq backward-delete-char-untabify-method 'nil)
+(setq backward-delete-char-untabify-method 'hungry)
 
 #+end_src
 
@@ -196,17 +205,19 @@
 
 (defun efs/set-font-faces ()
   (message "Setting faces!")
-  (set-face-attribute 'default nil :font "Iosevka" :height 170)
+
   (set-window-scroll-bars (minibuffer-window) nil nil nil nil t)
+
+	;; Set the emoji face
+  (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
+
+  (set-face-attribute 'default nil :font "Iosevka" :height 170)
 
   ;; Set the fixed pitch face
   (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 160)
 
   ;; Set the variable pitch face
-  (set-face-attribute 'variable-pitch nil :font "GFS Didot" :height 170 :weight 'regular)
-
-  ;; Set the emoji face
-  (set-fontset-font t 'symbol (font-spec :family "JoyPixels" :size 24)))
+  (set-face-attribute 'variable-pitch nil :font "GFS Didot" :height 180 :weight 'regular))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -327,7 +338,7 @@
         ;; 'underline-only-accented
         modus-themes-hl-line '(intense accented)
 
-        modus-themes-paren-match '(subtle-bold) ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-paren-match '(intense bold) ; {nil,'subtle-bold,'intense,'intense-bold}
 
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
@@ -337,21 +348,21 @@
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense'
-        modus-themes-prompts '(nil)
+        modus-themes-prompts '(intense)
 
-        modus-themes-completions '(nil) ; {nil,'moderate,'opinionated}
+        modus-themes-completions '(opinionated) ; {nil,'moderate,'opinionated}
 
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
         ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
-        ;; modus-themes-region 'bg-only-no-extend
+        modus-themes-region '(accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs '(fg-only-deuteranopia desaturated)
+        modus-themes-diffs '(desaturated)
 
         org-highlight-latex-and-related '(latex script)
 
-				modus-themes-lang-checkers '(background faint)
+				modus-themes-lang-checkers '(background text-also)
 
         modus-themes-org-blocks 'gray-background; {nil,'gray-background,'tinted-background}
 				)
@@ -467,18 +478,18 @@
 
 ***** Company-Quickhelp
 #+begin_src emacs-lisp
-(use-package company-quickhelp
-	:ensure t)
-(add-hook 'company-mode-hook 'company-quickhelp-mode)
-(company-quickhelp-mode)
+;; (use-package company-quickhelp
+;; 	:ensure t)
+;; (add-hook 'company-mode-hook 'company-quickhelp-mode)
+;; (company-quickhelp-mode)
 #+end_src
 
 ***** Company-Box
 #+begin_src emacs-lisp
 (use-package company-box
-	:ensure t)
-
-(add-hook 'company-mode-hook 'company-box-mode)
+	:ensure t
+  :hook (company-mode . company-box-mode)
+	)
 #+end_src
 
 ***** Company-Posframe
@@ -551,7 +562,6 @@
 
 *** OpenWith
 #+begin_src emacs-lisp
-
 (use-package openwith
   :load-path "/home/kchou/.emacs.d/elpa/openwith.el"
   :config
@@ -563,7 +573,6 @@
 																;; ("\\.jpg\\'" "eog" (file))
 																))
   (openwith-mode t))
-
 #+end_src
 
 ** Keybinds
@@ -624,7 +633,8 @@
 
 ;; (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
 
-;; (add-hook 'elfeed-mode-hook (lambda () (god-local-mode -1)))
+;; (add-to-list 'god-exempt-major-modes 'dired-mode)
+;; (add-to-list 'god-exempt-major-modes 'elfeed-search-mode)
 
 ;; (god-mode)
 
@@ -792,7 +802,7 @@
           treemacs-user-mode-line-format           nil
           treemacs-user-header-line-format         nil
           treemacs-wide-toggle-width               70
-          treemacs-width                           35
+          treemacs-width                           30
           treemacs-width-increment                 1
           treemacs-width-is-initially-locked       t
           treemacs-workspace-switch-cleanup        nil)
@@ -815,6 +825,12 @@
   :ensure t)
 #+end_src
 
+*** Octave
+#+begin_src emacs-lisp
+(setq auto-mode-alist
+      (cons '("\\.m$" . octave-mode) auto-mode-alist))
+#+end_src
+
 ** Ricing
 *** Prettify-Symbols
 #+begin_src emacs-lisp
@@ -825,8 +841,8 @@
 																 ("[ ]" . "☐")
 																 ("[-]" . "⧄")
 																 ("[X]" . "☑")
-																 ;; ("TODO" . "🟥")
-																 ;; ("DONE" . "✅")
+																 ("TODO" . "☐")
+																 ("DONE" . "☑")
 																 ("#+begin_src" . "»")
 																 ("#+end_src" . "«")
 																 ))
@@ -896,7 +912,7 @@
   :ensure t
   :config (minions-mode 1))
 
-(setq minions-mode-line-lighter nil)
+(setq minions-mode-line-lighter ";")
 
 #+end_src
 
@@ -996,7 +1012,10 @@
 (setq TeX-source-correlate-mode t)
 (setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
 (setq TeX-view-program-selection '((output-pdf "Evince")))
+(setq font-latex-fontify-script nil)
 ;; (add-hook 'TeX-mode-hook (lambda () (org-fragtog-mode t)))
+(add-hook 'LaTeX-mode-hook (lambda () (word-wrap 1)))
+(add-hook 'LaTeX-mode-hook (lambda () (visual-line-mode t)))
 
 #+end_src
 
@@ -1006,9 +1025,10 @@
 (use-package lsp-latex
 	:ensure t)
 
-;; (with-eval-after-load "tex-mode"
-;;  (add-hook 'TeX-mode-hook 'lsp)
-;;  (add-hook 'latex-mode-hook 'lsp))
+(with-eval-after-load "tex-mode"
+ (add-hook 'TeX-mode-hook 'lsp)
+ ;; (add-hook 'latex-mode-hook 'lsp)
+ )
 
 #+end_src
 
@@ -1148,6 +1168,7 @@
 				("https://www.youtube.com/feeds/videos.xml?channel_id=UCz3l6nyODzXLzTxIkARZ8rw")
 				("https://www.youtube.com/feeds/videos.xml?channel_id=UCfm_QzFKkLcDYYKV2XEYWSw")
 				("https://www.youtube.com/feeds/videos.xml?channel_id=UCj8mAcR6Mu1dvaXQ6BdShRQ")
+				("https://www.youtube.com/feeds/videos.xml?channel_id=UC9rTsvTxJnx1DNrDA3Rqa6A")
 				("https://www.youtube.com/feeds/videos.xml?channel_id=UC-f76NUQN5M-Z0cd0MOP5xw"))))
 
 #+end_src
@@ -1176,9 +1197,9 @@
   (setq dashboard-set-footer nil)
   (setq dashboard-week-agenda t)
   (setq dashboard-page-separator "\n\n")
-  (setq dashboard-items '((bookmarks . 5)
+  (setq dashboard-items '((bookmarks . 20)
                           (recents . 5)
-                          (agenda . 5)))
+                          (agenda . 10)))
 
   (dashboard-setup-startup-hook))
 
@@ -1230,7 +1251,7 @@
         org-fontify-quote-and-verse-blocks t
         org-deadline-warning-days 14
         org-agenda-files
-        '("~/Textfiles/TODO.org")))
+        '("~/Textfiles/TODO/TODO.org")))
 
 #+end_src
 
@@ -1238,7 +1259,7 @@
 #+begin_src emacs-lisp
 
 (setq org-latex-compiler "xelatex --synctex=1")
-(setq org-latex-hyperref-template "")
+;; (setq org-latex-hyperref-template "")
 ;; (setq org-latex-with-hyperref nil)
 (with-eval-after-load 'ox-latex
   (add-to-list 'org-latex-classes
@@ -1345,6 +1366,15 @@
 
 *** Org-Roam
 #+begin_src emacs-lisp
+(defun org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))
+#+end_src
+
+#+begin_src emacs-lisp
 (use-package org-roam
   :ensure t
   :init
@@ -1356,14 +1386,24 @@
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
          ("C-c n i" . org-roam-node-insert)
+         ("C-c n I" . org-roam-node-insert-immediate)
          ("C-c n c" . org-roam-capture)
-         :map org-mode-map
+         ("C-c n t" . org-roam-tag-add)
+         ("C-c n a" . org-roam-alias-add)
+				 :map org-mode-map
          ("C-M-i"    . completion-at-point))
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
   (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
   (org-roam-db-autosync-mode)
-  (org-roam-setup))
+  ;; (org-roam-setup)
+	)
+#+end_src
+
+**** Org-Roam-Ui
+#+begin_src emacs-lisp
+;; (use-package org-roam-ui
+;; 	:ensure t)
 #+end_src
 
 ** Writing
@@ -1394,9 +1434,9 @@
 
 *** Diff-Hl
 #+begin_src emacs-lisp
-(use-package diff-hl
-	:ensure t)
-(global-diff-hl-mode)
+;; (use-package diff-hl
+;; 	:ensure t)
+;; (global-diff-hl-mode)
 #+end_src
 
 ** Dired
