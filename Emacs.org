@@ -566,12 +566,13 @@
   :load-path "/home/kchou/.emacs.d/elpa/openwith.el"
   :config
   (setq openwith-associations '(("\\.pdf\\'" "evince" (file))
-																("\\.html\\'" "firefox" (file))
-																("\\.mp4\\'" "mpv" (file))
-																("\\.mkv\\'" "mpv" (file))
-																;; ("\\.png\\'" "eog" (file))
-																;; ("\\.jpg\\'" "eog" (file))
-																))
+								("\\.html\\'" "firefox" (file))
+								("\\.mp4\\'" "mpv" (file))
+								("\\.mkv\\'" "mpv" (file))
+								;; ("\\.png\\'" "eog" (file))
+								;; ("\\.jpg\\'" "eog" (file))
+								;; ("\\.jpeg\\'" "eog" (file))
+								))
   (openwith-mode t))
 #+end_src
 
@@ -1044,7 +1045,7 @@
   (start-process "mpv" "*mpv*" "mpv" url))
 
 (setq browse-url-browser-function '(("https:\\/\\/www\\.youtube." . browse-url-mpv)
-																		("." . browse-url-firefox)))
+									("." . browse-url-firefox)))
 
 ;; Mark all YouTube entries
 (add-hook 'elfeed-new-entry-hook
@@ -1052,7 +1053,7 @@
                               :add '(video youtube)))
 
 (setq elfeed-feeds
-			(quote
+	  (quote
        (("https://www.di.uoa.gr/rss.xml")
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCv1RoHmiVpx2tN2qxTXqcuw")
         ("https://www.gentoo.org/feeds/news.xml")
@@ -1158,18 +1159,19 @@
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCR2uRTQ53V_egXKFflMMaaw")
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCxpeu8gvV77Z1wUrTpu5BUQ")
         ("https://www.youtube.com/feeds/videos.xml?channel_id=UCr7lmzIk63PZnBw3bezl-Mg")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCHnyfMqiRRG1u-2MsSQLbXA")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCpCSAcbqs-sjEVfk_hMfY9w")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCafEZMU5s8geb9oIly6xTrg")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCG-3rEW4IrDNa7-9iGByc2A")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCbYoTv5DbJmzKwxx5dmnu6g")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCsBjURrPoezykLs9EqgamOA")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCl7dSJloxuCa9IBFml7sakw")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCz3l6nyODzXLzTxIkARZ8rw")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCfm_QzFKkLcDYYKV2XEYWSw")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UCj8mAcR6Mu1dvaXQ6BdShRQ")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UC9rTsvTxJnx1DNrDA3Rqa6A")
-				("https://www.youtube.com/feeds/videos.xml?channel_id=UC-f76NUQN5M-Z0cd0MOP5xw"))))
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCHnyfMqiRRG1u-2MsSQLbXA")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCpCSAcbqs-sjEVfk_hMfY9w")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCafEZMU5s8geb9oIly6xTrg")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCG-3rEW4IrDNa7-9iGByc2A")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCbYoTv5DbJmzKwxx5dmnu6g")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCsBjURrPoezykLs9EqgamOA")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCl7dSJloxuCa9IBFml7sakw")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCz3l6nyODzXLzTxIkARZ8rw")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCfm_QzFKkLcDYYKV2XEYWSw")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCj8mAcR6Mu1dvaXQ6BdShRQ")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UC9rTsvTxJnx1DNrDA3Rqa6A")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCcGlif61mMV6soFSiN2QHoQ")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UC-f76NUQN5M-Z0cd0MOP5xw"))))
 
 #+end_src
 
