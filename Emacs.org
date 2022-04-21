@@ -1063,7 +1063,7 @@
         ("https://github.com/analogcity.atom")
         ("https://github.com/bloc97/Anime4K/releases.atom")
         ;; ("https://github.com/GloriousEggroll/proton-ge-custom/releases.atom")
-        ;; ("https://github.com/hydrusnetwork/hydrus/releases.atom")
+        ("https://github.com/hydrusnetwork/hydrus/releases.atom")
         ("https://n-o-d-e.net/rss/rss.xml")
         ("https://linux-user.gr/tag/planet.rss")
         ("https://chubek.github.io/feed.xml")
@@ -1171,6 +1171,7 @@
 		("https://www.youtube.com/feeds/videos.xml?channel_id=UCj8mAcR6Mu1dvaXQ6BdShRQ")
 		("https://www.youtube.com/feeds/videos.xml?channel_id=UC9rTsvTxJnx1DNrDA3Rqa6A")
 		("https://www.youtube.com/feeds/videos.xml?channel_id=UCcGlif61mMV6soFSiN2QHoQ")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCGo5uT3qxwsSidWL_j-YDcw")
 		("https://www.youtube.com/feeds/videos.xml?channel_id=UC-f76NUQN5M-Z0cd0MOP5xw"))))
 
 #+end_src
