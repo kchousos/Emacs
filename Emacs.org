@@ -47,7 +47,7 @@
 *** View-Mode
 #+begin_src emacs-lisp
 
-;; (global-set-key (kbd "C-z") 'view-mode)
+(global-set-key (kbd "C-z") 'view-mode)
 
 #+end_src
 
@@ -68,7 +68,7 @@
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
 
-;; (setq truncate-lines t)
+(setq truncate-lines t)
 
 (setq x-select-enable-clipboard t)
 
@@ -146,12 +146,14 @@
 ** Tab Configuration
 #+begin_src emacs-lisp
 
+(setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
-(setq-default standard-indent 4)
-(setq c-basic-offset tab-width)
-(setq-default electric-indent-inhibit t)
-(setq-default indent-tabs-mode t)
-(setq backward-delete-char-untabify-method 'hungry)
+(setq indent-line-function 'insert-tab)
+
+;; (setq-default standard-indent 4)
+;; (setq c-basic-offset tab-width)
+;; (setq-default electric-indent-inhibit t)
+;; (setq backward-delete-char-untabify-method 'hungry)
 
 #+end_src
 
@@ -584,7 +586,7 @@
   :ensure t)
 
 (global-set-key (kbd "C-+") 'shift-number-up)
-(global-set-key (kbd "C-_") 'shift-number-down)
+(global-set-key (kbd "C--") 'shift-number-down)
 
 #+end_src
 
@@ -750,6 +752,14 @@
 (use-package mips-mode
 	:ensure t
 	:mode "\\.s$")
+
+#+end_src
+
+*** Yaml-Mode
+#+begin_src emacs-lisp
+
+(use-package yaml-mode
+	:ensure t)
 
 #+end_src
 
@@ -1172,6 +1182,7 @@
 		("https://www.youtube.com/feeds/videos.xml?channel_id=UC9rTsvTxJnx1DNrDA3Rqa6A")
 		("https://www.youtube.com/feeds/videos.xml?channel_id=UCcGlif61mMV6soFSiN2QHoQ")
 		("https://www.youtube.com/feeds/videos.xml?channel_id=UCGo5uT3qxwsSidWL_j-YDcw")
+		("https://www.youtube.com/feeds/videos.xml?channel_id=UCDLYtmD6489DPZ9li-ezcDA")
 		("https://www.youtube.com/feeds/videos.xml?channel_id=UC-f76NUQN5M-Z0cd0MOP5xw"))))
 
 #+end_src
@@ -1212,7 +1223,7 @@
 *** Org-Mode-Setup
 #+begin_src emacs-lisp
 
-;; (add-hook 'org-mode-hook (lambda () (truncate-lines 0)))
+(add-hook 'org-mode-hook (lambda () (truncate-lines 0)))
 
 (defun efs/org-mode-setup ()
   (org-indent-mode)
