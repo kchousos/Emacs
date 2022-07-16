@@ -3,6 +3,7 @@
 
 .cache/
 auto/
+eln-cache/
 auto-save-list/
 eclipse.jdt.ls/
 elpa/
@@ -10,6 +11,7 @@ transient/
 workspace/
 .dap-breakpoints
 .lsp-session-v1
+.org-id-locations
 history
 init.el
 places
