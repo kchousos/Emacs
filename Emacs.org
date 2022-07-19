@@ -1201,6 +1201,8 @@
 (use-package elfeed
   :straight t)
 
+(setq-default elfeed-search-filter '"+unread")
+
 (global-set-key (kbd "C-x w") 'elfeed)
 
 (defun browse-url-mpv (url &optional new-window)
