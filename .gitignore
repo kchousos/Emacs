@@ -23,7 +23,7 @@
 
 *
 
-!logos/**/
+!logos/*
 !snippets
 !.gitignore
 !Emacs.org
