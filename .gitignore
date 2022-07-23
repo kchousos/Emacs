@@ -23,6 +23,7 @@
 
 *
 
+!logos/
 !logos/*
 !snippets
 !.gitignore
