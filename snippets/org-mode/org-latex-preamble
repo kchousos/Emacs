@@ -1,0 +1,20 @@
+# -*- mode: snippet -*-
+# name: Org LaTeX Preamble
+# key: <ol
+# --
+
+#+SETUPFILE: ~/.emacs.d/org-latex-setup.tex
+#+UNNUMBERED: nil
+#+OPTIONS: num:t toc:t tex:t H:t date:nil
+#+LATEX_HEADER_EXTRA: \setmainfont{GFS Didot}
+#+LATEX_HEADER_EXTRA: \usepackage[margin=1.2in]{geometry}
+##+LATEX_HEADER_EXTRA: \usepackage{titlesec}
+##+LATEX_HEADER_EXTRA: \titleformat{\section}{\bf}{\thesection}{0.8em}{}
+#+LATEX_CLASS: article
+#+LaTeX_CLASS_OPTIONS: [a4paper, titlepage]
+#+TITLE: ${1:title}
+#+SUBTITLE: ${2:subtitle}
+
+\newpage
+
+$0
