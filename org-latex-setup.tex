@@ -1,0 +1,32 @@
+#+LaTeX_CLASS: org-plain-latex
+
+#+LATEX_COMPILER: xelatex
+
+#+AUTHOR: Κωνσταντίνος Χούσος
+
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra}
+#+LATEX_HEADER_EXTRA: \usepackage{xgreek}
+#+LATEX_HEADER_EXTRA: \setlanguage{greek}
+#+LATEX_HEADER_EXTRA: \usepackage{microtype}
+
+#+LATEX_HEADER_EXTRA: \usepackage{minted}
+#+LaTeX_HEADER_EXTRA: \usemintedstyle{vs}
+
+% % Page geometry
+% #+LATEX_HEADER_EXTRA: \usepackage[top=1in, bottom=1.25in, left=1.55in, right=1.55in]{geometry}
+#+LATEX_HEADER_EXTRA: \usepackage[margin=1.3in]{geometry}
+
+% % Line spacing
+#+LATEX_HEADER_EXTRA: \renewcommand{\baselinestretch}{1.2}
+
+% Colorizing links in a nicer way.
+% #+LATEX_HEADER_EXTRA: \definecolor{bblue}{HTML}{0645AD}
+#+LATEX_HEADER_EXTRA: \usepackage[colorlinks]{hyperref}
+#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks, linkcolor=blue, urlcolor=blue}
+
+% % Moving up the title.
+% #+LATEX_HEADER_EXTRA: \usepackage{titling}
+% #+LATEX_HEADER_EXTRA: \setlength{\droptitle}{-6em}
+
+% % Page numbering - this disables it
+% # #+LATEX_HEADER_EXTRA: \pagenumbering{gobble}

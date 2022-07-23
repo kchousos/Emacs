@@ -1,0 +1,76 @@
+* Imported Feeds :elfeed:
+** Youtube :youtube:
+*** Philosophy :philosophy:
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCiRiQGCHGjDLT9FQXFW0I3A][Academy of Ideas]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC2Z1ygZRfexFQWzUGmu0bkw][The Quintessential Mind]]
+*** Music :music:
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCnkp4xDOwqqJD7sSM3xdUiQ][Adam Neely]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCRYhCg0DHloE9gn-PAiAYNg][deep cuts]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCP5bYRGZUJMG93AVoMekz9g][Imaginary Ambition]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC8R8FRt1KcPiR-rtAflXmeg][Nahre Sol]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCXkNod_JcH7PleOjwK_8rYQ][Polyphonic]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC967kVys_gTWDX04E0smQdw][Kijugo]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC813jGofVJXoyN2fxoQbb-Q][Sonata Secrets]]
+**** Guitar :guitar:
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCoJfsSJIhGLK5mQtopUTPtA][Sebastiside]]
+*** Gym :gym:
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCG-3rEW4IrDNa7-9iGByc2A][Natural Hypertrophy]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCduKuJToxWPizJ7I2E6n1kA][BroScienceLife]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCbYoTv5DbJmzKwxx5dmnu6g][Bald Omni-Man]]
+*** Self-Improvement/Studying :sig:
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCvF7Ll_WOgQWOw0KZJsVNXQ][Elisha Long]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCG-KntY7aVnIGXYEBQvmBAQ][Thomas Frank]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCqYPhGiB9tkShZorfgcL2lA][What I've Learned]]
+**** Math :math:
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCYO_jab_esuFRV4b17AJtAw][3Blue1Brown]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC9rTsvTxJnx1DNrDA3Rqa6A][Dr. Trefor Bazett]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCGo5uT3qxwsSidWL_j-YDcw][Autodidact]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCKzJFdi57J53Vr_BkTfN3uQ][Primer]]
+*** Entertainment :entertainment:
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCnJnnEztMhpBEZaVORLriFg][Alexandros Kondopidis]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCR1D15p_vdP3HkrH8wgjQRw][Internet Historian]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC8Q7XEy86Q7T-3kNpNjYgwA][Incognito Mode]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCUJexeVabymyw7G-rxdjUDw][NinjaCakeAssassin]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCV5rcu0zw_3gLEex_f1D_fg][SNEAKO]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCJkMlOu7faDgqh4PfzbpLdg][Nerdwriter1]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCcGlif61mMV6soFSiN2QHoQ][The Kino Corner]]
+*** Yu-Gi-Oh!
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCEGuDrveqBgD0S9nqaOPw6Q][Farfa]]
+*** Technology :tech:
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCjr2bPAyPV7t35MvcgT3W8Q][The Hated One]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCS0N5baNlQWJCUrhCEo8WlA][Ben Eater]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCHnyfMqiRRG1u-2MsSQLbXA][Veritasium]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCDLYtmD6489DPZ9li-ezcDA][Thomas Computes]]
+**** Programming :prog:
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCUzQJ3JBuQ9w-po4TXRJHiA][jdh]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCRb6Mw3fJ6OFzp-cB9X29aA][Junferno]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCsBjURrPoezykLs9EqgamOA][Fireship]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCK8XIGR5kRidIw2fWqwyHRA][Reducible]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCIjUIjWig0r5DIixQrt6A3A][t3ssel8r]]
+**** Linux :linux:
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCVls1GmFKf6WlTraIb_IaJg][DistroTube]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC7YOGHUfC1Tb6E4pudI9STA][Mental Outlaw]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCsnGwSIHyoYN0kiINAGUKxg][Wolfgang's Channel]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCld68syR8Wi-GY_n4CaoJGA][Brodie Robertson]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCJetJ7nDNLlEzDLXv7KIo0w][Gavin Freeborn]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC9KvrhhUgAfO0nZUlhA6foA][Ethannij]]
+**** Emacs :emacs:
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g][Protesilaos Stavrou]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCBMMB7Yi0eyFuY95Qn2o0Yg][Jake B]]
+** ΕΚΠΑ :ΕΚΠΑ:
+*** [[https://www.di.uoa.gr/rss.xml][NewRssFeed]]
+** Linux :linux:
+*** [[https://www.gentoo.org/feeds/news.xml][Gentoo Linux]]
+*** [[https://archlinux.org/feeds/news/][Arch Linux: Recent news updates]]
+** Crypto :crypto:
+*** [[https://web.getmonero.org/feed.xml][Monero]]
+** Repos :repos:
+*** [[https://github.com/analogcity.atom][GitHub Public Timeline Feed]]
+*** [[https://github.com/bloc97/Anime4K/releases.atom][Release notes from Anime4K]]
+*** [[https://github.com/hydrusnetwork/hydrus/releases.atom][Release notes from hydrus]]
+*** [[https://github.com/ppy/osu/releases.atom][Release notes from osu]]
+** Sites/Blogs :blog:
+*** [[https://n-o-d-e.net/rss/rss.xml][N O D E]]
+*** [[https://linux-user.gr/tag/planet.rss][LINUXUSER - Νήματα με ετικέτες planet]]
+*** [[https://chubek.github.io/feed.xml][Chubak’s Machine Learning Imporium]]

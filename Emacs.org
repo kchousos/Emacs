@@ -1,0 +1,1214 @@
+#+PROPERTY: header-args:emacs-lisp :tangle ./init.el
+#+STARTUP: show2levels
+
+* QOL Stuff
+** Keybinds
+*** Line Numbers
+#+begin_src emacs-lisp
+(global-set-key (kbd "M-<f2>") '(lambda () (interactive) (global-display-line-numbers-mode 'toggle)))
+#+end_src
+
+*** Window Splits
+#+begin_src emacs-lisp
+(defun split-and-follow-horizontally ()
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+
+(defun split-and-follow-vertically ()
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
+#+end_src
+
+*** Jump Paragraphs
+#+begin_src emacs-lisp
+(global-set-key (kbd "M-]") 'forward-paragraph)
+(global-set-key (kbd "M-[") 'backward-paragraph)
+#+end_src
+
+*** Input Method
+#+begin_src emacs-lisp
+(add-hook 'after-init-hook (lambda () (setq default-input-method "greek")))
+#+end_src
+
+** Sane Defaults
+#+begin_src emacs-lisp
+(setq byte-compile-warnings '(cl-functions))
+
+(setq inhibit-startup-message t)
+
+(setq frame-resize-wise t)
+
+(tool-bar-mode -1)          ; Disable the toolbar
+(tooltip-mode -1)           ; Disable tooltips
+(menu-bar-mode -1)          ; Disable the menu bar
+
+(set-language-environment "UTF-8")
+(set-default-coding-systems 'utf-8)
+
+(set-default 'truncate-lines nil)
+
+(setq x-select-enable-clipboard t)
+
+(setq ring-bell-function 'ignore)
+
+(defalias 'yes-or-no-p 'y-or-n-p)
+
+(delete-selection-mode 1)
+
+(setq column-number-mode t)
+#+end_src
+
+** Fringes
+#+begin_src emacs-lisp
+;; Remove the line-wrap fringe indicators
+(setq-default fringe-indicator-alist (assq-delete-all 'truncation fringe-indicator-alist))
+
+(fringe-mode 10)
+#+end_src
+
+** Word Wrap
+#+begin_src emacs-lisp
+(global-word-wrap-whitespace-mode)
+#+end_src
+
+** Blink Cursor
+#+begin_src emacs-lisp
+(blink-cursor-mode 1)
+#+end_src
+
+** Highlight current line
+#+begin_src emacs-lisp
+(global-hl-line-mode 0)
+#+end_src
+
+** Fullscreen by default
+#+begin_src emacs-lisp
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
+#+end_src
+
+** Scrolling and Scrollbars
+#+begin_src emacs-lisp
+(global-set-key (kbd "M-<f3>") 'scroll-bar-mode)
+(scroll-bar-mode 0)
+(window-divider-mode 0)
+
+(setq scroll-bar-adjust-thumb-portion t)
+
+(set-window-scroll-bars (minibuffer-window) nil nil nil nil t)
+
+(setq mouse-wheel-scroll-amount '(5 ((shift) . 1)))
+
+(setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
+
+(setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
+
+(setq scroll-step 1) ;; keyboard scroll one line at a time
+
+;; (setq scroll-conservatively 100)
+#+end_src
+
+** Disable Backup Files
+#+begin_src emacs-lisp
+(setq make-backup-files nil)
+(setq auto-save-default nil)
+#+end_src
+
+** Tab Configuration
+#+begin_src emacs-lisp
+(setq-default indent-tabs-mode nil)
+(setq-default tab-width 4)
+(setq indent-line-function 'insert-tab)
+#+end_src
+
+** Parentheses Pairs
+#+begin_src emacs-lisp
+(setq electric-pair-pairs '(
+                            (?\{ . ?\})
+                            (?\( . ?\))
+                            (?\[ . ?\])
+                            (?\" . ?\")
+                            ))
+(electric-pair-mode t)
+
+(add-hook 'org-mode-hook (lambda ()
+           (setq-local electric-pair-inhibit-predicate
+                   `(lambda (c)
+                  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
+#+end_src
+
+** Line Numbers
+#+begin_src emacs-lisp
+(global-display-line-numbers-mode 0)
+#+end_src
+
+** No Async Warnings
+#+begin_src emacs-lisp
+(setq comp-async-report-warnings-errors nil)
+#+end_src
+
+* Fonts
+** Fonts
+#+begin_src emacs-lisp
+(pcase system-type
+  ('gnu/linux "It's Linux!")
+  ('windows-nt "It's Windows!")
+
+  (if (daemonp)
+      (message "Loading in the daemon!")
+    (message "Loading in regular Emacs!"))
+  ('darwin "It's macOS!"))
+
+(defun efs/set-font-faces ()
+  (message "Setting faces!")
+  (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
+  (set-face-attribute 'default nil :font "Iosevka" :height 160)
+  (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 140)
+  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 160))
+
+(if (daemonp)
+    (add-hook 'after-make-frame-functions
+              (lambda (frame)
+                (with-selected-frame frame
+                  (efs/set-font-faces))))
+  (efs/set-font-faces))
+#+end_src
+
+** Lsp-Ui Fonts
+#+begin_src emacs-lisp
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(lsp-ui-doc-header ((t (:family "Iosevka"))))
+ '(lsp-ui-doc-highlight-hover ((t (:inherit region :family "Iosevka"))))
+ '(markdown-code-face ((t (:inherit nil :weight bold :family "Iosevka"))))
+ '(markdown-inline-code-face ((t (:inherit (markdown-code-face font-lock-constant-face) :family "Iosevka"))))
+ '(preview-face ((t nil)))
+ '(preview-reference-face ((t (:foreground "#fbf1c7")))))
+(put 'erase-buffer 'disabled nil)
+#+end_src
+
+** Spacing
+#+begin_src emacs-lisp
+(setq line-spacing 0.2)
+#+end_src 
+
+* Packages
+** Package Management
+*** Straight.el
+#+begin_src emacs-lisp
+(defvar bootstrap-version)
+(let ((bootstrap-file
+	   (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+	  (bootstrap-version 5))
+  (unless (file-exists-p bootstrap-file)
+    (with-current-buffer
+	    (url-retrieve-synchronously
+	     "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+	     'silent 'inhibit-cookies)
+	  (goto-char (point-max))
+	  (eval-print-last-sexp)))
+  (load bootstrap-file nil 'nomessage))
+
+;; Use straight.el for use-package expressions
+(straight-use-package 'use-package)
+
+;; Disable package.el in favor of straight.el
+(setq package-enable-at-startup nil)
+#+end_src
+
+** Color Theme
+*** Modus Themes
+#+begin_src emacs-lisp
+;; (set-face-attribute 'mode-line nil :box t)
+
+;; (setq modus-themes-vivendi-color-overrides
+;;       '((bg-main . "#1d1f21")
+;;         ;; (bg-dim . "#faf6ef")
+;;         ;; (bg-alt . "#f7efe5")
+;;         ;; (bg-active . "#e8dfd1")
+;;         (bg-inactive . "#373b41")))
+
+;; (setq modus-themes-operandi-color-overrides
+;;       '((bg-main . "#fefcf4")
+;;         (bg-dim . "#faf6ef")
+;;         (bg-alt . "#f7efe5")
+;;         (bg-active . "#e8dfd1")
+;;         (bg-inactive . "#e8dfd1")))
+
+(setq modus-themes-headings
+      '((1 . (1.2))
+        (2 . (1.15))
+        (3 . (1.1))
+        (4 . (1.05))
+        (t . (1.0))))
+
+;; (setq modus-themes-operandi-color-overrides '(nil))
+
+(use-package modus-themes
+  :straight t
+  :init
+  ;; Add all your customizations prior to loading the themes
+  (setq modus-themes-italic-constructs nil
+        modus-themes-bold-constructs nil
+        modus-themes-mixed-fonts t
+        modus-themes-subtle-line-numbers nil
+        modus-themes-deuteranopia nil
+
+        modus-themes-fringes '(subtle) ; {nil,'subtle,'intense}
+
+        ;; Options for `modus-themes-mode-line' are either nil, or a list
+        ;; that can combine any of `3d' OR `moody', `borderless',
+        ;; `accented'.  The variable's doc string shows all possible
+        ;; combinations.
+        modus-themes-mode-line nil
+
+        ;; Options for `modus-themes-syntax': nil, 'faint,
+        ;; 'yellow-comments, 'green-strings,
+        ;; 'yellow-comments-green-strings, 'alt-syntax,
+        ;; 'alt-syntax-yellow-comments, 'faint-yellow-comments
+        modus-themes-syntax '(faint)
+
+        ;; Options for `modus-themes-hl-line': nil, 'intense-background,
+        ;; 'accented-background, 'underline-neutral,
+        ;; 'underline-accented, 'underline-only-neutral,
+        ;; 'underline-only-accented
+        modus-themes-hl-line nil
+
+        modus-themes-paren-match nil ; {nil,'subtle-bold,'intense,'intense-bold}
+
+        ;; Options for `modus-themes-links': nil, 'faint,
+        ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
+        ;; 'underline-only, 'neutral-underline-only
+        modus-themes-links '(faint neutral-underline)
+
+        ;; Options for `modus-themes-prompts' are either nil (the
+        ;; default), or a list of properties that may include any of those
+        ;; symbols: `background', `bold', `gray', `intense'
+        modus-themes-prompts nil
+
+        modus-themes-completions '(opinionated) ; {nil,'moderate,'opinionated}
+
+        ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
+        ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
+        modus-themes-region nil
+
+        ;; Options for `modus-themes-diffs': nil, 'desaturated,
+        ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
+        modus-themes-diffs '(desaturated)
+
+        org-highlight-latex-and-related '(latex script)
+
+		modus-themes-lang-checkers '(background text-also)
+
+        modus-themes-org-blocks nil; {nil,'gray-background,'tinted-background}
+
+		modus-themes-markup '(background)
+		)
+  ;; Load the theme files before enabling a theme
+  (modus-themes-load-themes)
+  :config
+  ;; Load the theme of your choice:
+  (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
+  :bind ("<f5>" . modus-themes-toggle)
+	)
+#+end_src
+
+** Essentials
+*** Window Navigation
+**** Ace-Window
+#+begin_src emacs-lisp
+(global-set-key (kbd "M-o") 'ace-window)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+(setq aw-dispatch-always nil)
+(setq aw-background nil)
+(defvar aw-dispatch-alist
+  '((?x aw-delete-window "Delete Window")
+    (?m aw-swap-window "Swap Windows")
+    (?M aw-move-window "Move Window")
+    (?c aw-copy-window "Copy Window")
+    (?j aw-switch-buffer-in-window "Select Buffer")
+    (?n aw-flip-window)
+    (?u aw-switch-buffer-other-window "Switch Buffer Other Window")
+    (?c aw-split-window-fair "Split Fair Window")
+    (?v aw-split-window-vert "Split Vert Window")
+    (?b aw-split-window-horz "Split Horz Window")
+    (?o delete-other-windows "Delete Other Windows")
+    (?? aw-show-dispatch-help))
+  "List of actions for `aw-dispatch-default'.")
+
+(use-package ace-window
+  :straight t)
+#+end_src
+
+**** Resize-Window
+#+begin_src emacs-lisp
+(setq resizewindow-allow-backgrounds nil)
+(global-set-key (kbd "C-c C-;") 'resize-window)
+(use-package resize-window
+  :straight t)
+#+end_src
+
+*** File History
+**** Undo-Tree
+#+begin_src emacs-lisp
+(use-package undo-tree
+  :straight t)
+(setq undo-tree-auto-save-history t)
+(defadvice undo-tree-make-history-save-file-name
+    (after undo-tree activate)
+  (setq ad-return-value (concat ad-return-value ".gz")))
+(global-undo-tree-mode)
+#+end_src
+
+*** Autocompletion
+**** Yasnippet
+***** Yasnippet
+#+begin_src emacs-lisp
+(use-package yasnippet
+	:straight t
+	:config
+	(setq yas-snippet-dirs '("~/.config/emacs/snippets")))
+
+(add-hook 'org-mode-hook  'yas-minor-mode-on)
+(add-hook 'prog-mode-hook 'yas-minor-mode-on)
+#+end_src
+
+***** Yasnippet-Snippets
+#+begin_src emacs-lisp
+(use-package yasnippet-snippets
+	:straight t)
+#+end_src
+
+**** Company
+***** Company
+#+begin_src emacs-lisp
+(use-package company
+  :straight t
+  :custom
+  (company-minimum-prefix-length 1)
+  (company-idle-delay 0.0))
+
+(global-company-mode)
+#+end_src
+
+***** Company-Posframe
+#+begin_src emacs-lisp
+(use-package company-posframe
+  :straight t)
+(company-posframe-mode 1)
+#+end_src
+
+***** Company-Quickhelp
+#+begin_src emacs-lisp
+(use-package company-quickhelp
+  :straight t)
+
+(company-quickhelp-mode)
+#+end_src
+
+*** Minibuffer
+**** Vertico
+***** Vertico
+#+begin_src emacs-lisp
+(use-package vertico
+  :straight t
+	;; TODO:
+  ;; :bind (:map vertico-map
+	;; 						:map minibuffer-local-map
+	;; 						("M-h" . backward-kill-word))
+  :custom
+  (vertico-cycle t)
+  :init
+  (vertico-mode))
+#+end_src
+
+***** Savehist
+#+begin_src emacs-lisp
+(use-package savehist
+	:straight t
+  :init
+  (savehist-mode))
+#+end_src
+
+***** Vertico-Posframe
+#+begin_src emacs-lisp
+(use-package vertico-posframe
+	:straight t
+  :init
+  (vertico-posframe-mode))
+#+end_src
+
+**** Marginalia
+#+begin_src emacs-lisp
+(use-package marginalia
+  :after vertico
+  :straight t
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
+#+end_src
+
+**** Orderless
+#+begin_src emacs-lisp
+(use-package orderless
+  :straight t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+*** Vterm
+#+begin_src emacs-lisp
+(use-package vterm
+  :straight t)
+#+end_src
+
+*** OpenWith
+#+begin_src emacs-lisp
+(use-package openwith
+  :straight (:host github :repo "thisirs/openwith")
+  :config
+  (setq openwith-associations '(("\\.pdf\\'" "evince" (file))
+								;; ("\\.html\\'" "firefox" (file))
+								("\\.mp4\\'" "mpv" (file))
+								("\\.mkv\\'" "mpv" (file))
+								;; ("\\.png\\'" "eog" (file))
+								;; ("\\.jpg\\'" "eog" (file))
+								;; ("\\.jpeg\\'" "eog" (file))
+								))
+  (openwith-mode t))
+#+end_src
+
+** Keybinds
+*** Shift-number
+#+begin_src emacs-lisp
+(use-package shift-number
+  :straight t)
+
+(global-set-key (kbd "C-+") 'shift-number-up)
+(global-set-key (kbd "C--") 'shift-number-down)
+#+end_src
+
+*** Which-Key
+#+begin_src emacs-lisp
+(use-package which-key
+  :straight t
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 1.5))
+#+end_src
+
+*** Move-Text
+#+begin_src emacs-lisp
+(use-package move-text
+  :straight t)
+(global-set-key (kbd "M-S-<up>") 'move-text-up)
+(global-set-key (kbd "M-S-<down>") 'move-text-down)
+#+end_src
+
+** Programming
+*** Languages
+**** C/C++
+#+begin_src emacs-lisp
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
+
+(setq lsp-clients-clangd-arg "--header-insertion=never")
+#+end_src
+
+**** Common Lisp
+#+begin_src emacs-lisp
+(use-package sly
+  :straight t)
+
+(setq inferior-lisp-program "clisp")
+
+(add-hook 'common-lisp-mode (lambda () (sly)))
+;; (add-hook 'common-lisp-mode (lambda () (slime-mode)))
+#+end_src
+
+**** MIPS Assembly
+#+begin_src emacs-lisp
+(use-package mips-mode
+	:straight t
+	:mode "\\.s$")
+#+end_src
+
+**** Yaml
+#+begin_src emacs-lisp
+(use-package yaml-mode
+	:straight t)
+#+end_src
+
+**** Fish Shell
+#+begin_src emacs-lisp
+(use-package fish-mode
+	:straight t)
+#+end_src
+
+**** Octave
+#+begin_src emacs-lisp
+(setq auto-mode-alist
+      (cons '("\\.m$" . octave-mode) auto-mode-alist))
+#+end_src
+
+*** General
+#+begin_src emacs-lisp
+(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1)))
+(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+(add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
+(add-hook 'prog-mode-hook (lambda () (setq truncate-lines t)))
+(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
+
+(setq gc-cons-threshold 100000000)
+(setq read-process-output-max (* 1024 1024)) ;; 1mb
+#+end_src
+
+*** LSP
+**** Lsp-Mode
+#+begin_src emacs-lisp
+(use-package lsp-mode
+  :straight t
+  :commands (lsp lsp-deferred)
+  :init
+	(setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+  :config
+  (lsp-enable-which-key-integration t))
+#+end_src
+
+**** Lsp-Treemacs
+#+begin_src emacs-lisp
+(use-package lsp-treemacs
+	:straight t)
+
+(lsp-treemacs-sync-mode 1)
+#+end_src
+
+*** Flycheck
+#+begin_src emacs-lisp
+(use-package flycheck
+  :straight t
+  :init (global-flycheck-mode))
+#+end_src
+
+*** Comment-Tags
+#+begin_src emacs-lisp
+(use-package comment-tags
+  :straight t
+  :hook ((prog-mode . comment-tags-mode)))
+#+end_src
+
+*** Highlight-Indent-Guides
+#+begin_src emacs-lisp
+(use-package highlight-indent-guides
+	:straight t)
+(setq highlight-indent-guides-method 'character)
+(setq highlight-indent-guides-responsive 'top)
+(setq highlight-indent-guides-delay 0)
+#+end_src
+
+*** Treemacs
+#+begin_src emacs-lisp
+(use-package treemacs
+  :straight t
+  :init
+  :config
+  (progn
+    (setq treemacs-display-in-side-window          t
+          treemacs-expand-after-init               t
+          treemacs-find-workspace-method           'find-for-file-or-pick-first
+          treemacs-indentation                     2
+          treemacs-show-cursor                     nil
+          treemacs-show-hidden-files               nil
+          treemacs-silent-filewatch                nil
+          treemacs-silent-refresh                  nil
+          treemacs-sorting                         'alphabetic-asc
+          treemacs-select-when-already-in-treemacs 'move-back
+          treemacs-space-between-root-nodes        t
+          treemacs-tag-follow-cleanup              t
+          treemacs-text-scale                      nil
+          treemacs-user-mode-line-format           nil
+          treemacs-user-header-line-format         nil
+          treemacs-wide-toggle-width               70
+          treemacs-width                           30
+          treemacs-width-increment                 1
+          treemacs-width-is-initially-locked       t
+          treemacs-workspace-switch-cleanup        nil)
+		
+    (treemacs-follow-mode nil)
+    (treemacs-filewatch-mode nil)
+    (treemacs-fringe-indicator-mode 'always)
+
+    (treemacs-hide-gitignored-files-mode nil))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t t"   . treemacs)))
+#+end_src
+
+**** Treemacs-Icons-Dired
+#+begin_src emacs-lisp
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once)
+  :straight t)
+#+end_src
+
+** LaTeX
+*** Settings
+#+begin_src emacs-lisp
+(straight-use-package 'auctex)
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq-default TeX-engine 'xetex)
+(setq-default TeX-PDF-mode t)
+(setq TeX-source-correlate-mode t)
+(setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
+(setq TeX-view-program-selection '((output-pdf "Evince")))
+(setq font-latex-fontify-script nil)
+;; (add-hook 'TeX-mode-hook (lambda () (org-fragtog-mode t)))
+(add-hook 'LaTeX-mode-hook (lambda () (visual-line-mode t)))
+(add-hook 'TeX-mode-hook (lambda () (visual-line-mode t)))
+(add-hook 'TeX-mode-hook (lambda () (truncate-lines nil)))
+
+(global-set-key (kbd "C-c C-x C-l") 'org-latex-preview)
+#+end_src
+
+*** Texlab/LSP-LaTeX
+#+begin_src emacs-lisp
+(use-package lsp-latex
+	:straight t)
+
+(with-eval-after-load "tex-mode"
+ (add-hook 'TeX-mode-hook 'lsp)
+ ;; (add-hook 'latex-mode-hook 'lsp)
+ )
+#+end_src
+
+** Writing
+*** Flyspell
+#+begin_src emacs-lisp
+(setq ispell-program-name "/usr/bin/aspell")
+
+(defun flyspell-greek ()
+  "Change the Flyspell dictionary to Greek"
+  (interactive)
+  (ispell-change-dictionary "el")
+  (flyspell-buffer))
+
+(defun flyspell-english ()
+  "Change the Flyspell dictionary to English"
+  (interactive)
+  (ispell-change-dictionary "en")
+  (flyspell-buffer))
+#+end_src
+
+*** Olivetti
+#+begin_src emacs-lisp
+(setq-default olivetti-body-width 130)
+(setq-default olivetti-margin-width 0)
+(use-package olivetti
+  :straight t
+  :hook
+  (org-mode . olivetti-mode)
+  (TeX-mode . olivetti-mode)
+  (tex-mode . olivetti-mode)
+  (LaTeX-mode . olivetti-mode)
+  (latex-mode . olivetti-mode))
+#+end_src
+
+** Git
+*** Magit
+#+begin_src emacs-lisp
+(use-package magit
+	:straight t
+  :commands magit-status)
+#+end_src
+
+** Dired
+#+begin_src emacs-lisp
+(put 'dired-find-alternate-file 'disabled nil)
+(add-hook 'dired-mode-hook (lambda () (hl-line-mode 1)))
+#+end_src
+
+*** Dired-Hide-Dotfiles
+#+begin_src emacs-lisp
+(use-package dired-hide-dotfiles
+  :straight t)
+
+(defun my-dired-mode-hook ()
+  "My `dired' mode hook."
+  ;; To hide dot-files by default
+  (dired-hide-dotfiles-mode))
+
+;; To toggle hiding
+(define-key dired-mode-map "." #'dired-hide-dotfiles-mode)
+(add-hook 'dired-mode-hook #'my-dired-mode-hook)
+#+end_src
+
+** Org
+*** Org
+#+begin_src emacs-lisp
+(use-package org
+  :straight (org :type built-in)
+                 ;; :repo "https://git.savannah.gnu.org/cgit/emacs/org-mode.git"
+                 ;; :commit "652430128896e690dc6ef2a83891a1209094b3da"
+  :commands (org-capture org-agenda)
+  :config
+  ;; (set-face-attribute 'org-headline-done nil :strike-through t)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.6))
+  (setq org-ellipsis "  "
+        org-hide-emphasis-markers t
+        org-startup-indented t
+        org-pretty-entities nil
+        org-support-shift-select t
+        org-agenda-block-separator ""
+        org-fontify-whole-heading-line t
+        org-fontify-done-headline t
+        org-startup-with-inline-images nil
+        org-fontify-quote-and-verse-blocks t
+        org-deadline-warning-days 14
+        org-agenda-start-with-log-mode t
+        org-log-done 'time
+        org-log-into-drawer t
+        org-auto-align-tags nil
+        org-tags-column 0
+        org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
+        org-agenda-files
+        '("~/Textfiles/TODO/TODO.org")))
+
+(add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
+
+(setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
+                             (vm-imap . vm-visit-imap-folder-other-frame)
+                             (gnus . org-gnus-no-new-news)
+                             (file . find-file)
+                             (wl . wl-other-frame)))
+#+end_src
+
+*** Org-Latex
+#+begin_src emacs-lisp
+(setq org-latex-compiler "xelatex --synctex=1")
+
+(setq org-src-preserve-indentation t)
+(setq indent-tabs-mode nil)
+
+(add-hook 'org-mode-hook
+      '(lambda ()
+         (delete '("\\.pdf\\'" . default) org-file-apps)
+         (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+
+;; ;; For syntax highlighting in exported code blocks
+;; ;; !!Needs python-pygments installed!!
+(setq org-latex-listings 'minted
+      org-latex-packages-alist '(("" "minted"))
+      org-latex-pdf-process
+      '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
+        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+#+end_src
+
+*** Org-Fragtog
+#+begin_src emacs-lisp
+(use-package org-fragtog
+  :straight t)
+
+;; (add-hook 'org-mode-hook 'org-fragtog-mode)
+#+end_src
+
+*** Org-Download
+#+begin_src emacs-lisp
+(use-package org-download
+  :straight t)
+#+end_src
+
+*** Org-Babel
+#+begin_src emacs-lisp
+(org-babel-do-load-languages
+ 'org-babel-load-languages '(
+                             (C . t)
+                             ))
+
+(setq org-confirm-babel-evaluate nil)
+#+end_src
+
+*** HTMLize
+#+begin_src emacs-lisp
+(use-package htmlize
+  :straight t)
+
+(setq org-html-validation-link nil)
+#+end_src
+
+*** Org-Roam
+**** Org-Roam
+#+begin_src emacs-lisp
+(use-package org-roam
+  :straight t
+
+  :init
+  (setq org-roam-v2-ack t)
+
+  :custom
+  (org-roam-directory "~/Textfiles/Braindump")
+  (org-roam-dailies-directory "journals/")
+  (org-roam-completion-everywhere t)
+
+  (org-roam-capture-ref-templates
+   '(("r" "ref" plain "%?"
+      :if-new (file+head "reference/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      :unnarrowed t)))
+
+  (org-roam-capture-templates
+   '(
+     ("m" "main" plain "%?"
+      :if-new (file+head "main/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      :unnarrowed t)
+
+     ("u" "uni class" plain
+      (file "~/Textfiles/Braindump/templates/UniversityClassTemplate.org")
+      :if-new (file+head "reference/uni/${slug}.org" "#+title: ${title}\n#+filetags: :Academics:DiT:\n#+date: %U\n\n")
+      :unnarrowed t)
+
+     ;; ("b" "book notes" plain
+     ;;  (file "~/Textfiles/Braindump/templates/BookNoteTemplate.org")
+     ;; :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+     ;;  :unnarrowed t)
+     ))
+
+  :bind (("C-c n l" . org-roam-buffer-toggle)
+         ("C-c n f" . org-roam-node-find)
+         ("C-c n g" . org-roam-graph)
+         ("C-c n i" . org-roam-node-insert)
+         ("C-c n I" . org-roam-node-insert-immediate)
+         ("C-c n c" . org-roam-capture)
+         ("C-c n t" . org-roam-tag-add)
+         ("C-c n a" . org-roam-alias-add)
+         ("C-c n r" . org-roam-ref-add)
+		 :map org-mode-map
+         ("C-M-i"    . completion-at-point))
+
+  :config
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+
+  ;; Creating the property “type” on my nodes
+  (cl-defmethod org-roam-node-type ((node org-roam-node))
+    "Return the TYPE of NODE."
+    (condition-case nil
+        (file-name-nondirectory
+         (directory-file-name
+          (file-name-directory
+           (file-relative-name (org-roam-node-file node) org-roam-directory))))
+      (error "")))
+  (setq org-roam-node-display-template
+        (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+
+  (org-roam-db-autosync-mode)
+  (org-roam-update-org-id-locations)
+  (org-roam-setup)
+  (require 'org-roam-protocol)
+  (require 'org-roam-export)
+  )
+#+end_src
+
+***** Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
+#+begin_src emacs-lisp
+(defun my/preview-fetcher ()
+  (let* ((elem (org-element-context))
+         (parent (org-element-property :parent elem)))
+    ;; TODO: alt handling for non-paragraph elements
+    (string-trim-right (buffer-substring-no-properties
+                        (org-element-property :begin parent)
+                        (org-element-property :end parent)))))
+
+(setq org-roam-preview-function #'my/preview-fetcher)
+#+end_src
+
+***** Get 'org-roam-preview-visit' and friends to replace the main window. This should be applicable only when 'org-roam-mode' buffer is displayed in a side-window.
+#+begin_src emacs-lisp
+(add-hook 'org-roam-mode-hook
+          (lambda ()
+            (setq-local display-buffer--same-window-action
+                        '(display-buffer-use-some-window
+                          (main)))))
+#+end_src
+
+***** Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
+#+begin_src emacs-lisp
+(add-to-list 'display-buffer-alist
+             '("\\*org-roam\\*"
+               (display-buffer-in-side-window)
+               ;; (dedicated . t)
+               (side . right)
+               (slot . 0)
+               (window-width . 0.33)
+               (preserve-size . (t nil))
+               (window-parameters . ((no-other-window . t)
+                                     (no-delete-other-windows . t)))))
+#+end_src
+
+***** Maximizes org-capture buffer
+#+begin_src emacs-lisp
+(add-hook 'org-capture-mode-hook 'delete-other-windows)
+#+end_src
+
+***** Automatically open the *org-roam* buffer when visiting an org-roam file
+#+begin_src emacs-lisp
+(defun tim/org-roam-buffer-show (_)
+  (if (and
+       ;; Don't do anything if we're in the minibuffer or in the calendar
+       (not (minibufferp))
+       (not (derived-mode-p 'calendar-mode))
+       ;; Show org-roam buffer iff the current buffer has a org-roam file
+       (xor (org-roam-file-p) (eq 'visible (org-roam-buffer--visibility))))
+      (org-roam-buffer-toggle)))
+(add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
+#+end_src
+
+***** Bindings
+****** node-insert-immediate
+#+begin_src emacs-lisp
+;; Bind this to C-c n I
+(defun org-roam-node-insert-immediate (arg &rest args)
+  (interactive "P")
+  (let ((args (cons arg args))
+        (org-roam-capture-templates (list (append (car org-roam-capture-templates)
+                                                  '(:immediate-finish t)))))
+    (apply #'org-roam-node-insert args)))
+#+end_src
+
+**** Org-Roam-Ui
+#+begin_src emacs-lisp
+(use-package org-roam-ui
+	:straight t)
+#+end_src
+
+**** Org-Transclusion
+#+begin_src emacs-lisp
+(use-package org-transclusion
+  :straight t
+
+  :config
+  (add-to-list 'org-transclusion-extensions 'org-transclusion-indent-mode)
+  )
+
+(define-key global-map (kbd "C-c t a") #'org-transclusion-add)
+(define-key global-map (kbd "C-c t t") #'org-transclusion-mode)
+#+end_src
+
+**** Deft
+#+begin_src emacs-lisp
+(use-package deft
+  :after org
+  :straight t
+  :bind
+  ("C-c n d" . deft)
+  :custom
+  (deft-recursive t)
+  (deft-use-filter-string-for-filename t)
+  (deft-default-extension "org")
+  (deft-directory "/home/kchou/Textfiles/Braindump")
+  :config
+  (defun cf/deft-parse-title (file contents)
+    "Parse the given FILE and CONTENTS and determine the title.
+      If `deft-use-filename-as-title' is nil, the title is taken to
+      be the first non-empty line of the FILE.  Else the base name of the FILE is
+      used as title."
+    (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
+      (if begin
+          (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
+        (deft-base-filename file))))
+  (advice-add 'deft-parse-title :override #'cf/deft-parse-title)
+  (setq deft-strip-summary-regexp
+        (concat "\\("
+                "[\n\t]" ;; blank
+                "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
+                "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n" ;; org-roam ID
+                "\\|\\[\\[\\(.*\\]\\)" ;; any link 
+                "\\)")))
+#+end_src
+
+** Ricing
+*** Dashboard
+#+begin_src emacs-lisp
+(use-package dashboard
+  :straight t
+  :config
+  ;; Set the banner
+  (setq dashboard-startup-banner 'official)
+  ;; Value can be
+  ;; 'official which displays the official emacs logo
+  ;; 'logo which displays an alternative emacs logo
+  ;; 1, 2 or 3 which displays one of the text banners
+  ;; "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever image/text you would prefer
+  ;; Content is not centered by default. To center, set
+  (setq dashboard-center-content t)
+  ;; To disable shortcut "jump" indicators for each section, set
+  ;; (setq dashboard-show-shortcuts nil)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-set-init-info t)
+  (setq dashboard-set-footer nil)
+  (setq dashboard-week-agenda t)
+  (setq dashboard-page-separator "\n\n")
+  (setq dashboard-items '((bookmarks . 20)
+                          (recents . 5)
+                          (agenda . 10)))
+
+  (dashboard-setup-startup-hook))
+
+(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+#+end_src
+
+*** Rainbow-Mode
+#+begin_src emacs-lisp
+(use-package rainbow-mode
+  :straight t)
+#+end_src
+
+*** Rainbow-Delimeters
+#+begin_src emacs-lisp
+(use-package rainbow-delimiters
+  :straight t
+  :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+*** Modeline
+**** Minions
+#+begin_src emacs-lisp
+(use-package minions
+  :straight t
+  :config (minions-mode 1))
+
+(setq minions-mode-line-lighter ";")
+#+end_src
+
+**** Moody
+#+begin_src emacs-lisp
+;; (use-package moody
+;; 	:straight t
+;;   :config
+;;   (setq x-underline-at-descent-line t)
+;;   (moody-replace-mode-line-buffer-identification)
+;;   (moody-replace-vc-mode)
+;;   (moody-replace-eldoc-minibuffer-message-function))
+
+;; (setq moody-mode-line-height 40)
+#+end_src
+
+*** Beacon-Mode
+#+begin_src emacs-lisp
+(use-package beacon
+	:straight t)
+
+(beacon-mode)
+#+end_src
+
+*** Org
+**** Org-Modern
+#+begin_src emacs-lisp
+(use-package org-modern
+  :straight t
+  :config
+  (setq org-modern-table nil)
+  ;; :custom
+  ;; (org-modern-hide-stars nil) ; adds extra indentation
+  :hook
+  (org-mode . org-modern-mode)
+  (org-agenda-finalize . org-modern-agenda))
+#+end_src
+
+**** Org-Modern-Indent
+#+begin_src emacs-lisp
+(use-package org-modern-indent
+  :straight (:host github :repo "jdtsmith/org-modern-indent")
+  :hook
+  (org-mode . org-modern-indent-mode))
+#+end_src
+
+**** Org-Pretty-Table-Mode
+#+begin_src emacs-lisp
+(use-package org-pretty-table
+  :straight (:host github :repo "Fuco1/org-pretty-table")
+  :hook (org-mode . org-pretty-table-mode))
+#+end_src
+
+** Fonts & Icons
+*** Mixed-Pitch
+#+begin_src emacs-lisp
+(use-package mixed-pitch
+  :straight t
+  :hook
+  ;; If you want it in all text modes:
+  (text-mode . mixed-pitch-mode))
+
+(setq mixed-pitch-variable-pitch-cursor 'box)
+#+end_src
+
+*** Ligatures
+#+begin_src emacs-lisp
+(use-package ligature
+  :straight (:host github :repo "mickeynp/ligature.el")
+  ;; Enable traditional ligature support in eww-mode, if the
+  ;; `variable-pitch' face supports it
+  :config
+  ;; Enable all programming ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
+									   "<<" "??" ";;" "->" "<-" "-->" "<--"
+									   ))
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
+#+end_src
+
+*** Emojify
+#+begin_src emacs-lisp
+(use-package emojify
+	:straight t)
+
+(setq emojify-display-style 'unicode)
+
+(global-emojify-mode)
+#+end_src
+
+*** All-the-Icons
+#+begin_src emacs-lisp
+(use-package all-the-icons
+  :straight t)
+#+end_src
+
+** Elfeed
+*** Elfeed-Org
+#+begin_src emacs-lisp
+(use-package elfeed-org
+  :straight t)
+
+(elfeed-org)
+(setq rmh-elfeed-org-files (list "~/.config/emacs/feeds.org"))
+#+end_src
+
+*** Elfeed
+#+begin_src emacs-lisp
+(use-package elfeed
+  :straight t)
+
+(setq-default elfeed-search-filter '"+unread")
+
+(global-set-key (kbd "C-x w") 'elfeed)
+
+(defun browse-url-mpv (url &optional new-window)
+  (start-process "mpv" "*mpv*" "mpv" url))
+
+(setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
+#+end_src
+
