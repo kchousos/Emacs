@@ -11,3 +11,5 @@
 !Emacs.org
 !feeds.org
 !org-latex-setup.tex
+
+*.gz
