@@ -34,7 +34,7 @@
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCV5rcu0zw_3gLEex_f1D_fg][SNEAKO]]
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCJkMlOu7faDgqh4PfzbpLdg][Nerdwriter1]]
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCcGlif61mMV6soFSiN2QHoQ][The Kino Corner]]
-*** Yu-Gi-Oh!
+**** Yu-Gi-Oh! :yugioh:
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCEGuDrveqBgD0S9nqaOPw6Q][Farfa]]
 *** Technology :tech:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCjr2bPAyPV7t35MvcgT3W8Q][The Hated One]]
