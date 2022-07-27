@@ -167,9 +167,9 @@
 (defun efs/set-font-faces ()
   (message "Setting faces!")
   (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
-  (set-face-attribute 'default nil :font "Iosevka" :height 160)
-  (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 140)
-  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 160))
+  (set-face-attribute 'default nil :font "Iosevka" :height 140)
+  (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 120)
+  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 140))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -759,41 +759,45 @@
 ** Org
 *** Org
 #+begin_src emacs-lisp
-(use-package org
-  :straight (org :type built-in)
-                 ;; :repo "https://git.savannah.gnu.org/cgit/emacs/org-mode.git"
-                 ;; :commit "652430128896e690dc6ef2a83891a1209094b3da"
-  :commands (org-capture org-agenda)
-  :config
-  ;; (set-face-attribute 'org-headline-done nil :strike-through t)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.6))
-  (setq org-ellipsis "  "
-        org-hide-emphasis-markers t
-        org-startup-indented t
-        org-pretty-entities nil
-        org-support-shift-select t
-        org-agenda-block-separator ""
-        org-fontify-whole-heading-line t
-        org-fontify-done-headline t
-        org-startup-with-inline-images nil
-        org-fontify-quote-and-verse-blocks t
-        org-deadline-warning-days 14
-        org-agenda-start-with-log-mode t
-        org-log-done 'time
-        org-log-into-drawer t
-        org-auto-align-tags nil
-        org-tags-column 0
-        org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
-        org-agenda-files
-        '("~/Textfiles/TODO/TODO.org")))
+  (use-package org
+    :straight (org :type built-in)
+                   ;; :repo "https://git.savannah.gnu.org/cgit/emacs/org-mode.git"
+                   ;; :commit "652430128896e690dc6ef2a83891a1209094b3da"
+    :commands (org-capture org-agenda)
+    :config
+    ;; (set-face-attribute 'org-headline-done nil :strike-through t)
+    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.6))
+    (setq org-ellipsis "  "
+          org-hide-emphasis-markers nil
+          org-startup-indented t
+          org-pretty-entities nil
+          org-support-shift-select t
+          org-agenda-block-separator ""
+          org-fontify-whole-heading-line t
+          org-fontify-done-headline t
+          org-startup-with-inline-images nil
+          org-fontify-quote-and-verse-blocks t
+          org-deadline-warning-days 14
+          org-agenda-start-with-log-mode t
+          org-log-done 'time
+          org-log-into-drawer t
+          org-auto-align-tags nil
+          org-tags-column 0
+          org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
+          org-agenda-files
+          '("~/Textfiles/TODO/TODO.org"
+            "~/Textfiles/Dailies.org")))
 
-(add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
+  (add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
 
-(setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
-                             (vm-imap . vm-visit-imap-folder-other-frame)
-                             (gnus . org-gnus-no-new-news)
-                             (file . find-file)
-                             (wl . wl-other-frame)))
+  (setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
+                               (vm-imap . vm-visit-imap-folder-other-frame)
+                               (gnus . org-gnus-no-new-news)
+                               (file . find-file)
+                               (wl . wl-other-frame)))
+
+  (with-eval-after-load 'org
+    (add-to-list 'org-modules 'org-habit t))
 #+end_src
 
 *** Org-Latex
@@ -1045,7 +1049,7 @@
   :straight t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner 'official)
+  (setq dashboard-startup-banner nil)
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
@@ -1212,3 +1216,6 @@
 (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
 #+end_src
 
+;; Local Variables: 
+;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t) 
+;; End:
