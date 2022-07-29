@@ -785,8 +785,7 @@
           org-tags-column 0
           org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
           org-agenda-files
-          '("~/Textfiles/TODO/TODO.org"
-            "~/Textfiles/Dailies.org")))
+          '("~/Textfiles/TODO/TODO.org")))
 
   (add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
 
@@ -1049,7 +1048,7 @@
   :straight t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner nil)
+  (setq dashboard-startup-banner 'official)
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
@@ -1215,7 +1214,10 @@
 
 (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
 #+end_src
-
+* Local Variables
+#+begin_src emacs-lisp
+(setq enable-local-eval t)
+#+end_src
 ;; Local Variables: 
 ;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t) 
 ;; End:
