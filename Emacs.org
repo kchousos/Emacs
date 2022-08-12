@@ -46,7 +46,7 @@
 
 (tool-bar-mode -1)          ; Disable the toolbar
 (tooltip-mode -1)           ; Disable tooltips
-(menu-bar-mode -1)          ; Disable the menu bar
+;; (menu-bar-mode -1)          ; Disable the menu bar
 
 (set-language-environment "UTF-8")
 (set-default-coding-systems 'utf-8)
@@ -167,9 +167,9 @@
 (defun efs/set-font-faces ()
   (message "Setting faces!")
   (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
-  (set-face-attribute 'default nil :font "Iosevka" :height 140)
-  (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 120)
-  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 140))
+  (set-face-attribute 'default nil :font "Iosevka" :height 160)
+  (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 140)
+  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 160))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -306,7 +306,7 @@
 
         org-highlight-latex-and-related '(latex script)
 
-		modus-themes-lang-checkers '(background text-also)
+		modus-themes-lang-checkers '(text-also)
 
         modus-themes-org-blocks nil; {nil,'gray-background,'tinted-background}
 
@@ -721,6 +721,7 @@
   :straight t
   :hook
   (org-mode . olivetti-mode)
+  (info-mode . olivetti-mode)
   (TeX-mode . olivetti-mode)
   (tex-mode . olivetti-mode)
   (LaTeX-mode . olivetti-mode)
@@ -761,8 +762,6 @@
 #+begin_src emacs-lisp
   (use-package org
     :straight (org :type built-in)
-                   ;; :repo "https://git.savannah.gnu.org/cgit/emacs/org-mode.git"
-                   ;; :commit "652430128896e690dc6ef2a83891a1209094b3da"
     :commands (org-capture org-agenda)
     :config
     ;; (set-face-attribute 'org-headline-done nil :strike-through t)
@@ -1214,6 +1213,7 @@
 
 (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
 #+end_src
+
 * Local Variables
 #+begin_src emacs-lisp
 (setq enable-local-eval t)
