@@ -526,17 +526,6 @@
 (setq lsp-clients-clangd-arg "--header-insertion=never")
 #+end_src
 
-**** Common Lisp
-#+begin_src emacs-lisp
-(use-package sly
-  :straight t)
-
-(setq inferior-lisp-program "clisp")
-
-(add-hook 'common-lisp-mode (lambda () (sly)))
-;; (add-hook 'common-lisp-mode (lambda () (slime-mode)))
-#+end_src
-
 **** MIPS Assembly
 #+begin_src emacs-lisp
 (use-package mips-mode
@@ -721,7 +710,7 @@
   :straight t
   :hook
   (org-mode . olivetti-mode)
-  (info-mode . olivetti-mode)
+  (Info-mode . olivetti-mode)
   (TeX-mode . olivetti-mode)
   (tex-mode . olivetti-mode)
   (LaTeX-mode . olivetti-mode)
@@ -755,6 +744,16 @@
 ;; To toggle hiding
 (define-key dired-mode-map "." #'dired-hide-dotfiles-mode)
 (add-hook 'dired-mode-hook #'my-dired-mode-hook)
+#+end_src
+
+*** Dired-copy-paste
+#+begin_src emacs-lisp
+(use-package dired-copy-paste
+  :straight (dired-copy-paste :type git :host github :repo "jsilve24/dired-copy-paste"))
+
+(define-key dired-mode-map "\C-c\C-x" 'dired-copy-paste-do-cut)
+(define-key dired-mode-map "\C-c\C-c" 'dired-copy-paste-do-copy)
+(define-key dired-mode-map "\C-c\C-v" 'dired-copy-paste-do-paste)
 #+end_src
 
 ** Org
