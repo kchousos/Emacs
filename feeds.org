@@ -11,17 +11,17 @@
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC8R8FRt1KcPiR-rtAflXmeg][Nahre Sol]]
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCXkNod_JcH7PleOjwK_8rYQ][Polyphonic]]
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC967kVys_gTWDX04E0smQdw][Kijugo]]
-**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC813jGofVJXoyN2fxoQbb-Q][Sonata Secrets]]
 **** Guitar :guitar:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCoJfsSJIhGLK5mQtopUTPtA][Sebastiside]]
 *** Gym :gym:
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCG-3rEW4IrDNa7-9iGByc2A][Natural Hypertrophy]]
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCduKuJToxWPizJ7I2E6n1kA][BroScienceLife]]
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCbYoTv5DbJmzKwxx5dmnu6g][Bald Omni-Man]]
-*** Self-Improvement/Studying :sig:
+*** Self-Improvement/Productivity/Studying :sig:
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCvF7Ll_WOgQWOw0KZJsVNXQ][Elisha Long]]
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCG-KntY7aVnIGXYEBQvmBAQ][Thomas Frank]]
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCqYPhGiB9tkShZorfgcL2lA][What I've Learned]]
+**** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCUFFHXvzAMRSD8Bq4bJppxQ][Elizabeth Filips]]
 **** Math :math:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCYO_jab_esuFRV4b17AJtAw][3Blue1Brown]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC9rTsvTxJnx1DNrDA3Rqa6A][Dr. Trefor Bazett]]
@@ -67,8 +67,8 @@
 ** Repos :repos:
 *** [[https://github.com/analogcity.atom][GitHub Public Timeline Feed]]
 *** [[https://github.com/bloc97/Anime4K/releases.atom][Release notes from Anime4K]]
-*** [[https://github.com/hydrusnetwork/hydrus/releases.atom][Release notes from hydrus]]
-*** [[https://github.com/ppy/osu/releases.atom][Release notes from osu]]
+# *** [[https://github.com/hydrusnetwork/hydrus/releases.atom][Release notes from hydrus]]
+# *** [[https://github.com/ppy/osu/releases.atom][Release notes from osu]]
 ** Sites/Blogs :blog:
 *** [[https://n-o-d-e.net/rss/rss.xml][N O D E]]
 *** [[https://linux-user.gr/tag/planet.rss][LINUXUSER - Νήματα με ετικέτες planet]]
