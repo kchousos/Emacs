@@ -750,9 +750,8 @@
 #+end_src
 **** HTML Export
 #+begin_src emacs-lisp
-(add-to-list 'load-path "$USER/.config/emacs/Org Export/elisp")
-(require 'load-directory)
-(load-directory '"./Org Export/elisp")
+(load "/home/kchou/.config/emacs/Org-Export/elisp/file-to-string.el")
+(load "/home/kchou/.config/emacs/Org-Export/elisp/org-html-src-block.el")
 (advice-add 'org-html-src-block :filter-return #'my/org-html-src-block)
 
 (setq org-html-htmlize-output-type nil)
@@ -760,9 +759,37 @@
 (setq org-html-head-include-default-style nil)
 (setq org-html-head-include-scripts nil)
 (setq org-html-metadata-timestamp-format "%A, %d %b %Y")
-(setq org-html-head (file-to-string "./Org Export/html/head.html"))
+;; (setq org-html-head (file-to-string "/home/kchou/.config/emacs/Org-Export/html/head.html"))
 (setq org-html-preamble nil)
-(setq org-html-postamble (file-to-string "./Org Export/html/postamble.html"))
+(setq org-html-postamble (file-to-string "/home/kchou/.config/emacs/Org-Export/html/postamble.html"))
+#+end_src
+
+**** Org-Reveal
+#+begin_src emacs-lisp
+(use-package ox-reveal
+  :straight t)
+#+end_src
+
+**** Org-Latex
+#+begin_src emacs-lisp
+(setq org-latex-compiler "xelatex --synctex=1 -interaction=nonstopmode")
+
+(setq org-src-preserve-indentation t)
+(setq indent-tabs-mode nil)
+(setq org-latex-caption-above nil)
+
+(add-hook 'org-mode-hook
+      '(lambda ()
+         (delete '("\\.pdf\\'" . default) org-file-apps)
+         (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+
+;; ;; For syntax highlighting in exported code blocks
+;; ;; !!Needs python-pygments installed!!
+(setq org-latex-listings 'minted
+      org-latex-packages-alist '(("" "minted"))
+      org-latex-pdf-process
+      '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
+        "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
 #+end_src
 
 *** Org
@@ -809,36 +836,6 @@
 *** Org-Timer
 #+begin_src emacs-lisp
 (setq org-clock-sound "~/.config/emacs/clock.wav")
-#+end_src
-
-*** Org-Reveal
-#+begin_src emacs-lisp
-(use-package ox-reveal
-  :straight t)
-
-(setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-#+end_src
-
-*** Org-Latex
-#+begin_src emacs-lisp
-(setq org-latex-compiler "xelatex --synctex=1 -interaction=nonstopmode")
-
-(setq org-src-preserve-indentation t)
-(setq indent-tabs-mode nil)
-(setq org-latex-caption-above nil)
-
-(add-hook 'org-mode-hook
-      '(lambda ()
-         (delete '("\\.pdf\\'" . default) org-file-apps)
-         (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
-
-;; ;; For syntax highlighting in exported code blocks
-;; ;; !!Needs python-pygments installed!!
-(setq org-latex-listings 'minted
-      org-latex-packages-alist '(("" "minted"))
-      org-latex-pdf-process
-      '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
-        "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
 #+end_src
 
 *** Org-Fragtog

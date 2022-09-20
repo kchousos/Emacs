@@ -1,9 +1,9 @@
 *
 
-!Org Export/
-!Org Export/*
-!Org Export/*/**
-!Org Export/*/**/**
+!Org-Export/
+!Org-Export/*
+!Org-Export/*/**
+!Org-Export/*/**/**
 
 !snippets/
 !snippets/*
@@ -12,6 +12,5 @@
 !.gitignore
 !Emacs.org
 !feeds.org
-!org-latex-setup.tex
 
 *.gz

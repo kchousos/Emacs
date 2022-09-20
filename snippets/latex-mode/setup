@@ -1,0 +1,29 @@
+# -*- mode: snippet -*-
+# name: xelatex setup
+# key: <xs
+# --
+
+\documentclass[a4paper, 10pt, titlepage]{article}
+
+\usepackage{xltxtra}
+\usepackage{xgreek}
+\setlanguage{greek}
+
+\usepackage{microtype}
+\usepackage[margin=1.3in]{geometry}
+\renewcommand{\baselinestretch}{1.2}
+
+\usepackage{newcomputermodern}
+% \setmainfont{}
+
+% \usepackage{minted}
+% \usemintedstyle{vs}
+
+% \usepackage[colorlinks]{hyperref}
+%  \hypersetup{colorlinks, linkcolor=black, urlcolor=blue}
+
+\begin{document}
+
+$0
+
+\end{document}

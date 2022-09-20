@@ -1,0 +1,40 @@
+# -*- mode: snippet -*-
+# name: Org LaTeX
+# key: <ol
+# --
+
+TITLE: $1
+#+SUBTITLE: $2
+#+AUTHOR: Κωνσταντίνος Χούσος
+#+OPTIONS: num:t toc:nil date:nil timestamp:nil
+
+:LATEX_PROPERTIES:
+#+LATEX_COMPILER: xelatex
+
+#+LATEX_CLASS: article
+#+LATEX_CLASS_OPTIONS: [a4paper, titlepage]
+
+#+LATEX_HEADER_EXTRA: \usepackage{xltxtra}
+#+LATEX_HEADER_EXTRA: \usepackage{xgreek}
+#+LATEX_HEADER_EXTRA: \setlanguage{greek}
+#+LATEX_HEADER_EXTRA: \usepackage{microtype}
+
+#+LATEX_HEADER_EXTRA: \usepackage{newcomputermodern}
+#+LATEX_HEADER_EXTRA: \setmonofont{Iosevka}
+
+#+LATEX_HEADER_EXTRA: \usepackage{minted}
+#+LaTeX_HEADER_EXTRA: \usemintedstyle{vs}
+
+# Page geometry
+#+LATEX_HEADER_EXTRA: \usepackage[margin=1.3in]{geometry}
+
+# Line spacing
+#+LATEX_HEADER_EXTRA: \renewcommand{\baselinestretch}{1.2}
+
+# Colorizing links in a nicer way.
+# #+LATEX_HEADER_EXTRA: \definecolor{bblue}{HTML}{0645AD}
+#+LATEX_HEADER_EXTRA: \usepackage[colorlinks]{hyperref}
+#+LATEX_HEADER_EXTRA: \hypersetup{colorlinks, linkcolor=black, urlcolor=blue}
+:END:
+
+$0
