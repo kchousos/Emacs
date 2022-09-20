@@ -57,6 +57,8 @@
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g][Protesilaos Stavrou]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCBMMB7Yi0eyFuY95Qn2o0Yg][Jake B]]
+*** Drawing :art:
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCWInq7M4CbytaqiDM9JYa1w][Can I Learn To Draw ?]]
 ** ΕΚΠΑ :ΕΚΠΑ:
 *** [[https://www.di.uoa.gr/rss.xml][NewRssFeed]]
 ** Linux :linux:

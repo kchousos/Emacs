@@ -1,0 +1,91 @@
+/* $color-text: #dedce5; */
+/* Sakura.css v1.4.1
+ * ================
+ * Minimal css theme.
+ * Project: https://github.com/oxalorg/sakura/
+ */
+body {
+    color: #c9c9c9;
+    background-color: #222222;
+}
+
+hr {
+    border-color: #ffffff;
+}
+
+h1 > a {
+    color: #c9c9c9;
+}
+
+h2 > a {
+    color: #c9c9c9;
+}
+
+h3 > a {
+    color: #c9c9c9;
+}
+
+h4 > a {
+    color: #c9c9c9;
+}
+
+h5 > a {
+    color: #c9c9c9;
+}
+
+a {
+    color: #ffffff;
+}
+a:hover {
+    color: #c9c9c9;
+    border-bottom: 2px solid #c9c9c9;
+}
+
+blockquote {
+    border-left: 5px solid #ffffff;
+    background-color: #4a4a4a;
+}
+
+/* Tables */
+td, th {
+    border-bottom: 1px solid #4a4a4a;
+}
+
+/* Buttons, forms and input */
+input, textarea {
+    border: 1px solid #c9c9c9;
+}
+input:focus, textarea:focus {
+    border: 1px solid #ffffff;
+}
+
+.button, button, input[type=submit], input[type=reset], input[type=button] {
+    background-color: #ffffff;
+    color: #222222;
+    border: 1px solid #ffffff;
+}
+
+.button:focus:enabled, .button:hover:enabled, button:focus:enabled, button:hover:enabled, input[type=submit]:focus:enabled, input[type=submit]:hover:enabled, input[type=reset]:focus:enabled, input[type=reset]:hover:enabled, input[type=button]:focus:enabled, input[type=button]:hover:enabled {
+    background-color: #c9c9c9;
+    border-color: #c9c9c9;
+    color: #222222;
+}
+
+textarea, select, input {
+    color: #c9c9c9;
+    background-color: #4a4a4a;
+    border: 1px solid #4a4a4a;
+}
+textarea:focus, select:focus, input:focus {
+    border: 1px solid #ffffff;
+}
+
+input[type=checkbox]:focus {
+    outline: 1px dotted #ffffff;
+}
+
+/* My overrides */
+
+kbd {
+    background: white;
+}

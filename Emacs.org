@@ -5,7 +5,7 @@
 ** Keybinds
 *** Line Numbers
 #+begin_src emacs-lisp
-(global-set-key (kbd "M-<f2>") '(lambda () (interactive) (global-display-line-numbers-mode 'toggle)))
+(global-set-key (kbd "M-<f2>") #'(lambda () (interactive) (global-display-line-numbers-mode #'toggle)))
 #+end_src
 
 *** Window Splits
@@ -15,20 +15,14 @@
   (split-window-below)
   (balance-windows)
   (other-window 1))
-(global-set-key (kbd "C-x 2") 'split-and-follow-horizontally)
+(global-set-key (kbd "C-x 2") #'split-and-follow-horizontally)
 
 (defun split-and-follow-vertically ()
   (interactive)
   (split-window-right)
   (balance-windows)
   (other-window 1))
-(global-set-key (kbd "C-x 3") 'split-and-follow-vertically)
-#+end_src
-
-*** Jump Paragraphs
-#+begin_src emacs-lisp
-(global-set-key (kbd "M-]") 'forward-paragraph)
-(global-set-key (kbd "M-[") 'backward-paragraph)
+(global-set-key (kbd "C-x 3") #'split-and-follow-vertically)
 #+end_src
 
 *** Input Method
@@ -36,10 +30,13 @@
 (add-hook 'after-init-hook (lambda () (setq default-input-method "greek")))
 #+end_src
 
+*** Kill This Buffer
+#+begin_src emacs-lisp
+(global-set-key (kbd "C-x C-k") #'kill-this-buffer)
+#+end_src
+
 ** Sane Defaults
 #+begin_src emacs-lisp
-(setq byte-compile-warnings '(cl-functions))
-
 (setq inhibit-startup-message t)
 
 (setq frame-resize-wise t)
@@ -123,7 +120,7 @@
 #+begin_src emacs-lisp
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
-(setq indent-line-function 'insert-tab)
+(setq indent-line-function #'insert-tab)
 #+end_src
 
 ** Parentheses Pairs
@@ -148,53 +145,44 @@
 (setq display-line-numbers-type 'relative)
 #+end_src
 
-** No Async Warnings
+** Warnings
 #+begin_src emacs-lisp
-(setq comp-async-report-warnings-errors nil)
+(setq warning-minimum-level :emergency)
 #+end_src
 
 * Fonts
 ** Fonts
 #+begin_src emacs-lisp
-(pcase system-type
-  ('gnu/linux "It's Linux!")
-  ('windows-nt "It's Windows!")
-
-  (if (daemonp)
-      (message "Loading in the daemon!")
-    (message "Loading in regular Emacs!"))
-  ('darwin "It's macOS!"))
-
-(defun efs/set-font-faces ()
-  (message "Setting faces!")
-  (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
-  (set-face-attribute 'default nil :font "Iosevka" :height 160)
-  (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 140)
-  (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 160))
+  (defun set-font-faces ()
+        (message "Setting faces!")
+        (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
+        (set-face-attribute 'default nil :font "Iosevka" :height 160)
+        (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 140)
+        (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 160))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
               (lambda (frame)
                 (with-selected-frame frame
-                  (efs/set-font-faces))))
-  (efs/set-font-faces))
+                  (set-font-faces))))
+    (set-font-faces))
 #+end_src
 
 ** Lsp-Ui Fonts
-#+begin_src emacs-lisp
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(lsp-ui-doc-header ((t (:family "Iosevka"))))
- '(lsp-ui-doc-highlight-hover ((t (:inherit region :family "Iosevka"))))
- '(markdown-code-face ((t (:inherit nil :weight bold :family "Iosevka"))))
- '(markdown-inline-code-face ((t (:inherit (markdown-code-face font-lock-constant-face) :family "Iosevka"))))
- '(preview-face ((t nil)))
- '(preview-reference-face ((t (:foreground "#fbf1c7")))))
-(put 'erase-buffer 'disabled nil)
-#+end_src
+# #+begin_src emacs-lisp
+# (custom-set-faces
+#  ;; custom-set-faces was added by Custom.
+#  ;; If you edit it by hand, you could mess it up, so be careful.
+#  ;; Your init file should contain only one such instance.
+#  ;; If there is more than one, they won't work right.
+#  '(lsp-ui-doc-header ((t (:family "Iosevka"))))
+#  '(lsp-ui-doc-highlight-hover ((t (:inherit region :family "Iosevka"))))
+#  '(markdown-code-face ((t (:inherit nil :weight bold :family "Iosevka"))))
+#  '(markdown-inline-code-face ((t (:inherit (markdown-code-face font-lock-constant-face) :family "Iosevka"))))
+#  '(preview-face ((t nil)))
+#  '(preview-reference-face ((t (:foreground "#fbf1c7")))))
+# (put 'erase-buffer 'disabled nil)
+# #+end_src
 
 ** Spacing
 #+begin_src emacs-lisp
@@ -380,6 +368,7 @@
 
 (add-hook 'org-mode-hook  'yas-minor-mode-on)
 (add-hook 'prog-mode-hook 'yas-minor-mode-on)
+(add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
 #+end_src
 
 ***** Yasnippet-Snippets
@@ -474,13 +463,13 @@
 (use-package openwith
   :straight (:host github :repo "thisirs/openwith")
   :config
-  (setq openwith-associations '(("\\.pdf\\'" "evince" (file))
+  (setq openwith-associations '(("\\.pdf\\'" "setsid -w xdg-open" (file))
 								;; ("\\.html\\'" "firefox" (file))
-								("\\.mp4\\'" "mpv" (file))
-								("\\.mkv\\'" "mpv" (file))
-								;; ("\\.png\\'" "eog" (file))
-								;; ("\\.jpg\\'" "eog" (file))
-								;; ("\\.jpeg\\'" "eog" (file))
+								("\\.mp4\\'" "setsid -w xdg-open" (file))
+								("\\.mkv\\'" "setsid -w xdg-open" (file))
+								;; ("\\.png\\'" "setsid -w xdg-open" (file))
+								;; ("\\.jpg\\'" "setsid -w xdg-open" (file))
+								;; ("\\.jpeg\\'" "setsid -w xdg-open" (file))
 								))
   (openwith-mode t))
 #+end_src
@@ -656,6 +645,7 @@
 
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
+(setq TeX-command-extra-options "-interaction=nonstopmode")
 (setq-default TeX-engine 'xetex)
 (setq-default TeX-PDF-mode t)
 (setq TeX-source-correlate-mode t)
@@ -665,7 +655,7 @@
 ;; (add-hook 'TeX-mode-hook (lambda () (org-fragtog-mode t)))
 (add-hook 'LaTeX-mode-hook (lambda () (visual-line-mode t)))
 (add-hook 'TeX-mode-hook (lambda () (visual-line-mode t)))
-(add-hook 'TeX-mode-hook (lambda () (truncate-lines nil)))
+;; (add-hook 'TeX-mode-hook (lambda () (truncate-lines nil)))
 
 (global-set-key (kbd "C-c C-x C-l") 'org-latex-preview)
 #+end_src
@@ -754,6 +744,27 @@
 #+end_src
 
 ** Org
+*** Org-Export
+#+begin_src emacs-lisp
+(setq org-export-backends '(texinfo md man beamer latex html ascii))
+#+end_src
+**** HTML Export
+#+begin_src emacs-lisp
+(add-to-list 'load-path "$USER/.config/emacs/Org Export/elisp")
+(require 'load-directory)
+(load-directory '"./Org Export/elisp")
+(advice-add 'org-html-src-block :filter-return #'my/org-html-src-block)
+
+(setq org-html-htmlize-output-type nil)
+(setq org-html-validation-link nil)
+(setq org-html-head-include-default-style nil)
+(setq org-html-head-include-scripts nil)
+(setq org-html-metadata-timestamp-format "%A, %d %b %Y")
+(setq org-html-head (file-to-string "./Org Export/html/head.html"))
+(setq org-html-preamble nil)
+(setq org-html-postamble (file-to-string "./Org Export/html/postamble.html"))
+#+end_src
+
 *** Org
 #+begin_src emacs-lisp
   (use-package org
@@ -795,12 +806,26 @@
     (add-to-list 'org-modules 'org-habit t))
 #+end_src
 
+*** Org-Timer
+#+begin_src emacs-lisp
+(setq org-clock-sound "~/.config/emacs/clock.wav")
+#+end_src
+
+*** Org-Reveal
+#+begin_src emacs-lisp
+(use-package ox-reveal
+  :straight t)
+
+(setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+#+end_src
+
 *** Org-Latex
 #+begin_src emacs-lisp
-(setq org-latex-compiler "xelatex --synctex=1")
+(setq org-latex-compiler "xelatex --synctex=1 -interaction=nonstopmode")
 
 (setq org-src-preserve-indentation t)
 (setq indent-tabs-mode nil)
+(setq org-latex-caption-above nil)
 
 (add-hook 'org-mode-hook
       '(lambda ()
@@ -812,8 +837,8 @@
 (setq org-latex-listings 'minted
       org-latex-packages-alist '(("" "minted"))
       org-latex-pdf-process
-      '("xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"
-        "xelatex -shell-escape -interaction nonstopmode -output-directory %o %f"))
+      '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
+        "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
 #+end_src
 
 *** Org-Fragtog
@@ -837,14 +862,6 @@
  'org-babel-load-languages '((C . t)))
 
 (setq org-confirm-babel-evaluate nil)
-#+end_src
-
-*** HTMLize
-#+begin_src emacs-lisp
-(use-package htmlize
-  :straight t)
-
-(setq org-html-validation-link nil)
 #+end_src
 
 *** Org-Roam
@@ -897,7 +914,7 @@
 
   :config
   ;; If you're using a vertical completion framework, you might want a more informative completion interface
-  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:25}" 'face 'org-tag)))
 
   ;; Creating the property “type” on my nodes
   (cl-defmethod org-roam-node-type ((node org-roam-node))
@@ -908,8 +925,6 @@
           (file-name-directory
            (file-relative-name (org-roam-node-file node) org-roam-directory))))
       (error "")))
-  (setq org-roam-node-display-template
-        (concat "${type:15} ${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
 
   (org-roam-db-autosync-mode)
   (org-roam-update-org-id-locations)
@@ -1040,23 +1055,23 @@
 *** Org
 **** Org-Modern
 #+begin_src emacs-lisp
-(use-package org-modern
-  :straight t
-  :config
-  (setq org-modern-table nil)
-  ;; :custom
-  ;; (org-modern-hide-stars nil) ; adds extra indentation
-  :hook
-  (org-mode . org-modern-mode)
-  (org-agenda-finalize . org-modern-agenda))
+  (use-package org-modern
+    :straight t
+    :config
+    (setq org-modern-table nil)
+    ;; :custom
+    ;; (org-modern-hide-stars nil) ; adds extra indentation
+    :hook
+    (org-mode . org-modern-mode)
+    (org-agenda-finalize . org-modern-agenda))
 #+end_src
 
 **** Org-Modern-Indent
 #+begin_src emacs-lisp
-(use-package org-modern-indent
-  :straight (:host github :repo "jdtsmith/org-modern-indent")
-  :hook
-  (org-mode . org-modern-indent-mode))
+  (use-package org-modern-indent
+    :straight (:host github :repo "jdtsmith/org-modern-indent")
+    :hook
+    (org-mode . org-modern-indent-mode))
 #+end_src
 
 **** Org-Pretty-Table-Mode
@@ -1096,11 +1111,11 @@
   ;; "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever image/text you would prefer
   ;; Content is not centered by default. To center, set
   (setq dashboard-center-content t)
-  ;; To disable shortcut "jump" indicators for each section, set
-  ;; (setq dashboard-show-shortcuts nil)
+  (setq dashboard-banner-logo-title nil)
+  (setq dashboard-show-shortcuts nil)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
-  (setq dashboard-set-init-info t)
+  (setq dashboard-set-init-info nil)
   (setq dashboard-set-footer nil)
   (setq dashboard-week-agenda t)
   (setq dashboard-page-separator "\n\n")

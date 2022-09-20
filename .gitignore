@@ -1,7 +1,9 @@
 *
 
-# !logos/
-# !logos/*
+!Org Export/
+!Org Export/*
+!Org Export/*/**
+!Org Export/*/**/**
 
 !snippets/
 !snippets/*
