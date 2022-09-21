@@ -1114,11 +1114,12 @@
   (setq dashboard-set-file-icons t)
   (setq dashboard-set-init-info nil)
   (setq dashboard-set-footer nil)
-  (setq dashboard-week-agenda nil)
+  (setq dashboard-week-agenda t)
   (setq dashboard-page-separator "\n\n")
   (setq dashboard-items '((bookmarks . 20)
                           (recents . 5)
-                          (agenda . 4)))
+                          ;; (agenda . 4)
+                          ))
 
   (dashboard-setup-startup-hook))
 
