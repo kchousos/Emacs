@@ -293,7 +293,7 @@
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
         modus-themes-diffs '(desaturated)
 
-        org-highlight-latex-and-related '(latex script)
+        org-highlight-latex-and-related '(latex)
 
 		modus-themes-lang-checkers '(text-also)
 
@@ -1114,7 +1114,7 @@
   (setq dashboard-set-file-icons t)
   (setq dashboard-set-init-info nil)
   (setq dashboard-set-footer nil)
-  (setq dashboard-week-agenda t)
+  (setq dashboard-week-agenda nil)
   (setq dashboard-page-separator "\n\n")
   (setq dashboard-items '((bookmarks . 20)
                           (recents . 5)
