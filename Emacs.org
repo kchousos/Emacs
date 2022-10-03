@@ -169,20 +169,20 @@
 #+end_src
 
 ** Lsp-Ui Fonts
-# #+begin_src emacs-lisp
-# (custom-set-faces
-#  ;; custom-set-faces was added by Custom.
-#  ;; If you edit it by hand, you could mess it up, so be careful.
-#  ;; Your init file should contain only one such instance.
-#  ;; If there is more than one, they won't work right.
-#  '(lsp-ui-doc-header ((t (:family "Iosevka"))))
-#  '(lsp-ui-doc-highlight-hover ((t (:inherit region :family "Iosevka"))))
-#  '(markdown-code-face ((t (:inherit nil :weight bold :family "Iosevka"))))
-#  '(markdown-inline-code-face ((t (:inherit (markdown-code-face font-lock-constant-face) :family "Iosevka"))))
-#  '(preview-face ((t nil)))
-#  '(preview-reference-face ((t (:foreground "#fbf1c7")))))
-# (put 'erase-buffer 'disabled nil)
-# #+end_src
+#+begin_src emacs-lisp
+;; (custom-set-faces
+;;  ;; custom-set-faces was added by Custom.
+;;  ;; If you edit it by hand, you could mess it up, so be careful.
+;;  ;; Your init file should contain only one such instance.
+;;  ;; If there is more than one, they won't work right.
+;;  '(lsp-ui-doc-header ((t (:family "Iosevka"))))
+;;  '(lsp-ui-doc-highlight-hover ((t (:inherit region :family "Iosevka"))))
+;;  '(markdown-code-face ((t (:inherit nil :weight bold :family "Iosevka"))))
+;;  '(markdown-inline-code-face ((t (:inherit (markdown-code-face font-lock-constant-face) :family "Iosevka"))))
+;;  '(preview-face ((t nil)))
+;;  '(preview-reference-face ((t (:foreground "#fbf1c7")))))
+;; (put 'erase-buffer 'disabled nil)
+#+end_src
 
 ** Spacing
 #+begin_src emacs-lisp
@@ -543,7 +543,7 @@
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 (add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
 (add-hook 'prog-mode-hook (lambda () (setq truncate-lines t)))
-(add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
+;; (add-hook 'prog-mode-hook #'highlight-indent-guides-mode)
 
 (setq gc-cons-threshold 100000000)
 (setq read-process-output-max (* 1024 1024)) ;; 1mb
@@ -585,11 +585,11 @@
 
 *** Highlight-Indent-Guides
 #+begin_src emacs-lisp
-(use-package highlight-indent-guides
-	:straight t)
-(setq highlight-indent-guides-method 'character)
-(setq highlight-indent-guides-responsive 'top)
-(setq highlight-indent-guides-delay 0)
+;; (use-package highlight-indent-guides
+;; 	:straight t)
+;; (setq highlight-indent-guides-method 'character)
+;; (setq highlight-indent-guides-responsive 'top)
+;; (setq highlight-indent-guides-delay 0)
 #+end_src
 
 *** Treemacs
@@ -697,6 +697,7 @@
   :straight t
   :hook
   (org-mode . olivetti-mode)
+  (markdown-mode . olivetti-mode)
   (Info-mode . olivetti-mode)
   (TeX-mode . olivetti-mode)
   (tex-mode . olivetti-mode)
@@ -744,9 +745,24 @@
 #+end_src
 
 ** Org
+*** Org-Agenda
+#+begin_src emacs-lisp
+(setq org-agenda-block-separator ""
+      org-agenda-start-with-log-mode nil
+      org-agenda-include-deadlines t
+      org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
+      org-agenda-span 'day
+      org-agenda-files
+      '("~/Textfiles/Org files/Tasks.org"
+        "~/Textfiles/Org files/Habits.org"))
+
+(global-set-key (kbd "C-c a") 'org-agenda)
+#+end_src
 *** Org-Export
 #+begin_src emacs-lisp
 (setq org-export-backends '(texinfo md man beamer latex html ascii))
+
+(setq org-publish-timestamp-directory '"~/.config/emacs/org-timestamps")
 #+end_src
 **** HTML Export
 #+begin_src emacs-lisp
@@ -791,46 +807,65 @@
       '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
         "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
 #+end_src
+*** Youtube
+Opens youtube links with mpv, and embeds them in the html exports instead of just having the link to it.
+#+begin_src emacs-lisp
+(defun spook-org--follow-yt-link (path prefix)
+  (let* ((url (format "https:%s" path))
+         (display-buffer-alist `((,shell-command-buffer-name-async . (display-buffer-no-window)))))
+    (if (and prefix (executable-find "mpv"))
+        (browse-url url)
+      (async-shell-command (format "mpv \"%s\"" url))
+      (message "Launched mpv with \"%s\"" url))))
+
+(defun spook-org--export-yt-link (path desc backend)
+  (when (eq backend 'html)
+    (let* ((video-id (cadar (url-parse-query-string path)))
+           (url (if (string-empty-p video-id) path
+                  (format "https://youtube.com/embed/%s" video-id))))
+      (format
+       "<iframe width=\"1000\" height=\"562.5\" src=\"%s\" title=\"%s\" frameborder=\"0\" allowfullscreen></iframe>"
+       url desc))))
+
+(org-link-set-parameters "yt" :follow #'spook-org--follow-yt-link :export #'spook-org--export-yt-link)
+#+end_src
 
 *** Org
 #+begin_src emacs-lisp
-  (use-package org
-    :straight (org :type built-in)
-    :commands (org-capture org-agenda)
-    :config
-    ;; (set-face-attribute 'org-headline-done nil :strike-through t)
-    (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.6))
-    (setq org-ellipsis "  "
-          org-hide-emphasis-markers nil
-          org-startup-indented t
-          org-pretty-entities nil
-          org-support-shift-select t
-          org-agenda-block-separator ""
-          org-fontify-whole-heading-line t
-          org-fontify-done-headline t
-          org-startup-with-inline-images nil
-          org-fontify-quote-and-verse-blocks t
-          org-deadline-warning-days 14
-          org-agenda-start-with-log-mode t
-          org-log-done 'time
-          org-log-into-drawer t
-          org-auto-align-tags nil
-          org-tags-column 0
-          org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
-          org-agenda-files
-          '("~/Textfiles/Org files/Tasks.org"
-            "~/Textfiles/Org files/Habits.org")))
+(use-package org
+  :straight (org :type built-in)
+  :commands (org-capture org-agenda)
+  :config
+  ;; (set-face-attribute 'org-headline-done nil :strike-through t)
+  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.6))
+  (setq org-ellipsis "  "
+        org-hide-emphasis-markers nil
+        org-startup-indented t
+        org-pretty-entities nil
+        org-support-shift-select t
+        org-fontify-whole-heading-line t
+        org-fontify-done-headline t
+        org-startup-with-inline-images nil
+        org-fontify-quote-and-verse-blocks t
+        org-deadline-warning-days 14
+        org-log-done 'time
+        org-log-into-drawer t
+        org-auto-align-tags nil
+        org-tags-column 0
+        org-return-follows-link t
+        org-capture-bookmark nil
+        ))
 
-  (add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
+(add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
 
-  (setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
-                               (vm-imap . vm-visit-imap-folder-other-frame)
-                               (gnus . org-gnus-no-new-news)
-                               (file . find-file)
-                               (wl . wl-other-frame)))
+(setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
+                             (vm-imap . vm-visit-imap-folder-other-frame)
+                             (gnus . org-gnus-no-new-news)
+                             (file . find-file)
+                             (wl . wl-other-frame)))
 
-  (with-eval-after-load 'org
-    (add-to-list 'org-modules 'org-habit t))
+(with-eval-after-load 'org
+  (add-to-list 'org-modules 'org-habit t))
 #+end_src
 
 *** Org-Timer
@@ -856,7 +891,14 @@
 *** Org-Babel
 #+begin_src emacs-lisp
 (org-babel-do-load-languages
- 'org-babel-load-languages '((C . t)))
+ 'org-babel-load-languages
+ '((emacs-lisp . t)
+   (C . t)
+   (clojure . t)))
+;; Show syntax highlighting per language native mode in *.org
+(setq org-src-fontify-natively t)
+;; For languages with significant whitespace like Python:
+(setq org-src-preserve-indentation t)
 
 (setq org-confirm-babel-evaluate nil)
 #+end_src
@@ -897,7 +939,7 @@
      ;;  :unnarrowed t)
      ))
 
-  :bind (("C-c n l" . org-roam-buffer-toggle)
+  :bind (("C-c n b" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
          ("C-c n i" . org-roam-node-insert)
@@ -982,7 +1024,7 @@
        ;; Show org-roam buffer iff the current buffer has a org-roam file
        (xor (org-roam-file-p) (eq 'visible (org-roam-buffer--visibility))))
       (org-roam-buffer-toggle)))
-(add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
+;; (add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
 #+end_src
 
 ***** Bindings
@@ -1118,7 +1160,7 @@
   (setq dashboard-page-separator "\n\n")
   (setq dashboard-items '((bookmarks . 20)
                           (recents . 5)
-                          ;; (agenda . 4)
+                          (agenda . 4)
                           ))
 
   (dashboard-setup-startup-hook))
@@ -1230,6 +1272,7 @@
   :straight t)
 
 (setq-default elfeed-search-filter '"+unread")
+(setq-default elfeed-db-directory '"~/.config/elfeed")
 
 (global-set-key (kbd "C-x w") 'elfeed)
 
@@ -1237,6 +1280,20 @@
   (start-process "mpv" "*mpv*" "mpv" url))
 
 (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
+#+end_src
+
+* Kill unecessary buffers
+#+begin_src emacs-lisp
+(setq-default message-log-max nil)
+(kill-buffer "*Messages*")
+
+(defun remove-scratch-buffer ()
+  (if (get-buffer "*scratch*")
+      (kill-buffer "*scratch*")))
+;; (add-hook 'after-change-major-mode-hook 'remove-scratch-buffer)
+
+(kill-buffer "*straight-process*")
+(kill-buffer "*elfeed-log*")
 #+end_src
 
 * Local Variables
