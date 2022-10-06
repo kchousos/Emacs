@@ -514,9 +514,9 @@
 
 **** MIPS Assembly
 #+begin_src emacs-lisp
-(use-package mips-mode
-	:straight t
-	:mode "\\.s$")
+;; (use-package mips-mode
+;; 	:straight t
+;; 	:mode "\\.s$")
 #+end_src
 
 **** Yaml
@@ -535,6 +535,11 @@
 #+begin_src emacs-lisp
 (setq auto-mode-alist
       (cons '("\\.m$" . octave-mode) auto-mode-alist))
+#+end_src
+
+**** Python
+#+begin_src emacs-lisp
+;; TODO
 #+end_src
 
 *** General
@@ -1283,7 +1288,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
 #+end_src
 
-* Kill unecessary buffers
+* Buffer Shenanigans
 #+begin_src emacs-lisp
 (setq-default message-log-max nil)
 (kill-buffer "*Messages*")
