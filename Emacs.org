@@ -404,6 +404,14 @@
 (company-quickhelp-mode)
 #+end_src
 
+***** Company-Lsp
+#+begin_src emacs-lisp
+;; (use-package company-lsp
+;;   :straight t)
+;; (push 'company-lsp company-backends)
+;; (setq company-lsp-enable-snippet t)
+#+end_src
+
 *** Minibuffer
 **** Vertico
 ***** Vertico
@@ -538,8 +546,16 @@
 #+end_src
 
 **** Python
+***** LSP
 #+begin_src emacs-lisp
-;; TODO
+(add-hook 'python-mode-hook 'lsp)
+#+end_src
+***** Virtual Environments
+#+begin_src emacs-lisp
+(use-package pyvenv
+  :config
+  (pyvenv-mode 1))
+(setq pyvenv-activate "/home/kchou/.conda/envs/ai")
 #+end_src
 
 *** General
