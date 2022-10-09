@@ -546,12 +546,19 @@
 #+end_src
 
 **** Python
-***** Virtual Environments
+
+***** Pyvenv
 #+begin_src emacs-lisp
 (use-package pyvenv
-  :straight t)
-(setq pyvenv-activate "/home/kchou/.conda/envs/ai")
-;; (add-hook 'python-mode-hook #'pyvenv-mode)
+  :straight t
+  :init
+  (setenv "WORKON_HOME" "~/.conda/envs"))
+
+(add-hook 'python-mode-hook #'pyvenv-mode)
+(add-hook 'python-mode-hook (lambda () (pyvenv-workon 'ai)))
+(add-hook 'pyvenv-post-activate-hooks
+          #'(lambda ()
+              (call-interactively #'lsp)))
 #+end_src
 
 ***** LSP
@@ -582,6 +589,12 @@
     (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
   :config
   (lsp-enable-which-key-integration t))
+#+end_src
+
+**** Lsp-Ui
+#+begin_src emacs-lisp
+(use-package lsp-ui
+  :straight t)
 #+end_src
 
 **** Lsp-Treemacs
