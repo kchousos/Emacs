@@ -187,7 +187,7 @@
 ** Spacing
 #+begin_src emacs-lisp
 (setq line-spacing 0.2)
-#+end_src 
+#+end_src
 
 * Packages
 ** Package Management
@@ -195,15 +195,15 @@
 #+begin_src emacs-lisp
 (defvar bootstrap-version)
 (let ((bootstrap-file
-	   (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-	  (bootstrap-version 5))
+       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
+      (bootstrap-version 5))
   (unless (file-exists-p bootstrap-file)
     (with-current-buffer
-	    (url-retrieve-synchronously
-	     "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-	     'silent 'inhibit-cookies)
-	  (goto-char (point-max))
-	  (eval-print-last-sexp)))
+        (url-retrieve-synchronously
+         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
+         'silent 'inhibit-cookies)
+      (goto-char (point-max))
+      (eval-print-last-sexp)))
   (load bootstrap-file nil 'nomessage))
 
 ;; Use straight.el for use-package expressions
@@ -295,19 +295,19 @@
 
         org-highlight-latex-and-related '(latex)
 
-		modus-themes-lang-checkers '(text-also)
+        modus-themes-lang-checkers '(text-also)
 
         modus-themes-org-blocks nil; {nil,'gray-background,'tinted-background}
 
-		modus-themes-markup '(background)
-		)
+        modus-themes-markup '(background)
+        )
   ;; Load the theme files before enabling a theme
   (modus-themes-load-themes)
   :config
   ;; Load the theme of your choice:
   (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
   :bind ("<f5>" . modus-themes-toggle)
-	)
+    )
 #+end_src
 
 ** Essentials
@@ -362,9 +362,9 @@
 ***** Yasnippet
 #+begin_src emacs-lisp
 (use-package yasnippet
-	:straight t
-	:config
-	(setq yas-snippet-dirs '("~/.config/emacs/snippets")))
+    :straight t
+    :config
+    (setq yas-snippet-dirs '("~/.config/emacs/snippets")))
 
 (add-hook 'org-mode-hook  'yas-minor-mode-on)
 (add-hook 'prog-mode-hook 'yas-minor-mode-on)
@@ -374,7 +374,7 @@
 ***** Yasnippet-Snippets
 #+begin_src emacs-lisp
 (use-package yasnippet-snippets
-	:straight t)
+    :straight t)
 #+end_src
 
 **** Company
@@ -427,7 +427,7 @@
 ***** Savehist
 #+begin_src emacs-lisp
 (use-package savehist
-	:straight t
+    :straight t
   :init
   (savehist-mode))
 #+end_src
@@ -435,7 +435,7 @@
 ***** Vertico-Posframe
 #+begin_src emacs-lisp
 (use-package vertico-posframe
-	:straight t
+    :straight t
   :init
   (vertico-posframe-mode))
 #+end_src
@@ -472,13 +472,13 @@
   :straight (:host github :repo "thisirs/openwith")
   :config
   (setq openwith-associations '(("\\.pdf\\'" "setsid -w xdg-open" (file))
-								;; ("\\.html\\'" "firefox" (file))
-								("\\.mp4\\'" "setsid -w xdg-open" (file))
-								("\\.mkv\\'" "setsid -w xdg-open" (file))
-								;; ("\\.png\\'" "setsid -w xdg-open" (file))
-								;; ("\\.jpg\\'" "setsid -w xdg-open" (file))
-								;; ("\\.jpeg\\'" "setsid -w xdg-open" (file))
-								))
+                                ;; ("\\.html\\'" "firefox" (file))
+                                ("\\.mp4\\'" "setsid -w xdg-open" (file))
+                                ("\\.mkv\\'" "setsid -w xdg-open" (file))
+                                ;; ("\\.png\\'" "setsid -w xdg-open" (file))
+                                ;; ("\\.jpg\\'" "setsid -w xdg-open" (file))
+                                ;; ("\\.jpeg\\'" "setsid -w xdg-open" (file))
+                                ))
   (openwith-mode t))
 #+end_src
 
@@ -523,20 +523,20 @@
 **** MIPS Assembly
 #+begin_src emacs-lisp
 ;; (use-package mips-mode
-;; 	:straight t
-;; 	:mode "\\.s$")
+;;  :straight t
+;;  :mode "\\.s$")
 #+end_src
 
 **** Yaml
 #+begin_src emacs-lisp
 (use-package yaml-mode
-	:straight t)
+    :straight t)
 #+end_src
 
 **** Fish Shell
 #+begin_src emacs-lisp
 (use-package fish-mode
-	:straight t)
+    :straight t)
 #+end_src
 
 **** Octave
@@ -546,16 +546,18 @@
 #+end_src
 
 **** Python
-***** LSP
-#+begin_src emacs-lisp
-(add-hook 'python-mode-hook 'lsp)
-#+end_src
 ***** Virtual Environments
 #+begin_src emacs-lisp
 (use-package pyvenv
-  :config
-  (pyvenv-mode 1))
+  :straight t)
 (setq pyvenv-activate "/home/kchou/.conda/envs/ai")
+;; (add-hook 'python-mode-hook #'pyvenv-mode)
+#+end_src
+
+***** LSP
+#+begin_src emacs-lisp
+;; Disables its default "lsp linter", allowing pylint to work
+(setq lsp-diagnostic-package :none)
 #+end_src
 
 *** General
@@ -577,7 +579,7 @@
   :straight t
   :commands (lsp lsp-deferred)
   :init
-	(setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
+    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
   :config
   (lsp-enable-which-key-integration t))
 #+end_src
@@ -585,7 +587,7 @@
 **** Lsp-Treemacs
 #+begin_src emacs-lisp
 (use-package lsp-treemacs
-	:straight t)
+    :straight t)
 
 (lsp-treemacs-sync-mode 1)
 #+end_src
@@ -607,7 +609,7 @@
 *** Indent-Guide
 #+begin_src emacs-lisp
 (use-package indent-guide
-	:straight t)
+    :straight t)
 (setq indent-guide-char "│")
 (setq indent-guide-recursive t)
 #+end_src
@@ -639,7 +641,7 @@
           treemacs-width-increment                 1
           treemacs-width-is-initially-locked       t
           treemacs-workspace-switch-cleanup        nil)
-		
+
     (treemacs-follow-mode nil)
     (treemacs-filewatch-mode nil)
     (treemacs-fringe-indicator-mode 'always)
@@ -683,7 +685,7 @@
 *** Texlab/LSP-LaTeX
 #+begin_src emacs-lisp
 (use-package lsp-latex
-	:straight t)
+    :straight t)
 
 (with-eval-after-load "tex-mode"
  (add-hook 'TeX-mode-hook 'lsp)
@@ -729,7 +731,7 @@
 *** Magit
 #+begin_src emacs-lisp
 (use-package magit
-	:straight t
+    :straight t
   :commands magit-status)
 #+end_src
 
@@ -970,7 +972,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
          ("C-c n t" . org-roam-tag-add)
          ("C-c n a" . org-roam-alias-add)
          ("C-c n r" . org-roam-ref-add)
-		 :map org-mode-map
+         :map org-mode-map
          ("C-M-i"    . completion-at-point))
 
   :config
@@ -1064,7 +1066,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 **** Org-Roam-Ui
 #+begin_src emacs-lisp
 (use-package org-roam-ui
-	:straight t)
+    :straight t)
 #+end_src
 
 **** Org-Transclusion
@@ -1106,7 +1108,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
                 "[\n\t]" ;; blank
                 "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
                 "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n" ;; org-roam ID
-                "\\|\\[\\[\\(.*\\]\\)" ;; any link 
+                "\\|\\[\\[\\(.*\\]\\)" ;; any link
                 "\\)")))
 #+end_src
 
@@ -1216,7 +1218,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 **** Moody
 #+begin_src emacs-lisp
 ;; (use-package moody
-;; 	:straight t
+;;  :straight t
 ;;   :config
 ;;   (setq x-underline-at-descent-line t)
 ;;   (moody-replace-mode-line-buffer-identification)
@@ -1229,7 +1231,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 *** Beacon-Mode
 #+begin_src emacs-lisp
 (use-package beacon
-	:straight t)
+    :straight t)
 
 (beacon-mode)
 #+end_src
@@ -1249,14 +1251,14 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 *** Ligatures
 #+begin_src emacs-lisp
 (use-package ligature
-  :straight (:host github :repo "mickeynp/ligature.el")
+  :straight t ;; (:host github :repo "mickeynp/ligature.el")
   ;; Enable traditional ligature support in eww-mode, if the
   ;; `variable-pitch' face supports it
   :config
   ;; Enable all programming ligatures in programming modes
   (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
-									   "<<" "??" ";;" "->" "<-" "-->" "<--"
-									   ))
+                                       "<<" "??" ";;" "->" "<-" "-->" "<--"
+                                       ))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
   (global-ligature-mode t))
@@ -1265,7 +1267,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 *** Emojify
 #+begin_src emacs-lisp
 (use-package emojify
-	:straight t)
+    :straight t)
 
 (setq emojify-display-style 'unicode)
 
@@ -1322,6 +1324,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+begin_src emacs-lisp
 (setq enable-local-eval t)
 #+end_src
-;; Local Variables: 
-;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t) 
+;; Local Variables:
+;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t)
 ;; End:
