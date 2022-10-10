@@ -593,8 +593,13 @@
 
 **** Lsp-Ui
 #+begin_src emacs-lisp
-(use-package lsp-ui
-  :straight t)
+;; (use-package lsp-ui
+;;   :straight t)
+;; (setq lsp-ui-sideline-enable nil)
+;; (setq lsp-ui-doc-enable t)
+;; (setq lsp-ui-doc-position 'at-point)
+;; (setq lsp-ui-doc-show-with-cursor t)
+;; (setq lsp-ui-doc-show-with-mouse t)
 #+end_src
 
 **** Lsp-Treemacs
