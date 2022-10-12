@@ -41,6 +41,7 @@
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCS0N5baNlQWJCUrhCEo8WlA][Ben Eater]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCHnyfMqiRRG1u-2MsSQLbXA][Veritasium]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCDLYtmD6489DPZ9li-ezcDA][Thomas Computes]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCPMThfZUPqx_dlbjoY0jznQ][Carter Hurd]]
 **** Programming :prog:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCUzQJ3JBuQ9w-po4TXRJHiA][jdh]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCRb6Mw3fJ6OFzp-cB9X29aA][Junferno]]
