@@ -547,18 +547,37 @@
 
 **** Python
 
+#+begin_src emacs-lisp
+(add-hook 'python-mode #'lsp)
+#+end_src
+
 ***** Pyvenv
 #+begin_src emacs-lisp
 (use-package pyvenv
   :straight t
   :init
-  (setenv "WORKON_HOME" "~/.conda/envs"))
+  (setenv "WORKON_HOME" (expand-file-name "~/.conda/envs"))
+  :config
+  (pyvenv-mode 1))
 
-(add-hook 'python-mode-hook #'pyvenv-mode)
-(add-hook 'python-mode-hook (lambda () (pyvenv-workon 'ai)))
+;; (add-hook 'python-mode-hook #'pyvenv-mode)
+;; (add-hook 'python-mode-hook (lambda () (pyvenv-workon 'ai)))
 (add-hook 'pyvenv-post-activate-hooks
           #'(lambda ()
               (call-interactively #'lsp)))
+#+end_src
+
+***** Conda.el
+#+begin_src emacs-lisp
+;; (use-package conda
+;;   :straight t
+;;   :init
+;;   ;; (setq conda-anaconda-home "/home/kchou/.conda")
+;;   ;; (setq conda-env-home-directory "/home/kchou/.conda")
+;;   ;; ;; if you want eshell support, include:
+;;   (conda-env-initialize-eshell)
+;;   ;; if you want auto-activation (see below for details), include:
+;;   (conda-env-autoactivate-mode t))
 #+end_src
 
 ***** LSP
