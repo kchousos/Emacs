@@ -56,6 +56,7 @@
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCld68syR8Wi-GY_n4CaoJGA][Brodie Robertson]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCJetJ7nDNLlEzDLXv7KIo0w][Gavin Freeborn]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC9KvrhhUgAfO0nZUlhA6foA][Ethannij]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCWm2Zy4ujLaN3Hj_IEVrCiw][Ambro's]]
 **** Emacs :emacs:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC0uTPqBCFIpZxlz_Lv1tk_g][Protesilaos Stavrou]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCAiiOTio8Yu69c3XnR7nQBQ][System Crafters]]

@@ -558,7 +558,8 @@
   :init
   (setenv "WORKON_HOME" (expand-file-name "~/.conda/envs"))
   :config
-  (pyvenv-mode 1))
+  (pyvenv-mode 1)
+  )
 
 ;; (add-hook 'python-mode-hook #'pyvenv-mode)
 ;; (add-hook 'python-mode-hook (lambda () (pyvenv-workon 'ai)))
