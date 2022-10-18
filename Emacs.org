@@ -901,7 +901,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :commands (org-capture org-agenda)
   :config
   (setq org-hide-emphasis-markers nil
-        org-ellipsis "…"
+        org-ellipsis " …"
         org-startup-indented t
         org-pretty-entities nil
         org-support-shift-select t
