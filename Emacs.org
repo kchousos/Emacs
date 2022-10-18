@@ -293,7 +293,7 @@
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
         modus-themes-diffs '(desaturated)
 
-        ;; org-highlight-latex-and-related '(latex)
+        org-highlight-latex-and-related '(latex)
 
         modus-themes-lang-checkers '(text-also)
 
@@ -852,7 +852,7 @@
 
 **** Org-Latex
 #+begin_src emacs-lisp
-(setq org-latex-compiler "xelatex --synctex=1 -interaction=nonstopmode")
+(setq org-latex-compiler "xelatex --synctex=1 -interaction=batchmode")
 
 (setq org-src-preserve-indentation t)
 (setq indent-tabs-mode nil)
@@ -1285,6 +1285,45 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (add-to-list 'org-latex-packages-alist
 	     '("cache=false" "minted" t))
 
+(setq xenops-math-latex-process-alist
+      '(
+       (dvisvgm :programs
+                ("xelatex" "dvisvgm")
+                :description "xdv > svg"
+                :message "you need to install the programs: xelatex and dvisvgm."
+                :image-input-type "xdv"
+                :image-output-type "svg"
+                :image-size-adjust (1.6 . 1.6)
+                :latex-compiler
+                ("xelatex -no-pdf -interaction=nonstopmode -shell-escape -output-directory %o %f")
+                :image-converter
+                ("dvisvgm %f -n -b min -c %S -o %O"))
+        (dvipng :programs
+               ("xelatex" "dvipng")
+               :description "dvi > png"
+               :message "you need to install the programs: latex and dvipng."
+               :image-input-type "dvi"
+               :image-output-type "png"
+               :image-size-adjust
+               (1.0 . 1.0)
+               :latex-compiler
+               ("xelatex -interaction nonstopmode -shell-escape -output-format dvi -output-directory %o %f")
+               :image-converter
+               ("dvipng -D %D -T tight -o %O %f"))
+       (imagemagick :programs
+                    ("latex" "convert")
+                    :description "pdf > png"
+                    :message "you need to install the programs: latex and imagemagick."
+                    :image-input-type "pdf"
+                    :image-output-type "png"
+                    :image-size-adjust
+                    (1.0 . 1.0)
+                    :latex-compiler
+                    ("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")
+                    :image-converter
+                    ("convert -density %D -trim -antialias %f -quality 100 %O"))))
+
+(setq xenops-math-latex-process 'dvisvgm)
 (add-hook 'latex-mode-hook #'xenops-mode)
 (add-hook 'LaTeX-mode-hook #'xenops-mode)
 (add-hook 'org-mode-hook #'xenops-mode)
