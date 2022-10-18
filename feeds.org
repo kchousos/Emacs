@@ -27,6 +27,7 @@
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC9rTsvTxJnx1DNrDA3Rqa6A][Dr. Trefor Bazett]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCGo5uT3qxwsSidWL_j-YDcw][Autodidact]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCKzJFdi57J53Vr_BkTfN3uQ][Primer]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCd0dc7kQA1FUpJ76o1EjLqQ][Leios Labs]]
 *** Entertainment :entertainment:
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCnJnnEztMhpBEZaVORLriFg][Alexandros Kondopidis]]
 **** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCR1D15p_vdP3HkrH8wgjQRw][Internet Historian]]

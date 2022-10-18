@@ -293,7 +293,7 @@
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
         modus-themes-diffs '(desaturated)
 
-        org-highlight-latex-and-related '(latex)
+        ;; org-highlight-latex-and-related '(latex)
 
         modus-themes-lang-checkers '(text-also)
 
@@ -350,10 +350,16 @@
 #+begin_src emacs-lisp
 (use-package undo-tree
   :straight t)
+
 (setq undo-tree-auto-save-history t)
+
 (defadvice undo-tree-make-history-save-file-name
     (after undo-tree activate)
   (setq ad-return-value (concat ad-return-value ".gz")))
+
+(setq undo-tree-visualizer-diff t)
+(setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
+
 (global-undo-tree-mode)
 #+end_src
 
@@ -712,12 +718,8 @@
 (setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
 (setq TeX-view-program-selection '((output-pdf "Evince")))
 (setq font-latex-fontify-script nil)
-;; (add-hook 'TeX-mode-hook (lambda () (org-fragtog-mode t)))
 (add-hook 'LaTeX-mode-hook (lambda () (visual-line-mode t)))
 (add-hook 'TeX-mode-hook (lambda () (visual-line-mode t)))
-;; (add-hook 'TeX-mode-hook (lambda () (truncate-lines nil)))
-
-(global-set-key (kbd "C-c C-x C-l") 'org-latex-preview)
 #+end_src
 
 *** Texlab/LSP-LaTeX
@@ -898,10 +900,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight (org :type built-in)
   :commands (org-capture org-agenda)
   :config
-  ;; (set-face-attribute 'org-headline-done nil :strike-through t)
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.6))
-  (setq org-ellipsis "  "
-        org-hide-emphasis-markers nil
+  (setq org-hide-emphasis-markers nil
+        org-ellipsis "…"
         org-startup-indented t
         org-pretty-entities nil
         org-support-shift-select t
@@ -935,13 +935,13 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-clock-sound "~/.config/emacs/clock.wav")
 #+end_src
 
-*** Org-Fragtog
+*** Org-Fragtog :deprecated:
 #+begin_src emacs-lisp
-(use-package org-fragtog
-  :straight t)
+;; (use-package org-fragtog
+;;   :straight t)
 
-(add-hook 'org-mode-hook #'org-latex-preview)
-(add-hook 'org-mode-hook 'org-fragtog-mode)
+;; (add-hook 'org-mode-hook #'org-latex-preview)
+;; (add-hook 'org-mode-hook 'org-fragtog-mode)
 #+end_src
 
 *** Org-Download
@@ -956,7 +956,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
  'org-babel-load-languages
  '((emacs-lisp . t)
    (C . t)
-   (clojure . t)))
+   ;; (python . t)
+   ))
 ;; Show syntax highlighting per language native mode in *.org
 (setq org-src-fontify-natively t)
 ;; For languages with significant whitespace like Python:
@@ -1274,6 +1275,21 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (beacon-mode)
 #+end_src
 
+*** Xenops
+#+begin_src emacs-lisp
+(use-package xenops
+  :straight t
+  :config
+  (setq xenops-math-image-scale-factor 1.6))
+
+(add-to-list 'org-latex-packages-alist
+	     '("cache=false" "minted" t))
+
+(add-hook 'latex-mode-hook #'xenops-mode)
+(add-hook 'LaTeX-mode-hook #'xenops-mode)
+(add-hook 'org-mode-hook #'xenops-mode)
+#+end_src
+
 ** Fonts & Icons
 *** Mixed-Pitch
 #+begin_src emacs-lisp
@@ -1289,7 +1305,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 *** Ligatures
 #+begin_src emacs-lisp
 (use-package ligature
-  :straight t ;; (:host github :repo "mickeynp/ligature.el")
+  :straight t
   ;; Enable traditional ligature support in eww-mode, if the
   ;; `variable-pitch' face supports it
   :config
