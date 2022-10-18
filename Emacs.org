@@ -708,6 +708,7 @@
 *** Settings
 #+begin_src emacs-lisp
 (straight-use-package 'auctex)
+(setq-default TeX-master nil)
 
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
@@ -1327,6 +1328,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq xenops-math-latex-process 'dvisvgm)
 (add-hook 'latex-mode-hook #'xenops-mode)
 (add-hook 'LaTeX-mode-hook #'xenops-mode)
+(add-hook 'TeX-mode-hook #'xenops-mode)
 (add-hook 'org-mode-hook #'xenops-mode)
 #+end_src
 
