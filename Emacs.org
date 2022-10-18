@@ -956,7 +956,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
  'org-babel-load-languages
  '((emacs-lisp . t)
    (C . t)
-   ;; (python . t)
+   (python . t)
+   (octave . t)
    ))
 ;; Show syntax highlighting per language native mode in *.org
 (setq org-src-fontify-natively t)
