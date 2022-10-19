@@ -14,9 +14,9 @@
 #+LATEX_CLASS: article
 #+LATEX_CLASS_OPTIONS: [a4paper, titlepage]
 
-#+LATEX_HEADER_EXTRA: \usepackage{xltxtra}
-#+LATEX_HEADER_EXTRA: \usepackage{xgreek}
-#+LATEX_HEADER_EXTRA: \setlanguage{greek}
+#+LATEX_HEADER_EXTRA: \usepackage{polyglossia}
+#+LATEX_HEADER_EXTRA: \setmainlanguage{greek}
+#+LATEX_HEADER_EXTRA: \setotherlanguage{english}
 #+LATEX_HEADER_EXTRA: \usepackage{microtype}
 
 #+LATEX_HEADER_EXTRA: \usepackage{newcomputermodern}
