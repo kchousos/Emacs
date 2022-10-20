@@ -1,15 +1,14 @@
-#+PROPERTY: header-args:emacs-lisp :tangle ./init.el
 #+STARTUP: show2levels
 
 * QOL Stuff
 ** Keybinds
 *** Line Numbers
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "M-<f2>") #'(lambda () (interactive) (global-display-line-numbers-mode #'toggle)))
 #+end_src
 
 *** Window Splits
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (defun split-and-follow-horizontally ()
   (interactive)
   (split-window-below)
@@ -26,17 +25,17 @@
 #+end_src
 
 *** Input Method
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'after-init-hook (lambda () (setq default-input-method "greek")))
 #+end_src
 
 *** Kill This Buffer
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "C-x C-k") #'kill-this-buffer)
 #+end_src
 
 ** Sane Defaults
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq inhibit-startup-message t)
 
 (setq frame-resize-wise t)
@@ -62,7 +61,7 @@
 #+end_src
 
 ** Fringes
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 ;; Remove the line-wrap fringe indicators
 (setq-default fringe-indicator-alist (assq-delete-all 'truncation fringe-indicator-alist))
 
@@ -70,27 +69,27 @@
 #+end_src
 
 ** Word Wrap
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (global-word-wrap-whitespace-mode)
 #+end_src
 
 ** Blink Cursor
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (blink-cursor-mode 1)
 #+end_src
 
 ** Highlight current line
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (global-hl-line-mode 0)
 #+end_src
 
 ** Fullscreen by default
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+end_src
 
 ** Scrolling and Scrollbars
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "M-<f3>") 'scroll-bar-mode)
 (scroll-bar-mode 0)
 (window-divider-mode 0)
@@ -111,20 +110,20 @@
 #+end_src
 
 ** Disable Backup Files
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 #+end_src
 
 ** Tab Configuration
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq indent-line-function #'insert-tab)
 #+end_src
 
 ** Parentheses Pairs
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq electric-pair-pairs '(
                             (?\{ . ?\})
                             (?\( . ?\))
@@ -140,19 +139,19 @@
 #+end_src
 
 ** Line Numbers
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (global-display-line-numbers-mode 0)
 (setq display-line-numbers-type 'relative)
 #+end_src
 
 ** Warnings
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq warning-minimum-level :emergency)
 #+end_src
 
 * Fonts
 ** Fonts
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
   (defun set-font-faces ()
         (message "Setting faces!")
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
@@ -169,30 +168,30 @@
 #+end_src
 
 ** Lsp-Ui Fonts
-#+begin_src emacs-lisp
-;; (custom-set-faces
-;;  ;; custom-set-faces was added by Custom.
-;;  ;; If you edit it by hand, you could mess it up, so be careful.
-;;  ;; Your init file should contain only one such instance.
-;;  ;; If there is more than one, they won't work right.
-;;  '(lsp-ui-doc-header ((t (:family "Iosevka"))))
-;;  '(lsp-ui-doc-highlight-hover ((t (:inherit region :family "Iosevka"))))
-;;  '(markdown-code-face ((t (:inherit nil :weight bold :family "Iosevka"))))
-;;  '(markdown-inline-code-face ((t (:inherit (markdown-code-face font-lock-constant-face) :family "Iosevka"))))
-;;  '(preview-face ((t nil)))
-;;  '(preview-reference-face ((t (:foreground "#fbf1c7")))))
-;; (put 'erase-buffer 'disabled nil)
+#+begin_src emacs-lisp :tangle no
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(lsp-ui-doc-header ((t (:family "Iosevka"))))
+ '(lsp-ui-doc-highlight-hover ((t (:inherit region :family "Iosevka"))))
+ '(markdown-code-face ((t (:inherit nil :weight bold :family "Iosevka"))))
+ '(markdown-inline-code-face ((t (:inherit (markdown-code-face font-lock-constant-face) :family "Iosevka"))))
+ '(preview-face ((t nil)))
+ '(preview-reference-face ((t (:foreground "#fbf1c7")))))
+(put 'erase-buffer 'disabled nil)
 #+end_src
 
 ** Spacing
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq line-spacing 0.2)
 #+end_src
 
 * Packages
 ** Package Management
 *** Straight.el
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
        (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
@@ -215,23 +214,26 @@
 
 ** Color Theme
 *** Modus Themes
-#+begin_src emacs-lisp
-;; (set-face-attribute 'mode-line nil :box t)
+**** Overrides
+#+begin_src emacs-lisp :tangle no
+(set-face-attribute 'mode-line nil :box t)
 
-;; (setq modus-themes-vivendi-color-overrides
-;;       '((bg-main . "#1d1f21")
-;;         ;; (bg-dim . "#faf6ef")
-;;         ;; (bg-alt . "#f7efe5")
-;;         ;; (bg-active . "#e8dfd1")
-;;         (bg-inactive . "#373b41")))
+(setq modus-themes-vivendi-color-overrides
+      '((bg-main . "#1d1f21")
+        ;; (bg-dim . "#faf6ef")
+        ;; (bg-alt . "#f7efe5")
+        ;; (bg-active . "#e8dfd1")
+        (bg-inactive . "#373b41")))
 
-;; (setq modus-themes-operandi-color-overrides
-;;       '((bg-main . "#fefcf4")
-;;         (bg-dim . "#faf6ef")
-;;         (bg-alt . "#f7efe5")
-;;         (bg-active . "#e8dfd1")
-;;         (bg-inactive . "#e8dfd1")))
+(setq modus-themes-operandi-color-overrides
+      '((bg-main . "#fefcf4")
+        (bg-dim . "#faf6ef")
+        (bg-alt . "#f7efe5")
+        (bg-active . "#e8dfd1")
+        (bg-inactive . "#e8dfd1")))
+#+end_src
 
+#+begin_src emacs-lisp :tangle ./init.el
 (setq modus-themes-headings
       '((1 . (1.2))
         (2 . (1.15))
@@ -241,8 +243,10 @@
 
 ;; (setq modus-themes-operandi-color-overrides '(nil))
 
+(load-theme 'modus-operandi)
+
 (use-package modus-themes
-  :straight t
+  :straight nil
   :init
   ;; Add all your customizations prior to loading the themes
   (setq modus-themes-italic-constructs nil
@@ -313,7 +317,7 @@
 ** Essentials
 *** Window Navigation
 **** Ace-Window
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "M-o") 'ace-window)
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
 (setq aw-dispatch-always nil)
@@ -338,7 +342,7 @@
 #+end_src
 
 **** Resize-Window
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq resizewindow-allow-backgrounds nil)
 (global-set-key (kbd "C-c C-;") 'resize-window)
 (use-package resize-window
@@ -347,7 +351,7 @@
 
 *** File History
 **** Undo-Tree
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package undo-tree
   :straight t)
 
@@ -366,7 +370,7 @@
 *** Autocompletion
 **** Yasnippet
 ***** Yasnippet
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package yasnippet
     :straight t
     :config
@@ -378,14 +382,14 @@
 #+end_src
 
 ***** Yasnippet-Snippets
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package yasnippet-snippets
     :straight t)
 #+end_src
 
 **** Company
 ***** Company
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package company
   :straight t
   :custom
@@ -396,14 +400,14 @@
 #+end_src
 
 ***** Company-Posframe
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package company-posframe
   :straight t)
 (company-posframe-mode 1)
 #+end_src
 
 ***** Company-Quickhelp
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package company-quickhelp
   :straight t)
 
@@ -411,17 +415,17 @@
 #+end_src
 
 ***** Company-Lsp
-#+begin_src emacs-lisp
-;; (use-package company-lsp
-;;   :straight t)
-;; (push 'company-lsp company-backends)
-;; (setq company-lsp-enable-snippet t)
+#+begin_src emacs-lisp :tangle no
+(use-package company-lsp
+  :straight t)
+(push 'company-lsp company-backends)
+(setq company-lsp-enable-snippet t)
 #+end_src
 
 *** Minibuffer
 **** Vertico
 ***** Vertico
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package vertico
   :straight t
   :custom
@@ -431,7 +435,7 @@
 #+end_src
 
 ***** Savehist
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package savehist
     :straight t
   :init
@@ -439,7 +443,7 @@
 #+end_src
 
 ***** Vertico-Posframe
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package vertico-posframe
     :straight t
   :init
@@ -447,7 +451,7 @@
 #+end_src
 
 **** Marginalia
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package marginalia
   :after vertico
   :straight t
@@ -458,7 +462,7 @@
 #+end_src
 
 **** Orderless
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package orderless
   :straight t
   :custom
@@ -467,13 +471,13 @@
 #+end_src
 
 *** Vterm
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package vterm
   :straight t)
 #+end_src
 
 *** OpenWith
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package openwith
   :straight (:host github :repo "thisirs/openwith")
   :config
@@ -490,7 +494,7 @@
 
 ** Keybinds
 *** Shift-number
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package shift-number
   :straight t)
 
@@ -499,7 +503,7 @@
 #+end_src
 
 *** Which-Key
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package which-key
   :straight t
   :init (which-key-mode)
@@ -509,7 +513,7 @@
 #+end_src
 
 *** Move-Text
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package move-text
   :straight t)
 (global-set-key (kbd "M-S-<up>") 'move-text-up)
@@ -519,7 +523,7 @@
 ** Programming
 *** Languages
 **** C/C++
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'c-mode-hook 'lsp)
 (add-hook 'c++-mode-hook 'lsp)
 
@@ -527,38 +531,38 @@
 #+end_src
 
 **** MIPS Assembly
-#+begin_src emacs-lisp
-;; (use-package mips-mode
-;;  :straight t
-;;  :mode "\\.s$")
+#+begin_src emacs-lisp :tangle no
+(use-package mips-mode
+ :straight t
+ :mode "\\.s$")
 #+end_src
 
 **** Yaml
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (use-package yaml-mode
     :straight t)
 #+end_src
 
 **** Fish Shell
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package fish-mode
     :straight t)
 #+end_src
 
 **** Octave
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq auto-mode-alist
       (cons '("\\.m$" . octave-mode) auto-mode-alist))
 #+end_src
 
 **** Python
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'python-mode #'lsp)
 #+end_src
 
 ***** Pyvenv
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package pyvenv
   :straight t
   :init
@@ -575,26 +579,34 @@
 #+end_src
 
 ***** Conda.el
-#+begin_src emacs-lisp
-;; (use-package conda
-;;   :straight t
-;;   :init
-;;   ;; (setq conda-anaconda-home "/home/kchou/.conda")
-;;   ;; (setq conda-env-home-directory "/home/kchou/.conda")
-;;   ;; ;; if you want eshell support, include:
-;;   (conda-env-initialize-eshell)
-;;   ;; if you want auto-activation (see below for details), include:
-;;   (conda-env-autoactivate-mode t))
+#+begin_src emacs-lisp :tangle no
+(use-package conda
+  :straight t
+  :init
+  ;; (setq conda-anaconda-home "/home/kchou/.conda")
+  ;; (setq conda-env-home-directory "/home/kchou/.conda")
+  ;; ;; if you want eshell support, include:
+  (conda-env-initialize-eshell)
+  ;; if you want auto-activation (see below for details), include:
+  (conda-env-autoactivate-mode t))
 #+end_src
 
 ***** LSP
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 ;; Disables its default "lsp linter", allowing pylint to work
 (setq lsp-diagnostic-package :none)
 #+end_src
 
+**** Sagemath
+
+***** Sage-shell-mode
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package sage-shell-mode
+  :straight t)
+#+end_src
+
 *** General
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1)))
 (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
 (add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
@@ -607,7 +619,7 @@
 
 *** LSP
 **** Lsp-Mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-mode
   :straight t
   :commands (lsp lsp-deferred)
@@ -618,18 +630,18 @@
 #+end_src
 
 **** Lsp-Ui
-#+begin_src emacs-lisp
-;; (use-package lsp-ui
-;;   :straight t)
-;; (setq lsp-ui-sideline-enable nil)
-;; (setq lsp-ui-doc-enable t)
-;; (setq lsp-ui-doc-position 'at-point)
-;; (setq lsp-ui-doc-show-with-cursor t)
-;; (setq lsp-ui-doc-show-with-mouse t)
+#+begin_src emacs-lisp :tangle no
+(use-package lsp-ui
+  :straight t)
+(setq lsp-ui-sideline-enable nil)
+(setq lsp-ui-doc-enable t)
+(setq lsp-ui-doc-position 'at-point)
+(setq lsp-ui-doc-show-with-cursor t)
+(setq lsp-ui-doc-show-with-mouse t)
 #+end_src
 
 **** Lsp-Treemacs
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-treemacs
     :straight t)
 
@@ -637,21 +649,21 @@
 #+end_src
 
 *** Flycheck
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package flycheck
   :straight t
   :init (global-flycheck-mode))
 #+end_src
 
 *** Comment-Tags
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package comment-tags
   :straight t
   :hook ((prog-mode . comment-tags-mode)))
 #+end_src
 
 *** Indent-Guide
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package indent-guide
     :straight t)
 (setq indent-guide-char "│")
@@ -659,7 +671,7 @@
 #+end_src
 
 *** Treemacs
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package treemacs
   :straight t
   :init
@@ -698,7 +710,7 @@
 #+end_src
 
 **** Treemacs-Icons-Dired
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once)
   :straight t)
@@ -706,7 +718,7 @@
 
 ** LaTeX
 *** Settings
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (straight-use-package 'auctex)
 (setq-default TeX-master nil)
 
@@ -724,7 +736,7 @@
 #+end_src
 
 *** Texlab/LSP-LaTeX
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-latex
     :straight t)
 
@@ -736,7 +748,7 @@
 
 ** Writing
 *** Flyspell
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle no
 (setq ispell-program-name "/usr/bin/aspell")
 
 (defun flyspell-greek ()
@@ -753,7 +765,7 @@
 #+end_src
 
 *** Olivetti
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq-default olivetti-body-width 130)
 (setq-default olivetti-margin-width 0)
 (use-package olivetti
@@ -770,20 +782,20 @@
 
 ** Git
 *** Magit
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package magit
     :straight t
   :commands magit-status)
 #+end_src
 
 ** Dired
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (put 'dired-find-alternate-file 'disabled nil)
 (add-hook 'dired-mode-hook (lambda () (hl-line-mode 1)))
 #+end_src
 
 *** Dired-Hide-Dotfiles
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package dired-hide-dotfiles
   :straight t)
 
@@ -798,7 +810,7 @@
 #+end_src
 
 *** Dired-copy-paste
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package dired-copy-paste
   :straight (dired-copy-paste :type git :host github :repo "jsilve24/dired-copy-paste"))
 
@@ -809,7 +821,7 @@
 
 ** Org
 *** Org-Agenda
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq org-agenda-block-separator ""
       org-agenda-start-with-log-mode nil
       org-agenda-include-deadlines t
@@ -823,14 +835,16 @@
 
 (global-set-key (kbd "C-c a") 'org-agenda)
 #+end_src
+
 *** Org-Export
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq org-export-backends '(texinfo md man beamer latex html ascii))
 
 (setq org-publish-timestamp-directory '"~/.config/emacs/org-timestamps")
 #+end_src
+
 **** HTML Export
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (load "/home/kchou/.config/emacs/Org-Export/elisp/file-to-string.el")
 (load "/home/kchou/.config/emacs/Org-Export/elisp/org-html-src-block.el")
 (advice-add 'org-html-src-block :filter-return #'my/org-html-src-block)
@@ -846,13 +860,13 @@
 #+end_src
 
 **** Org-Reveal
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package ox-reveal
   :straight t)
 #+end_src
 
 **** Org-Latex
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq org-latex-compiler "xelatex --synctex=1 -interaction=batchmode")
 
 (setq org-src-preserve-indentation t)
@@ -864,17 +878,18 @@
          (delete '("\\.pdf\\'" . default) org-file-apps)
          (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
-;; ;; For syntax highlighting in exported code blocks
-;; ;; !!Needs python-pygments installed!!
-(setq org-latex-listings 'minted
-      org-latex-packages-alist '(("" "minted"))
+;; For syntax highlighting in exported code blocks
+;; !!Needs python-pygments installed!!
+(setq org-latex-listings 'verbatim
       org-latex-pdf-process
       '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
         "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
 #+end_src
+
 *** Youtube
 Opens youtube links with mpv, and embeds them in the html exports instead of just having the link to it.
-#+begin_src emacs-lisp
+
+#+begin_src emacs-lisp :tangle ./init.el
 (defun spook-org--follow-yt-link (path prefix)
   (let* ((url (format "https:%s" path))
          (display-buffer-alist `((,shell-command-buffer-name-async . (display-buffer-no-window)))))
@@ -896,13 +911,13 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package org
   :straight (org :type built-in)
   :commands (org-capture org-agenda)
   :config
   (setq org-hide-emphasis-markers nil
-        org-ellipsis " …"
+        org-ellipsis "…"
         org-startup-indented t
         org-pretty-entities nil
         org-support-shift-select t
@@ -932,30 +947,30 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org-Timer
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq org-clock-sound "~/.config/emacs/clock.wav")
 #+end_src
 
-*** Org-Fragtog :deprecated:
-#+begin_src emacs-lisp
-;; (use-package org-fragtog
-;;   :straight t)
+*** Org-Fragtog
+#+begin_src emacs-lisp :tangle no
+(use-package org-fragtog
+  :straight t)
 
-;; (add-hook 'org-mode-hook #'org-latex-preview)
-;; (add-hook 'org-mode-hook 'org-fragtog-mode)
+(add-hook 'org-mode-hook #'org-latex-preview)
+(add-hook 'org-mode-hook 'org-fragtog-mode)
 #+end_src
 
 *** Org-Download
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package org-download
   :straight t)
 #+end_src
 
 *** Org-Babel
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((emacs-lisp . t)
+ '((emacs-lisp :tangle ./init.el . t)
    (C . t)
    (python . t)
    (octave . t)
@@ -968,9 +983,47 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-confirm-babel-evaluate nil)
 #+end_src
 
+**** Ob-Sagemath
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package ob-sagemath
+  :straight t)
+
+;; Ob-sagemath supports only evaluating with a session.
+(setq org-babel-default-header-args:sage '((:session . t)
+                                           ;; (:results . "output")
+                                           ))
+
+;; ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
+;; (with-eval-after-load "org"
+;;   (define-key org-mode-map (kbd "C-c c") 'ob-sagemath-execute-async))
+
+;; ;; Do not confirm before evaluation
+;; (setq org-confirm-babel-evaluate nil)
+
+;; ;; Do not evaluate code blocks when exporting.
+;; (setq org-export-babel-evaluate nil)
+
+;; ;; Show images when opening a file.
+;; (setq org-startup-with-inline-images t)
+
+;; ;; Show images after evaluating code blocks.
+;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+#+end_src
+
+*** Org-Transclusion
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-transclusion
+  :straight t
+  :config
+  (add-to-list 'org-transclusion-extensions 'org-transclusion-indent-mode))
+
+(define-key global-map (kbd "C-c t a") #'org-transclusion-add)
+(define-key global-map (kbd "C-c t t") #'org-transclusion-mode)
+#+end_src
+
 *** Org-Roam
 **** Org-Roam
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam
   :straight t
 
@@ -1039,7 +1092,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 ***** Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
-#+begin_src emacs-lisp
+
+#+begin_src emacs-lisp :tangle ./init.el
 (defun my/preview-fetcher ()
   (let* ((elem (org-element-context))
          (parent (org-element-property :parent elem)))
@@ -1052,7 +1106,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 ***** Get 'org-roam-preview-visit' and friends to replace the main window. This should be applicable only when 'org-roam-mode' buffer is displayed in a side-window.
-#+begin_src emacs-lisp
+
+#+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'org-roam-mode-hook
           (lambda ()
             (setq-local display-buffer--same-window-action
@@ -1061,7 +1116,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 ***** Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
-#+begin_src emacs-lisp
+
+#+begin_src emacs-lisp :tangle ./init.el
 (add-to-list 'display-buffer-alist
              '("\\*org-roam\\*"
                (display-buffer-in-side-window)
@@ -1075,12 +1131,14 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 ***** Maximizes org-capture buffer
-#+begin_src emacs-lisp
+
+#+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 #+end_src
 
 ***** Automatically open the *org-roam* buffer when visiting an org-roam file
-#+begin_src emacs-lisp
+
+#+begin_src emacs-lisp :tangle ./init.el
 (defun tim/org-roam-buffer-show (_)
   (if (and
        ;; Don't do anything if we're in the minibuffer or in the calendar
@@ -1094,7 +1152,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 ***** Bindings
 ****** node-insert-immediate
-#+begin_src emacs-lisp
+
+#+begin_src emacs-lisp :tangle ./init.el
 ;; Bind this to C-c n I
 (defun org-roam-node-insert-immediate (arg &rest args)
   (interactive "P")
@@ -1105,24 +1164,13 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Org-Roam-Ui
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam-ui
     :straight t)
 #+end_src
 
-**** Org-Transclusion
-#+begin_src emacs-lisp
-(use-package org-transclusion
-  :straight t
-  :config
-  (add-to-list 'org-transclusion-extensions 'org-transclusion-indent-mode))
-
-(define-key global-map (kbd "C-c t a") #'org-transclusion-add)
-(define-key global-map (kbd "C-c t t") #'org-transclusion-mode)
-#+end_src
-
 **** Deft
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package deft
   :after org
   :straight t
@@ -1156,7 +1204,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 ** Ricing
 *** Org
 **** Org-Modern
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
   (use-package org-modern
     :straight t
     :config
@@ -1170,7 +1218,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Org-Modern-Indent
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
   (use-package org-modern-indent
     :straight (:host github :repo "jdtsmith/org-modern-indent")
     :hook
@@ -1179,14 +1227,14 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Org-Pretty-Table-Mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package org-pretty-table
   :straight (:host github :repo "Fuco1/org-pretty-table")
   :hook (org-mode . org-pretty-table-mode))
 #+end_src
 
 **** Org-Fancy-Priorities
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package org-fancy-priorities
   :straight t
   :hook (org-mode . org-fancy-priorities-mode))
@@ -1202,7 +1250,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Dashboard
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package dashboard
   :straight t
   :config
@@ -1234,13 +1282,13 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Rainbow-Mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package rainbow-mode
   :straight t)
 #+end_src
 
 *** Rainbow-Delimeters
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package rainbow-delimiters
   :straight t
   :hook (prog-mode . rainbow-delimiters-mode))
@@ -1248,7 +1296,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 *** Modeline
 **** Minions
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package minions
   :straight t
   :config (minions-mode 1))
@@ -1257,20 +1305,20 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Moody
-#+begin_src emacs-lisp
-;; (use-package moody
-;;  :straight t
-;;   :config
-;;   (setq x-underline-at-descent-line t)
-;;   (moody-replace-mode-line-buffer-identification)
-;;   (moody-replace-vc-mode)
-;;   (moody-replace-eldoc-minibuffer-message-function))
+#+begin_src emacs-lisp :tangle no
+(use-package moody
+ :straight t
+  :config
+  (setq x-underline-at-descent-line t)
+  (moody-replace-mode-line-buffer-identification)
+  (moody-replace-vc-mode)
+  (moody-replace-eldoc-minibuffer-message-function))
 
-;; (setq moody-mode-line-height 40)
+(setq moody-mode-line-height 40)
 #+end_src
 
 *** Beacon-Mode
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package beacon
     :straight t)
 
@@ -1278,7 +1326,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Xenops
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package xenops
   :straight t
   :config
@@ -1335,7 +1383,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 ** Fonts & Icons
 *** Mixed-Pitch
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package mixed-pitch
   :straight t
   :hook
@@ -1346,7 +1394,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Ligatures
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package ligature
   :straight t
   ;; Enable traditional ligature support in eww-mode, if the
@@ -1362,24 +1410,24 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Emojify
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package emojify
     :straight t)
 
 (setq emojify-display-style 'unicode)
 
-(global-emojify-mode)
+;(global-emojify-mode)
 #+end_src
 
 *** All-the-Icons
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package all-the-icons
   :straight t)
 #+end_src
 
 ** Elfeed
 *** Elfeed-Org
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package elfeed-org
   :straight t)
 
@@ -1388,7 +1436,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Elfeed
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package elfeed
   :straight t)
 
@@ -1404,7 +1452,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 * Buffer Shenanigans
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq-default message-log-max nil)
 (kill-buffer "*Messages*")
 
@@ -1418,7 +1466,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 * Local Variables
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 (setq enable-local-eval t)
 #+end_src
 ;; Local Variables:
