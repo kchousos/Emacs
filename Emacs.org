@@ -58,6 +58,8 @@
 (delete-selection-mode 1)
 
 (setq column-number-mode t)
+
+(setq frame-inhibit-implied-resize t)
 #+end_src
 
 ** Fringes
@@ -105,6 +107,8 @@
 (setq mouse-wheel-follow-mouse 't) ;; scroll window under mouse
 
 (setq scroll-step 1) ;; keyboard scroll one line at a time
+
+(setq pixel-scroll-precision-mode t)
 
 ;; (setq scroll-conservatively 100)
 #+end_src
@@ -216,23 +220,35 @@
 *** Modus Themes
 **** Overrides
 #+begin_src emacs-lisp :tangle no
-(set-face-attribute 'mode-line nil :box t)
+;; (set-face-attribute 'mode-line nil :box t)
 
 (setq modus-themes-vivendi-color-overrides
-      '((bg-main . "#1d1f21")
-        ;; (bg-dim . "#faf6ef")
-        ;; (bg-alt . "#f7efe5")
-        ;; (bg-active . "#e8dfd1")
-        (bg-inactive . "#373b41")))
+      '(
+        ;; (bg-main . "#1d1f21")
+        ;; ;; (bg-dim . "#faf6ef")
+        ;; ;; (bg-alt . "#f7efe5")
+        ;; ;; (bg-active . "#e8dfd1")
+        ;; (bg-inactive . "#373b41")
+        ))
 
 (setq modus-themes-operandi-color-overrides
-      '((bg-main . "#fefcf4")
-        (bg-dim . "#faf6ef")
-        (bg-alt . "#f7efe5")
-        (bg-active . "#e8dfd1")
-        (bg-inactive . "#e8dfd1")))
+      '(
+        ;; (bg-main . "#fefcf4")
+        ;; ;; (bg-dim . "#faf6ef")
+        ;; ;; (bg-alt . "#f7efe5")
+        ;; ;; (bg-active . "#e8dfd1")
+        ;; (bg-inactive . "#e8dfd1")
+        ))
 #+end_src
 
+#+begin_src emacs-lisp :tangle ./init.el
+(defun my-modus-themes-custom-faces ()
+  (set-face-attribute 'modus-themes-markup-macro nil :background (modus-themes-color 'bg-main)))
+
+(add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
+#+end_src
+
+**** Modus Themes
 #+begin_src emacs-lisp :tangle ./init.el
 (setq modus-themes-headings
       '((1 . (1.2))
@@ -240,8 +256,6 @@
         (3 . (1.1))
         (4 . (1.05))
         (t . (1.0))))
-
-;; (setq modus-themes-operandi-color-overrides '(nil))
 
 (load-theme 'modus-operandi)
 
@@ -314,7 +328,7 @@
     )
 #+end_src
 
-** Essentials
+** Misc
 *** Window Navigation
 **** Ace-Window
 #+begin_src emacs-lisp :tangle ./init.el
@@ -490,6 +504,12 @@
                                 ;; ("\\.jpeg\\'" "setsid -w xdg-open" (file))
                                 ))
   (openwith-mode t))
+#+end_src
+
+*** Emacs-Everywhere
+#+begin_src emacs-lisp :tangle no
+(use-package emacs-everywhere
+  :straight t)
 #+end_src
 
 ** Keybinds
@@ -746,6 +766,15 @@
  )
 #+end_src
 
+*** CDLaTeX
+#+begin_src emacs-lisp :tangle ./init.ele
+(use-package cdlatex
+  :straight t)
+
+(add-hook 'LaTeX-mode-hook (lambda () (cdlatex-mode t)))
+(add-hook 'TeX-mode-hook (lambda () (cdlatex-mode t)))
+#+end_src
+
 ** Writing
 *** Flyspell
 #+begin_src emacs-lisp :tangle no
@@ -856,7 +885,7 @@
 (setq org-html-metadata-timestamp-format "%A, %d %b %Y")
 ;; (setq org-html-head (file-to-string "/home/kchou/.config/emacs/Org-Export/html/head.html"))
 (setq org-html-preamble nil)
-(setq org-html-postamble (file-to-string "/home/kchou/.config/emacs/Org-Export/html/postamble.html"))
+(setq org-html-postamble (file-to-string "/home/kchou/.config/emacs/Org-Export/html/postamble2.html"))
 #+end_src
 
 **** Org-Reveal
@@ -990,7 +1019,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 ;; Ob-sagemath supports only evaluating with a session.
 (setq org-babel-default-header-args:sage '((:session . t)
-                                           ;; (:results . "output")
+                                           (:results . "drawer")
                                            ))
 
 ;; ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
@@ -1449,6 +1478,54 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (start-process "mpv" "*mpv*" "mpv" url))
 
 (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
+#+end_src
+
+** Anki
+
+*** Anki-Editor
+#+begin_src emacs-lisp :tangle ./init.el
+(setq-default anki-editor-use-math-jax t)
+
+(use-package anki-editor
+  :straight t
+  :bind (:map org-mode-map
+              ("<f12>" . anki-editor-cloze-region-auto-incr)
+              ("<f11>" . anki-editor-cloze-region-dont-incr)
+              ("<f10>" . anki-editor-reset-cloze-number)
+              ("<f9>"  . anki-editor-push-tree))
+  :hook (org-capture-after-finalize . anki-editor-reset-cloze-number) ; Reset cloze-number after each capture.
+  :config
+  (setq anki-editor-create-decks nil ;; Allow anki-editor to create a new deck if it doesn't exist
+        anki-editor-org-tags-as-anki-tags t
+        )
+
+  (defun anki-editor-cloze-region-auto-incr (&optional arg)
+    "Cloze region without hint and increase card number."
+    (interactive)
+    (anki-editor-cloze-region my-anki-editor-cloze-number "")
+    (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
+    (forward-sexp))
+  
+  (defun anki-editor-cloze-region-dont-incr (&optional arg)
+    "Cloze region without hint using the previous card number."
+    (interactive)
+    (anki-editor-cloze-region (1- my-anki-editor-cloze-number) "")
+    (forward-sexp))
+  
+  (defun anki-editor-reset-cloze-number (&optional arg)
+    "Reset cloze number to ARG or 1"
+    (interactive)
+    (setq my-anki-editor-cloze-number (or arg 1)))
+  
+  (defun anki-editor-push-tree ()
+    "Push all notes under a tree."
+    (interactive)
+    (anki-editor-push-notes '(4))
+    (anki-editor-reset-cloze-number))
+
+  ;; Initialize
+  (anki-editor-reset-cloze-number)
+)
 #+end_src
 
 * Buffer Shenanigans
