@@ -574,6 +574,8 @@
 #+begin_src emacs-lisp :tangle ./init.el
 (setq auto-mode-alist
       (cons '("\\.m$" . octave-mode) auto-mode-alist))
+
+(setq-default inferior-octave-startup-args '("-i" "-q" "--line-editing"))
 #+end_src
 
 **** Python
