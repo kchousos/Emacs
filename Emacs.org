@@ -559,7 +559,7 @@
 #+end_src
 
 **** Yaml
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package yaml-mode
     :straight t)
 #+end_src
