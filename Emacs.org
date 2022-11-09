@@ -329,6 +329,50 @@
     )
 #+end_src
 
+** Fonts & Icons
+*** Mixed-Pitch
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package mixed-pitch
+  :straight t
+  :hook
+  ;; If you want it in all text modes:
+  (text-mode . mixed-pitch-mode))
+
+(setq mixed-pitch-variable-pitch-cursor 'box)
+#+end_src
+
+*** Ligatures
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package ligature
+  :straight t
+  ;; Enable traditional ligature support in eww-mode, if the
+  ;; `variable-pitch' face supports it
+  :config
+  ;; Enable all programming ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
+                                       "<<" "??" ";;" "->" "<-" "-->" "<--"
+                                       ))
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
+#+end_src
+
+*** Emojify
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package emojify
+    :straight t)
+
+(setq emojify-display-style 'unicode)
+
+;(global-emojify-mode)
+#+end_src
+
+*** All-the-Icons
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package all-the-icons
+  :straight t)
+#+end_src
+
 ** Misc
 *** Window Navigation
 **** Ace-Window
@@ -578,6 +622,12 @@
 (setq-default inferior-octave-startup-args '("-i" "-q" "--line-editing"))
 #+end_src
 
+**** Prolog
+#+begin_src emacs-lisp :tangle ./init.el
+(setq auto-mode-alist
+      (cons '("\\.pl$" . prolog-mode) auto-mode-alist))
+#+end_src
+
 **** Python
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -812,6 +862,23 @@
   (latex-mode . olivetti-mode))
 #+end_src
 
+*** Citar
+#+begin_src emacs-lisp :tangle ./init.el
+  (use-package citar
+    :straight t
+    :bind (("C-c b" . citar-insert-citation)
+           :map minibuffer-local-map
+           ("M-b" . citar-insert-preset))
+    :custom
+    (citar-bibliography '("~/Textfiles/biblio.bib")))
+
+  (setq citar-symbols
+        `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
+          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
+          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
+  (setq citar-symbol-separator "  ")
+#+end_src
+
 ** Git
 *** Magit
 #+begin_src emacs-lisp :tangle ./init.el
@@ -916,6 +983,20 @@
       org-latex-pdf-process
       '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
         "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
+
+(setq org-export-with-smart-quotes t)
+
+(setq org-latex-hyperref-template "\\hypersetup{
+pdfauthor={%a},
+pdftitle={%t},
+pdfkeywords={%k},
+pdfsubject={%d},
+pdfcreator={%c}, 
+pdflang={%L},
+colorlinks,    
+linkcolor=blue,
+citecolor=red,
+urlcolor=blue}")
 #+end_src
 
 *** Youtube
@@ -976,6 +1057,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 (with-eval-after-load 'org
   (add-to-list 'org-modules 'org-habit t))
+
+(setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
 #+end_src
 
 *** Org-Timer
@@ -1006,6 +1089,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
    (C . t)
    (python . t)
    (octave . t)
+   (R . t)
    ))
 ;; Show syntax highlighting per language native mode in *.org
 (setq org-src-fontify-natively t)
@@ -1022,7 +1106,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 ;; Ob-sagemath supports only evaluating with a session.
 (setq org-babel-default-header-args:sage '((:session . t)
-                                           (:results . "drawer")
+                                           ;; (:results . "drawer")
                                            ))
 
 ;; ;; C-c c for asynchronous evaluating (only for SageMath code blocks).
@@ -1034,9 +1118,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 ;; ;; Do not evaluate code blocks when exporting.
 ;; (setq org-export-babel-evaluate nil)
-
-;; ;; Show images when opening a file.
-;; (setq org-startup-with-inline-images t)
 
 ;; ;; Show images after evaluating code blocks.
 ;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
@@ -1413,50 +1494,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (add-hook 'org-mode-hook #'xenops-mode)
 #+end_src
 
-** Fonts & Icons
-*** Mixed-Pitch
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package mixed-pitch
-  :straight t
-  :hook
-  ;; If you want it in all text modes:
-  (text-mode . mixed-pitch-mode))
-
-(setq mixed-pitch-variable-pitch-cursor 'box)
-#+end_src
-
-*** Ligatures
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package ligature
-  :straight t
-  ;; Enable traditional ligature support in eww-mode, if the
-  ;; `variable-pitch' face supports it
-  :config
-  ;; Enable all programming ligatures in programming modes
-  (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
-                                       "<<" "??" ";;" "->" "<-" "-->" "<--"
-                                       ))
-  ;; Enables ligature checks globally in all buffers. You can also do it
-  ;; per mode with `ligature-mode'.
-  (global-ligature-mode t))
-#+end_src
-
-*** Emojify
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package emojify
-    :straight t)
-
-(setq emojify-display-style 'unicode)
-
-;(global-emojify-mode)
-#+end_src
-
-*** All-the-Icons
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package all-the-icons
-  :straight t)
-#+end_src
-
 ** Elfeed
 *** Elfeed-Org
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1529,6 +1566,12 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   ;; Initialize
   (anki-editor-reset-cloze-number)
 )
+#+end_src
+
+*** Org-Anki
+#+begin_src emacs-lisp :tangle no
+(use-package org-anki
+  :straight t)
 #+end_src
 
 * Buffer Shenanigans
