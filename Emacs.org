@@ -996,8 +996,7 @@ pdflang={%L},
 colorlinks,    
 linkcolor=blue,
 citecolor=red,
-urlcolor=blue,
-pdfpagemode=FullScreen}")
+urlcolor=blue}")
 #+end_src
 
 *** Youtube
