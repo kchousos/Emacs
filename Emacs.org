@@ -609,6 +609,15 @@
                  (window-parameters (mode-line-format . none)))))
 #+end_src
 
+**** Citar-Embark
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package citar-embark
+  :straight t
+  :after citar embark
+  :no-require
+  :config (citar-embark-mode))
+#+end_src
+
 ** Programming
 *** Languages
 **** C/C++
@@ -903,6 +912,15 @@
   (setq citar-symbol-separator "  ")
 #+end_src
 
+**** Citar-Org-Roam
+#+begin_src emacs-lisp :tangle no
+(use-package citar-org-roam
+  :straight t
+  :after citar org-roam
+  :no-require
+  :config (citar-org-roam-mode))
+#+end_src
+
 ** Git
 *** Magit
 #+begin_src emacs-lisp :tangle ./init.el
@@ -964,6 +982,13 @@
 (setq org-export-backends '(texinfo md man beamer latex html ascii))
 
 (setq org-publish-timestamp-directory '"~/.config/emacs/org-timestamps")
+
+(setq-default org-cite-csl-styles-dir​ (expand-file-name "~/HDD/Έγγραφα/Zotero/styles"))
+
+(setq org-cite-export-processors
+       '((latex . (biblatex))
+         (t . (csl "nature.csl"))
+         ))
 #+end_src
 
 **** HTML Export
@@ -1003,7 +1028,7 @@
 
 ;; For syntax highlighting in exported code blocks
 ;; !!Needs python-pygments installed!!
-(setq org-latex-listings 'verbatim
+(setq org-latex-listings 'minted
       org-latex-pdf-process
       '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
         "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
@@ -1083,6 +1108,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (add-to-list 'org-modules 'org-habit t))
 
 (setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
+
+(setq org-image-actual-width 800)
 #+end_src
 
 *** Org-Timer
@@ -1174,7 +1201,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
-      :if-new (file+head "reference/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
       :unnarrowed t)))
 
   (org-roam-capture-templates
@@ -1185,7 +1212,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
      ("u" "uni class" plain
       (file "~/Textfiles/Braindump/templates/UniversityClassTemplate.org")
-      :if-new (file+head "reference/uni/${slug}.org" "#+title: ${title}\n#+filetags: :Academics:DiT:\n#+date: %U\n\n")
+      :if-new (file+head "references/uni/${slug}.org" "#+title: ${title}\n#+filetags: :Academics:DiT:\n#+date: %U\n\n")
       :unnarrowed t)
 
      ;; ("b" "book notes" plain
