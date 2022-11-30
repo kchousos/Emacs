@@ -154,6 +154,15 @@
 (setq warning-minimum-level :emergency)
 #+end_src
 
+** Recent files
+#+begin_src emacs-lisp :tangle ./init.el
+(recentf-mode 1)
+(setq recentf-max-menu-items 25)
+(setq recentf-max-saved-items 25)
+(global-set-key "\C-x\ \C-r" 'recentf-open-files)
+(run-at-time nil (* 5 60) 'recentf-save-list)
+#+end_src
+
 * Fonts
 ** Fonts
 #+begin_src emacs-lisp :tangle ./init.el
@@ -661,6 +670,25 @@
       (cons '("\\.pl$" . prolog-mode) auto-mode-alist))
 #+end_src
 
+**** Haskell
+
+***** haskell-mode
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package haskell-mode
+  :straight t)
+
+(setq auto-mode-alist
+      (cons '("\\.hs$" . haskell-mode) auto-mode-alist))
+#+end_src
+
+***** lsp-askell
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package lsp-haskell
+  :straight t)
+
+(add-hook 'haskell-mode-hook 'lsp)
+#+end_src
+
 **** Python
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -713,14 +741,14 @@
 
 *** General
 #+begin_src emacs-lisp :tangle ./init.el
-(add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1)))
-(add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
-(add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
-(add-hook 'prog-mode-hook (lambda () (setq truncate-lines t)))
-(add-hook 'prog-mode-hook #'indent-guide-mode)
+  (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1)))
+  (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+  (add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
+  (add-hook 'prog-mode-hook (lambda () (setq truncate-lines t)))
+  (add-hook 'prog-mode-hook #'indent-guide-mode)
 
-(setq gc-cons-threshold 100000000)
-(setq read-process-output-max (* 1024 1024)) ;; 1mb
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
 
 *** LSP
@@ -729,9 +757,8 @@
 (use-package lsp-mode
   :straight t
   :commands (lsp lsp-deferred)
-  :init
-    (setq lsp-keymap-prefix "C-c l")  ;; Or 'C-l', 's-l'
   :config
+  (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
   (lsp-enable-which-key-integration t))
 #+end_src
 
@@ -1433,11 +1460,11 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (setq dashboard-set-file-icons t)
   (setq dashboard-set-init-info nil)
   (setq dashboard-set-footer nil)
-  (setq dashboard-week-agenda t)
+  (setq dashboard-week-agenda nil)
   (setq dashboard-page-separator "\n\n")
   (setq dashboard-items '((bookmarks . 20)
-                          (recents . 5)
-                          (agenda . 4)
+                          ;; (recents . 5)
+                          ;; (agenda . 10)
                           ))
 
   (dashboard-setup-startup-hook))
