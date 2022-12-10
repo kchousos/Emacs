@@ -868,6 +868,14 @@
 (add-hook 'TeX-mode-hook (lambda () (visual-line-mode t)))
 #+end_src
 
+*** RefTeX
+#+begin_src emacs-lisp :tangle ./init.el
+;; Turn on RefTeX in AUCTeX
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+;; Activate nice interface between RefTeX and AUCTeX
+(setq reftex-plug-into-AUCTeX t)
+#+end_src
+
 *** Texlab/LSP-LaTeX
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-latex
@@ -928,7 +936,8 @@
     :straight t
     :bind (("C-c b" . citar-insert-citation)
            :map minibuffer-local-map
-           ("M-b" . citar-insert-preset))
+           ;; ("M-b" . citar-insert-preset)
+           )
     :custom
     (citar-bibliography '("~/Textfiles/biblio.bib")))
 
@@ -1014,7 +1023,7 @@
 
 (setq org-cite-export-processors
        '((latex . (biblatex))
-         (t . (csl "nature.csl"))
+         (t . (csl "ieee.csl"))
          ))
 #+end_src
 
@@ -1137,11 +1146,21 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
 
 (setq org-image-actual-width 800)
+
+(setq org-display-remote-inline-images 'download)
 #+end_src
 
 *** Org-Timer
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-clock-sound "~/.config/emacs/clock.wav")
+#+end_src
+
+*** Oxr
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package oxr
+  :straight (oxr :type git :host github :repo "bdarcus/oxr")
+  :bind
+  (("C-c r" . oxr-insert-ref)))
 #+end_src
 
 *** Org-Fragtog
@@ -1453,6 +1472,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   ;; 1, 2 or 3 which displays one of the text banners
   ;; "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever image/text you would prefer
   ;; Content is not centered by default. To center, set
+  (setq dashboard-set-navigator t)
   (setq dashboard-center-content t)
   (setq dashboard-banner-logo-title nil)
   (setq dashboard-show-shortcuts nil)
@@ -1470,6 +1490,45 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (dashboard-setup-startup-hook))
 
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+#+end_src
+
+**** navigator buttons
+#+begin_src emacs-lisp :tangle no
+(setq dashboard-navigator-buttons
+      `(;; line1
+        ;; ((,(all-the-icons-octicon "octoface" :height 1.1 :v-adjust 0.0)
+        ;;   "Homepage"
+        ;;   "Browse homepage"
+        ;;   (lambda (&rest _) (browse-url "https://github.com/Likhon-baRoy/.emacs.d")) nil "" " |")
+        ;;  (,(all-the-icons-faicon "refresh" :height 1.1 :v-adjust 0.0)
+        ;;   "Update"
+        ;;   "Update Zmacs"
+        ;;   (lambda (&rest _) (auto-package-update-maybe)) warning "" " |")
+        ;;  (,(all-the-icons-faicon "flag" :height 1.1 :v-adjust 0.0) nil
+        ;;   "Report a BUG"
+        ;;   (lambda (&rest _) (browse-url "https://github.com/Likhon-baRoy/.emacs.d/issues/new")) error "" ""))
+        ;; ;; line 2
+        ;; ;; ((,(all-the-icons-octicon "mark-github" :height 1.1 :v-adjust 0.0)
+        ;; ;;   "AlienFriend"
+        ;; ;;   "Browse Alien Page"
+        ;; ;;   (lambda (&rest _) (browse-url "https://github.com/b-coimbra/.emacs.d")) nil "" ""))
+        ;; ;; Empty line
+        ;; (("" "\n" "" nil nil "" ""))
+
+        ;; Keybindings
+        ((,(all-the-icons-octicon "search" :height 1.0 :v-adjust 0.0)
+          " Find file" nil
+          (lambda (&rest _) (find-file)) nil "" "           C-x C-f"))
+        ((,(all-the-icons-octicon "file-directory" :height 1.0 :v-adjust 0.0)
+          " Open project" nil
+          (lambda (&rest _) (treemacs)) nil "" "         C-x t t"))
+        ((,(all-the-icons-octicon "three-bars" :height 1.0 :v-adjust 0.0)
+          " File explorer" nil
+          (lambda (&rest _) (dired)) nil "" "        C-x d"))
+        ((,(all-the-icons-octicon "settings" :height 1.0 :v-adjust 0.0)
+          " Open settings" nil
+          (lambda (&rest _) (find-file "~/Repos/Emacs/Emacs.org")) nil "" "        C-c e  ")))
+)
 #+end_src
 
 *** Rainbow-Mode

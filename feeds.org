@@ -45,15 +45,18 @@
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCPMThfZUPqx_dlbjoY0jznQ][Carter Hurd]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCKrdrX1WJGydbCQjrm6Yimg][Cole Kraten]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC5U7mHlhP6s6478wd7ZvnhA][Trafotin]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC3MISyr_jXpvDZt79kR4toA][Chris Harig]]
 **** Programming :prog:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCRb6Mw3fJ6OFzp-cB9X29aA][Junferno]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCsBjURrPoezykLs9EqgamOA][Fireship]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCK8XIGR5kRidIw2fWqwyHRA][Reducible]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCaSCt8s_4nfkRglWCvNSDrg][CodeAesthetic]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCmtyQOKKmrMVaKuRXz02jbQ][Sebastian Lague]]
 **** Game Dev :gamedev:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCUzQJ3JBuQ9w-po4TXRJHiA][jdh]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCIjUIjWig0r5DIixQrt6A3A][t3ssel8r]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCQvW_89l7f-hCMP1pzGm4xw][Nathan Baggs]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCNAq4oTwCy8ZiuZc3hS80vQ][Benjamin Blodgett]]
 **** Linux :linux:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCVls1GmFKf6WlTraIb_IaJg][DistroTube]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UC7YOGHUfC1Tb6E4pudI9STA][Mental Outlaw]]
@@ -84,3 +87,4 @@
 *** [[https://n-o-d-e.net/rss/rss.xml][N O D E]]
 *** [[https://linux-user.gr/tag/planet.rss][LINUXUSER - Νήματα με ετικέτες planet]]
 *** [[https://chubek.github.io/feed.xml][Chubak’s Machine Learning Imporium]]
+*** [[https://blog.tecosaur.com/tmio/rss.xml][This Month in Org]]
