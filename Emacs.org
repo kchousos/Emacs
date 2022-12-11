@@ -1084,6 +1084,15 @@ citecolor=red,
 urlcolor=blue}")
 #+end_src
 
+**** org-contrib
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-contrib
+  :straight t)
+
+(require 'ox-extra)
+(ox-extras-activate '(ignore-headlines))
+#+end_src
+
 *** Youtube
 Opens youtube links with mpv, and embeds them in the html exports instead of just having the link to it.
 
