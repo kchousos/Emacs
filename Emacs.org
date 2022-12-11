@@ -1084,6 +1084,16 @@ citecolor=red,
 urlcolor=blue}")
 #+end_src
 
+#+begin_src emacs-lisp :tangle ./init.el
+(defun org-latex-ref-to-cref (text backend info)
+  "Use \\cref instead of \\ref in latex export."
+  (when (org-export-derived-backend-p backend 'latex)
+    (replace-regexp-in-string "\\\\ref{" "\\\\cref{" text)))
+
+(add-to-list 'org-export-filter-final-output-functions
+             'org-latex-ref-to-cref)
+#+end_src
+
 **** org-contrib
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-contrib
