@@ -1084,7 +1084,7 @@ citecolor=red,
 urlcolor=blue}")
 #+end_src
 
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (defun org-latex-ref-to-cref (text backend info)
   "Use \\cref instead of \\ref in latex export."
   (when (org-export-derived-backend-p backend 'latex)
@@ -1248,6 +1248,15 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 (define-key global-map (kbd "C-c t a") #'org-transclusion-add)
 (define-key global-map (kbd "C-c t t") #'org-transclusion-mode)
+#+end_src
+
+*** Org-Plot
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package gnuplot-mode
+  :straight t)
+
+(use-package gnuplot
+  :straight t)
 #+end_src
 
 *** Org-Roam
