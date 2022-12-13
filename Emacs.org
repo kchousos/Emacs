@@ -34,6 +34,11 @@
 (global-set-key (kbd "C-x C-k") #'kill-this-buffer)
 #+end_src
 
+*** WoMan
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "C-c w") #'woman)
+#+end_src
+
 ** Sane Defaults
 #+begin_src emacs-lisp :tangle ./init.el
 (setq inhibit-startup-message t)
