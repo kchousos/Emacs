@@ -387,6 +387,16 @@
   :straight t)
 #+end_src
 
+**** All-The-Icons-Completion
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package all-the-icons-completion
+  :straight t
+  :after (marginalia all-the-icons)
+  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+  :init
+  (all-the-icons-completion-mode))
+#+end_src
+
 ** Misc
 *** Window Navigation
 **** Ace-Window
