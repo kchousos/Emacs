@@ -72,7 +72,7 @@
 *** Drawing :art:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCWInq7M4CbytaqiDM9JYa1w][Can I Learn To Draw ?]]
 ** ΕΚΠΑ :ΕΚΠΑ:
-*** [[https://www.di.uoa.gr/rss.xml][NewRssFeed]]
+*** [[https://www.di.uoa.gr/rss.xml][DiT]]
 ** Linux :linux:
 *** [[https://www.gentoo.org/feeds/news.xml][Gentoo Linux]]
 *** [[https://archlinux.org/feeds/news/][Arch Linux: Recent news updates]]

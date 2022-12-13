@@ -949,7 +949,7 @@
 #+end_src
 
 **** Citar-Org-Roam
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package citar-org-roam
   :straight t
   :after citar org-roam
