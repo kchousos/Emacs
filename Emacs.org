@@ -1024,7 +1024,8 @@
 
 (setq org-publish-timestamp-directory '"~/.config/emacs/org-timestamps")
 
-(setq-default org-cite-csl-styles-dir​ (expand-file-name "~/HDD/Έγγραφα/Zotero/styles"))
+(custom-set-variables
+ '(org-cite-csl-styles-dir "/home/kchou/HDD/Έγγραφα/Zotero/styles"))
 
 (setq org-cite-export-processors
        '((latex . (biblatex))
