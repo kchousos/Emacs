@@ -15,16 +15,20 @@
 
 #+LATEX_HEADER: \usepackage{newcomputermodern}
 
-#+LATEX_HEADER: \usepackage[sorting=none]{biblatex}
-#+CITE_EXPORT: biblatex
+#+LATEX_HEADER: \usepackage{biblatex}
 
 #+LATEX_HEADER: \usepackage[margin=1.3in]{geometry}
 
 #+LATEX_HEADER: \renewcommand{\baselinestretch}{1.2}
-:END:
-#+TITLE: $1
-#+SUBTITLE: $2
-#+AUTHOR: Κωνσταντίνος Χούσος
-#+OPTIONS: num:t toc:nil date:nil timestamp:nil
 
-$0
+#+LATEX_HEADER: \usemintedstyle{friendly}
+#+LATEX_HEADER: \setminted{frame=single, framesep=2mm}
+
+#+LATEX_HEADER: \usepackage{fancyhdr}
+#+LATEX_HEADER: \pagestyle{fancy}
+#+LATEX_HEADER: \rhead{Κωνσταντίνος Χούσος}
+#+LATEX_HEADER: \lhead{\textit{$1}}
+
+#+LATEX_HEADER: \usepackage{titlesec}
+#+LATEX_HEADER: \titleformat{\section}{\large \center \bf \uppercase}{\thesection}{0.5em}{}{}
+:END:
