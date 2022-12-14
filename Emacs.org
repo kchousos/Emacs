@@ -1198,6 +1198,18 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (("C-c r" . oxr-insert-ref)))
 #+end_src
 
+*** org-cite-csl-activate
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-cite-csl-activate
+  :straight (org-cite-csl-activate :type git :host github :repo "andras-simonyi/org-cite-csl-activate"))
+
+(add-hook 'org-mode-hook (lambda () (cursor-sensor-mode 1)))
+
+(require 'oc-csl-activate)
+(setq org-cite-activate-processor 'csl-activate)
+(setq org-cite-csl-activate-use-citar-cache t)
+#+end_src
+
 *** Org-Fragtog
 #+begin_src emacs-lisp :tangle no
 (use-package org-fragtog
