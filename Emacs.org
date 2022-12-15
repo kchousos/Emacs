@@ -743,7 +743,11 @@
 ***** LSP
 #+begin_src emacs-lisp :tangle ./init.el
 ;; Disables its default "lsp linter", allowing pylint to work
-(setq lsp-diagnostic-package :none)
+
+(add-hook 'python-mode-hook
+      (lambda ()
+        (make-local-variable 'lsp-diagnostic-provider)
+        (setq lsp-diagnostic-provider :none)))
 #+end_src
 
 **** Sagemath
@@ -776,7 +780,7 @@
   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
   (lsp-enable-which-key-integration t))
 
-(setq lsp-diagnostics-provider :flycheck)
+;; (setq lsp-diagnostics-provider :flycheck)
 #+end_src
 
 **** Lsp-Ui
