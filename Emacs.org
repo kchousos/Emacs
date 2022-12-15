@@ -696,7 +696,7 @@
       (cons '("\\.hs$" . haskell-mode) auto-mode-alist))
 #+end_src
 
-***** lsp-askell
+***** lsp-haskell
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-haskell
   :straight t)
@@ -775,13 +775,15 @@
   :config
   (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
   (lsp-enable-which-key-integration t))
+
+(setq lsp-diagnostics-provider :flycheck)
 #+end_src
 
 **** Lsp-Ui
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-ui
   :straight t)
-(setq lsp-ui-sideline-enable nil)
+(setq lsp-ui-sideline-enable t)
 (setq lsp-ui-doc-enable t)
 (setq lsp-ui-doc-position 'at-point)
 (setq lsp-ui-doc-show-with-cursor t)
