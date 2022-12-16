@@ -1077,7 +1077,7 @@
 
 (setq org-src-preserve-indentation t)
 (setq indent-tabs-mode nil)
-(setq org-latex-caption-above nil)
+(setq org-latex-caption-above '(table))
 
 (add-hook 'org-mode-hook
       '(lambda ()
