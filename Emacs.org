@@ -1207,13 +1207,14 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 *** org-cite-csl-activate
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-cite-csl-activate
-  :straight (org-cite-csl-activate :type git :host github :repo "andras-simonyi/org-cite-csl-activate"))
+  :straight (org-cite-csl-activate :type git :host github :repo "andras-simonyi/org-cite-csl-activate")
+  :after citar)
 
 (add-hook 'org-mode-hook (lambda () (cursor-sensor-mode 1)))
 
 (require 'oc-csl-activate)
 (setq org-cite-activate-processor 'csl-activate)
-(setq org-cite-csl-activate-use-citar-cache t)
+;; (setq org-cite-csl-activate-use-citar-cache t)
 #+end_src
 
 *** Org-Fragtog
@@ -1775,8 +1776,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 * Buffer Shenanigans
 #+begin_src emacs-lisp :tangle ./init.el
-(setq-default message-log-max nil)
-(kill-buffer "*Messages*")
+;; (setq-default message-log-max nil)
+;; (kill-buffer "*Messages*")
 
 (defun remove-scratch-buffer ()
   (if (get-buffer "*scratch*")
