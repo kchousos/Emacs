@@ -1584,7 +1584,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-roam-preview-function #'my/preview-fetcher)
 #+end_src
 
-***** Get 'org-roam-preview-visit' and friends to replace the main window. This should be applicable only when 'org-roam-mode' buffer is displayed in a side-window.
+***** Get 'org-roam-preview-visit' and friends to replace the main window. This should be applicable only when  'org-roam-mode' buffer is displayed in a side-window.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'org-roam-mode-hook
@@ -1596,7 +1596,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 ***** Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle ./init.el
 (add-to-list 'display-buffer-alist
              '("\\*org-roam\\*"
                (display-buffer-in-side-window)
