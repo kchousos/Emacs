@@ -3,6 +3,6 @@
 # key: <el
 # --
 
-#+begin_src emacs-lisp
+#+begin_src emacs-lisp :tangle ./init.el
 $0
 #+end_src

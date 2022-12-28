@@ -106,7 +106,7 @@
 
 (set-window-scroll-bars (minibuffer-window) nil nil nil nil t)
 
-(setq mouse-wheel-scroll-amount '(5 ((shift) . 1)))
+;; (setq mouse-wheel-scroll-amount '(5 ((shift) . 1)))
 
 (setq mouse-wheel-progressive-speed nil) ;; don't accelerate scrolling
 
@@ -114,7 +114,7 @@
 
 (setq scroll-step 1) ;; keyboard scroll one line at a time
 
-(setq pixel-scroll-precision-mode t)
+(pixel-scroll-precision-mode t)
 
 ;; (setq scroll-conservatively 100)
 #+end_src
@@ -166,6 +166,16 @@
 (setq recentf-max-saved-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 (run-at-time nil (* 5 60) 'recentf-save-list)
+#+end_src
+
+** Winner-mode
+#+begin_src emacs-lisp :tangle ./init.el
+(winner-mode t)
+#+end_src
+
+** eww
+#+begin_src emacs-lisp :tangle ./init.el
+(setq eww-auto-rename-buffer t)
 #+end_src
 
 * Fonts
@@ -454,25 +464,162 @@
 **** Yasnippet
 ***** Yasnippet
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package yasnippet
-    :straight t
-    :config
-    (setq yas-snippet-dirs '("~/.config/emacs/snippets")))
+  (use-package yasnippet
+      :straight t
+      :config
+      (setq yas-snippet-dirs '("~/.config/emacs/snippets")))
 
-(add-hook 'org-mode-hook  'yas-minor-mode-on)
-(add-hook 'prog-mode-hook 'yas-minor-mode-on)
-(add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
+  ;; (require 'company-yasnippet)
+
+  (add-hook 'org-mode-hook  'yas-minor-mode-on)
+  (add-hook 'prog-mode-hook 'yas-minor-mode-on)
+  (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
 #+end_src
-
 ***** Yasnippet-Snippets
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package yasnippet-snippets
     :straight t)
 #+end_src
 
+**** Corfu
+
+***** Corfu
+#+begin_src emacs-lisp :tangle ./init.el
+  (use-package corfu
+    :straight t
+
+    :custom
+    (corfu-cycle t)                       ;; Enable cycling for `corfu-next/previous'
+    (corfu-auto t)                        ;; Enable auto completion
+    (corfu-separator ?\s)                 ;; Orderless field separator
+    (corfu-quit-at-boundary 'separator)   ;; Never quit at completion boundary
+    ;; (corfu-quit-no-match nil)          ;; Never quit, even if there is no match
+    (corfu-preview-current 'insert)       ;; Disable current candidate preview
+    (corfu-preselect 'prompt)             ;; Preselect the prompt
+    (corfu-on-exact-match nil)            ;; Configure handling of exact matches
+    ;; (corfu-scroll-margin 5)            ;; Use scroll margin
+    (corfu-auto-delay 0)
+    (corfu-auto-prefix 1)
+
+    (completion-cycle-threshold nil)
+    (tab-always-indent 'complete)
+
+    ;; (corfu-min-width 80)
+    ;; (corfu-max-width corfu-min-width)
+
+    (lsp-completion-provider :none) ; Use corfu instead the default for lsp completions
+
+    :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
+
+    :config
+    ;; Setup lsp to use corfu for lsp completion
+    (defun kb/corfu-setup-lsp ()
+      "Use orderless completion style with lsp-capf instead of the
+    default lsp-passthrough."
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+            '(orderless)))
+
+    :bind
+    (:map corfu-map
+          ("C-n" . #'corfu-next)
+          ("C-p" . #'corfu-previous)
+          ("<escape>" . #'corfu-quit)
+          ("<return>" . #'corfu-insert)
+          ("<return>" . #'corfu-complete)
+          ("C-<tab>" . corfu-insert-separator)
+          ;; ("M-d" . #'corfu-show-documentation)
+          ;; ("M-l" . #'corfu-show-location)
+          )
+          :init
+          (global-corfu-mode))
+#+end_src
+
+***** Corfu-doc
+#+begin_src emacs-lisp :tangle no
+(use-package corfu-doc
+  ;; NOTE 2022-02-05: At the time of writing, `corfu-doc' is not yet on melpa
+  :straight t
+  :after corfu
+  :hook (corfu-mode . corfu-doc-mode)
+  :bind(:map corfu-map
+             ;; This is a manual toggle for the documentation popup.
+             ([remap corfu-show-documentation] . #'corfu-doc-toggle) ; Remap the default doc command
+             ;; Scroll in the documentation window
+             ("M-n" . #'corfu-doc-scroll-up)
+             ("M-p" . #'corfu-doc-scroll-down))
+  :custom
+  (corfu-doc-delay 0.5)
+  (corfu-doc-max-width 70)
+  (corfu-doc-max-height 20)
+
+  ;; NOTE 2022-02-05: I've also set this in the `corfu' use-package to be
+  ;; extra-safe that this is set when corfu-doc is loaded. I do not want
+  ;; documentation shown in both the echo area and in the `corfu-doc' popup.
+  (corfu-echo-documentation nil))
+#+end_src
+
+***** kind-icon
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package kind-icon
+  :straight t
+  :after corfu
+  :custom
+  (kind-icon-use-icons t)
+  (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face background
+  (kind-icon-blend-background nil)  ; Use midpoint color between foreground and background colors ("blended")?
+  (kind-icon-blend-frac 0.08)
+
+  :config
+  ;; enable kind-icon only in lsp-mode
+  (defun my/enable-kind-icon ()
+    (setq-local corfu-margin-formatters '(kind-icon-margin-formatter)))
+  :hook  ((lsp-managed-mode . my/enable-kind-icon))
+  )
+#+end_src
+
+**** Cape
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package cape
+  :straight t
+  ;; ;; Bind dedicated completion commands
+  ;; ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+  ;; :bind (("C-c p p" . completion-at-point) ;; capf
+  ;;        ("C-c p t" . complete-tag)        ;; etags
+  ;;        ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+  ;;        ("C-c p h" . cape-history)
+  ;;        ("C-c p f" . cape-file)
+  ;;        ("C-c p k" . cape-keyword)
+  ;;        ("C-c p s" . cape-symbol)
+  ;;        ("C-c p a" . cape-abbrev)
+  ;;        ("C-c p i" . cape-ispell)
+  ;;        ("C-c p l" . cape-line)
+  ;;        ("C-c p w" . cape-dict)
+  ;;        ("C-c p \\" . cape-tex)
+  ;;        ("C-c p _" . cape-tex)
+  ;;        ("C-c p ^" . cape-tex)
+  ;;        ("C-c p &" . cape-sgml)
+  ;;        ("C-c p r" . cape-rfc1345))
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-file)
+  ;;(add-to-list 'completion-at-point-functions #'cape-history)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  (add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-ispell)
+  ;; (add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;; (add-to-list 'completion-at-point-functions #'cape-line)
+)
+#+end_src
+
 **** Company
 ***** Company
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no 
 (use-package company
   :straight t
   :custom
@@ -483,14 +630,14 @@
 #+end_src
 
 ***** Company-Posframe
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (use-package company-posframe
   :straight t)
 (company-posframe-mode 1)
 #+end_src
 
 ***** Company-Quickhelp
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (use-package company-quickhelp
   :straight t)
 
@@ -578,6 +725,12 @@
 *** Emacs-Everywhere
 #+begin_src emacs-lisp :tangle no
 (use-package emacs-everywhere
+  :straight t)
+#+end_src
+
+*** Elpher
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package elpher
   :straight t)
 #+end_src
 
@@ -919,20 +1072,16 @@
 
 ** Writing
 *** Flyspell
-#+begin_src emacs-lisp :tangle no
-(setq ispell-program-name "/usr/bin/aspell")
+#+begin_src emacs-lisp :tangle ./init.el
+  (with-eval-after-load "ispell"
+    (setq ispell-program-name "hunspell")
+    (setq ispell-dictionary "el_GR,en_US")
+    (ispell-set-spellchecker-params)
+    (ispell-hunspell-add-multi-dic "el_GR,en_US")
+    (setq ispell-personal-dictionary "~/.hunspell_personal"))
 
-(defun flyspell-greek ()
-  "Change the Flyspell dictionary to Greek"
-  (interactive)
-  (ispell-change-dictionary "el")
-  (flyspell-buffer))
-
-(defun flyspell-english ()
-  "Change the Flyspell dictionary to English"
-  (interactive)
-  (ispell-change-dictionary "en")
-  (flyspell-buffer))
+(add-hook 'org-mode-hook (lambda () (flyspell-mode 1)))
+;; (add-hook 'prog-mode-hook (lambda () (flyspell-prog-mode 1)))
 #+end_src
 
 *** Olivetti
@@ -945,6 +1094,8 @@
   (org-mode . olivetti-mode)
   (markdown-mode . olivetti-mode)
   (Info-mode . olivetti-mode)
+  (elpher-mode . olivetti-mode)
+  (eww-mode . olivetti-mode)
   (TeX-mode . olivetti-mode)
   (tex-mode . olivetti-mode)
   (LaTeX-mode . olivetti-mode)
@@ -956,7 +1107,7 @@
   (use-package citar
     :straight t
     :bind (("C-c b" . citar-insert-citation)
-           :map minibuffer-local-map
+           ;; :map minibuffer-local-map
            ;; ("M-b" . citar-insert-preset)
            )
     :custom
@@ -967,6 +1118,15 @@
           (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
           (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
   (setq citar-symbol-separator "  ")
+#+end_src
+
+**** Citar-capf
+#+begin_src emacs-lisp :tangle ./init.el
+;; (require 'citar-capf)
+
+(add-hook 'completion-at-point-functions
+          #'citar-capf
+          'append)
 #+end_src
 
 **** Citar-Org-Roam
@@ -1025,10 +1185,11 @@
       org-agenda-include-deadlines t
       org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
       org-agenda-span 'day
+      org-extend-today-until 2
       org-agenda-files
       '("~/Textfiles/Org files/Tasks.org"
-        "~/Textfiles/Org files/Habits.org"
         "~/Textfiles/Org files/Μαθήματα.org"
+        "~/Textfiles/Org files/Habits.org"
         ))
 
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -1170,7 +1331,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
         org-auto-align-tags nil
         org-tags-column 0
         org-return-follows-link t
-        org-capture-bookmark nil
         ))
 
 (add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
@@ -1189,6 +1349,49 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-image-actual-width 800)
 
 (setq org-display-remote-inline-images 'download)
+#+end_src
+
+*** Org Bookmarks
+#+begin_src emacs-lisp :tangle ./init.el
+(setq org-bookmark-names-plist '(:last-capture nil :last-refile nil :last-capture-marker nil))
+#+end_src
+
+*** Org-Capture
+#+begin_src emacs-lisp :tangle ./init.el
+(setq org-default-notes-file "~/Textfiles/Org files/capture.org")
+
+(global-set-key (kbd "C-c c") #'org-capture)
+
+(setq org-capture-bookmark nil)
+
+(setq org-capture-templates
+      '(
+        ;; todo's for my regular agenda files
+        ("t" "Todo" entry (file+headline "~/Textfiles/Org files/Tasks.org" "Capture")
+         "* TODO %?")
+        ;; tasks related to uni
+        ("u" "Uni" entry (file "~/Textfiles/Org files/Μαθήματα.org")
+         "* TODO %?")
+        ;; thought capture for org-roam
+        ("s" "slipbox" entry (file "~/Textfiles/Braindump/slipbox.org")
+         "* %?")
+        ))
+#+end_src
+
+*** Org-refile
+#+begin_src emacs-lisp :tangle ./init.el
+(setq org-refile-targets '((nil :maxlevel . 3)
+                           (("~/Textfiles/Org files/Tasks.org"
+                             "~/Textfiles/Org files/Μαθήματα.org")
+                            :maxlevel . 1)))
+
+(setq org-outline-path-complete-in-steps t)
+(setq org-refile-use-outline-path nil)
+#+end_src
+
+*** Org-store-link
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "C-c l") #'org-store-link)
 #+end_src
 
 *** Org-Timer
@@ -1305,8 +1508,12 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
   :custom
   (org-roam-directory "~/Textfiles/Braindump")
-  (org-roam-dailies-directory "journals/")
+  (org-roam-dailies-directory "journal/")
   (org-roam-completion-everywhere t)
+
+  (org-roam-dailies-capture-templates
+   '(("d" "default" entry "* %<%H:%M>\n\n %?"
+      :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
@@ -1323,11 +1530,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
       (file "~/Textfiles/Braindump/templates/UniversityClassTemplate.org")
       :if-new (file+head "references/uni/${slug}.org" "#+title: ${title}\n#+filetags: :Academics:DiT:\n#+date: %U\n\n")
       :unnarrowed t)
-
-     ;; ("b" "book notes" plain
-     ;;  (file "~/Textfiles/Braindump/templates/BookNoteTemplate.org")
-     ;; :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
-     ;;  :unnarrowed t)
      ))
 
   :bind (("C-c n b" . org-roam-buffer-toggle)
@@ -1342,10 +1544,10 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
          :map org-mode-map
          ("C-M-i"    . completion-at-point))
 
-  :config
-  ;; If you're using a vertical completion framework, you might want a more informative completion interface
-  (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:25}" 'face 'org-tag)))
+  :bind-keymap
+  ("C-c n d" . org-roam-dailies-map)
 
+  :config
   ;; Creating the property “type” on my nodes
   (cl-defmethod org-roam-node-type ((node org-roam-node))
     "Return the TYPE of NODE."
@@ -1356,9 +1558,13 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
            (file-relative-name (org-roam-node-file node) org-roam-directory))))
       (error "")))
 
+  ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  (setq org-roam-node-display-template (concat "${type:15} ${title:*} " (propertize "${tags:25}" 'face 'org-tag)))
+
   (org-roam-db-autosync-mode)
   (org-roam-update-org-id-locations)
   (org-roam-setup)
+  (require 'org-roam-dailies)
   (require 'org-roam-protocol)
   (require 'org-roam-export)
   )
@@ -1390,7 +1596,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 ***** Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
 
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (add-to-list 'display-buffer-alist
              '("\\*org-roam\\*"
                (display-buffer-in-side-window)
@@ -1411,7 +1617,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 ***** Automatically open the *org-roam* buffer when visiting an org-roam file
 
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (defun tim/org-roam-buffer-show (_)
   (if (and
        ;; Don't do anything if we're in the minibuffer or in the calendar
@@ -1420,10 +1626,11 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
        ;; Show org-roam buffer iff the current buffer has a org-roam file
        (xor (org-roam-file-p) (eq 'visible (org-roam-buffer--visibility))))
       (org-roam-buffer-toggle)))
-;; (add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
+(add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
 #+end_src
 
 ***** Bindings
+
 ****** node-insert-immediate
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1435,7 +1642,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
                                                   '(:immediate-finish t)))))
     (apply #'org-roam-node-insert args)))
 #+end_src
-
 **** Org-Roam-Ui
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam-ui
@@ -1448,7 +1654,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :after org
   :straight t
   :bind
-  ("C-c n d" . deft)
+  ("C-c n s" . deft)
   :custom
   (deft-recursive t)
   (deft-use-filter-string-for-filename t)
@@ -1528,7 +1734,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner 'official)
+  (setq dashboard-startup-banner "~/.config/emacs/logos/gnu-emacs.svg")
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
@@ -1542,10 +1748,10 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-set-init-info nil)
-  (setq dashboard-set-footer nil)
+  (setq dashboard-set-footer t)
   (setq dashboard-week-agenda nil)
   (setq dashboard-page-separator "\n\n")
-  (setq dashboard-items '((bookmarks . 20)
+  (setq dashboard-items '(;;(bookmarks . 20)
                           ;; (recents . 5)
                           ;; (agenda . 10)
                           ))
@@ -1718,6 +1924,22 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (start-process "mpv" "*mpv*" "mpv" url))
 
 (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
+#+end_src
+
+**** eww integration
+#+begin_src emacs-lisp :tangle ./init.el
+(defun elfeed-eww-open (&optional use-generic-p)
+  "open with eww"
+  (interactive "P")
+  (let ((entries (elfeed-search-selected)))
+    (cl-loop for entry in entries
+             do (elfeed-untag entry 'unread)
+             when (elfeed-entry-link entry)
+             do (eww-browse-url it))
+    (mapc #'elfeed-search-update-entry entries)
+    (unless (use-region-p) (forward-line))))
+
+(define-key elfeed-search-mode-map (kbd "w") 'elfeed-eww-open)
 #+end_src
 
 ** Anki
