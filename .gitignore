@@ -13,4 +13,9 @@
 !Emacs.org
 !feeds.org
 
+!clock.wav
+
+!logos/
+!logos/*
+
 *.gz

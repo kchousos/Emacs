@@ -74,13 +74,7 @@
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCWInq7M4CbytaqiDM9JYa1w][Can I Learn To Draw ?]]
 ** ΕΚΠΑ :ΕΚΠΑ:
 *** [[https://www.di.uoa.gr/rss.xml][DiT]]
-** Linux :linux:
-*** [[https://www.gentoo.org/feeds/news.xml][Gentoo Linux]]
-*** [[https://archlinux.org/feeds/news/][Arch Linux: Recent news updates]]
-** Crypto :crypto:
-*** [[https://web.getmonero.org/feed.xml][Monero]]
 ** Repos :repos:
-*** [[https://github.com/analogcity.atom][GitHub Public Timeline Feed]]
 *** [[https://github.com/bloc97/Anime4K/releases.atom][Release notes from Anime4K]]
 # *** [[https://github.com/hydrusnetwork/hydrus/releases.atom][Release notes from hydrus]]
 # *** [[https://github.com/ppy/osu/releases.atom][Release notes from osu]]
@@ -89,3 +83,6 @@
 *** [[https://linux-user.gr/tag/planet.rss][LINUXUSER - Νήματα με ετικέτες planet]]
 *** [[https://chubek.github.io/feed.xml][Chubak’s Machine Learning Imporium]]
 *** [[https://blog.tecosaur.com/tmio/rss.xml][This Month in Org]]
+*** [[http://sawv.org/rss.xml][JR's Notes]]
+*** [[https://takeonrules.com/index.xml][Take on Rules]]
+*** [[https://doubleloop.net/feed/][Doubleloop]]
