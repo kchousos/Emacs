@@ -39,6 +39,11 @@
 (global-set-key (kbd "C-c w") #'woman)
 #+end_src
 
+*** view-mode
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "C-z") #'view-mode)
+#+end_src
+
 ** Sane Defaults
 #+begin_src emacs-lisp :tangle ./init.el
 (setq inhibit-startup-message t)
@@ -176,6 +181,7 @@
 ** eww
 #+begin_src emacs-lisp :tangle ./init.el
 (setq eww-auto-rename-buffer t)
+(global-set-key (kbd "C-c C-w") #'eww-follow-link)
 #+end_src
 
 * Fonts
@@ -570,10 +576,10 @@
   (kind-icon-blend-frac 0.08)
 
   :config
-  ;; enable kind-icon only in lsp-mode
+  ;; enable kind-icon only in prog-mode
   (defun my/enable-kind-icon ()
     (setq-local corfu-margin-formatters '(kind-icon-margin-formatter)))
-  :hook  ((lsp-managed-mode . my/enable-kind-icon))
+  :hook  ((prog-mode . my/enable-kind-icon))
   )
 #+end_src
 
@@ -917,7 +923,6 @@
   (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
   (add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
   (add-hook 'prog-mode-hook (lambda () (setq truncate-lines t)))
-  (add-hook 'prog-mode-hook #'indent-guide-mode)
 
   (setq gc-cons-threshold 100000000)
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
@@ -975,6 +980,8 @@
     :straight t)
 (setq indent-guide-char "│")
 (setq indent-guide-recursive t)
+
+(add-hook 'prog-mode-hook #'indent-guide-mode)
 #+end_src
 
 *** Treemacs
@@ -1185,7 +1192,7 @@
       org-agenda-include-deadlines t
       org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
       org-agenda-span 'day
-      org-extend-today-until 2
+      org-extend-today-until 4
       org-agenda-files
       '("~/Textfiles/Org files/Tasks.org"
         "~/Textfiles/Org files/Μαθήματα.org"
@@ -1197,7 +1204,9 @@
 
 *** Org-Export
 #+begin_src emacs-lisp :tangle ./init.el
-(setq org-export-backends '(texinfo md man beamer latex html ascii))
+;; (setq org-export-backends '(texinfo md man beamer latex html ascii))
+
+(setq org-export-backends '(md latex html))
 
 (setq org-publish-timestamp-directory '"~/.config/emacs/org-timestamps")
 
@@ -1241,16 +1250,17 @@
 (setq org-latex-caption-above '(table))
 
 (add-hook 'org-mode-hook
-      '(lambda ()
-         (delete '("\\.pdf\\'" . default) org-file-apps)
-         (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+          '(lambda ()
+             (delete '("\\.pdf\\'" . default) org-file-apps)
+             (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
 
 ;; For syntax highlighting in exported code blocks
 ;; !!Needs python-pygments installed!!
-(setq org-latex-listings 'minted
-      org-latex-pdf-process
-      '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
-        "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
+(setq
+ org-latex-listings 'minted
+ org-latex-pdf-process
+ '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
+   "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
 
 (setq org-export-with-smart-quotes t)
 
@@ -1277,6 +1287,17 @@ urlcolor=blue}")
              'org-latex-ref-to-cref)
 #+end_src
 
+***** engrave-faces
+#+begin_src emacs-lisp :tangle no
+(use-package engrave-faces
+  :straight t)
+
+(setq
+  ;; org-latex-listings 'minted
+ org-latex-listings 'engraved
+ org-latex-engraved-theme "modus-operandi")
+#+end_src
+
 **** org-contrib
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-contrib
@@ -1286,7 +1307,7 @@ urlcolor=blue}")
 (ox-extras-activate '(ignore-headlines))
 #+end_src
 
-*** Youtube
+**** Youtube
 Opens youtube links with mpv, and embeds them in the html exports instead of just having the link to it.
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1308,6 +1329,15 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
        url desc))))
 
 (org-link-set-parameters "yt" :follow #'spook-org--follow-yt-link :export #'spook-org--export-yt-link)
+#+end_src
+
+**** Ox-Hugo
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package ox-hugo
+  :straight t
+  :after ox)
+
+(setq org-hugo-base-dir (expand-file-name "~/Repos/test-site"))
 #+end_src
 
 *** Org
@@ -1349,9 +1379,11 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-image-actual-width 800)
 
 (setq org-display-remote-inline-images 'download)
+
+(setq org-link-file-path-type 'relative)
 #+end_src
 
-*** Org Bookmarks
+**** Org Bookmarks
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-bookmark-names-plist '(:last-capture nil :last-refile nil :last-capture-marker nil))
 #+end_src
@@ -1418,15 +1450,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (require 'oc-csl-activate)
 (setq org-cite-activate-processor 'csl-activate)
 ;; (setq org-cite-csl-activate-use-citar-cache t)
-#+end_src
-
-*** Org-Fragtog
-#+begin_src emacs-lisp :tangle no
-(use-package org-fragtog
-  :straight t)
-
-(add-hook 'org-mode-hook #'org-latex-preview)
-(add-hook 'org-mode-hook 'org-fragtog-mode)
 #+end_src
 
 *** Org-Download
@@ -1509,11 +1532,11 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :custom
   (org-roam-directory "~/Textfiles/Braindump")
   (org-roam-dailies-directory "journal/")
-  (org-roam-completion-everywhere t)
+  (org-roam-completion-everywhere nil)
 
   (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %<%H:%M>\n\n %?"
-      :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n"))))
+   '(("d" "default" entry "\n* %<%H:%M>\n\n %?"
+      :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: :journal:\n\n"))))
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
@@ -1524,11 +1547,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
    '(
      ("m" "main" plain "%?"
       :if-new (file+head "main/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
-      :unnarrowed t)
-
-     ("u" "uni class" plain
-      (file "~/Textfiles/Braindump/templates/UniversityClassTemplate.org")
-      :if-new (file+head "references/uni/${slug}.org" "#+title: ${title}\n#+filetags: :Academics:DiT:\n#+date: %U\n\n")
       :unnarrowed t)
      ))
 

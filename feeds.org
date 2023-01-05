@@ -86,3 +86,6 @@
 *** [[http://sawv.org/rss.xml][JR's Notes]]
 *** [[https://takeonrules.com/index.xml][Take on Rules]]
 *** [[https://doubleloop.net/feed/][Doubleloop]]
+*** [[https://aliquote.org/index.xml][aliquote.org]]
+** Papers :papers:
+*** [[https://export.arxiv.org/api/query?search_query=cat:cs.*&sortBy=lastUpdatedDate&sortOrder=descending][ArXiv CS]]
