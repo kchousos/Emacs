@@ -79,13 +79,15 @@
 # *** [[https://github.com/hydrusnetwork/hydrus/releases.atom][Release notes from hydrus]]
 # *** [[https://github.com/ppy/osu/releases.atom][Release notes from osu]]
 ** Sites/Blogs :blog:
-*** [[https://n-o-d-e.net/rss/rss.xml][N O D E]]
-*** [[https://linux-user.gr/tag/planet.rss][LINUXUSER - Νήματα με ετικέτες planet]]
+*** [[https://n-o-d-e.net/rss/rss.xml][N O D E]] :tech:
+*** [[https://linux-user.gr/tag/planet.rss][LINUXUSER - Νήματα με ετικέτες planet]] :greek:linux:
 *** [[https://chubek.github.io/feed.xml][Chubak’s Machine Learning Imporium]]
-*** [[https://blog.tecosaur.com/tmio/rss.xml][This Month in Org]]
+*** [[https://blog.tecosaur.com/tmio/rss.xml][This Month in Org]] :emacs:
 *** [[http://sawv.org/rss.xml][JR's Notes]]
-*** [[https://takeonrules.com/index.xml][Take on Rules]]
+*** [[https://takeonrules.com/index.xml][Take on Rules]] :prog:
 *** [[https://doubleloop.net/feed/][Doubleloop]]
-*** [[https://aliquote.org/index.xml][aliquote.org]]
+*** [[https://aliquote.org/index.xml][aliquote.org]] :prog:
+*** [[https://ellak.gr/events/feed/][Εκδηλώσεις ΕΛΛΑΚ]] :greek:foss:
+*** [[https://opensource.ellak.gr/feed/][OpenSource Ellak]] :greek:foss:
 ** Papers :papers:
 *** [[https://export.arxiv.org/api/query?search_query=cat:cs.*&sortBy=lastUpdatedDate&sortOrder=descending][ArXiv CS]]

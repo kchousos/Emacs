@@ -83,7 +83,7 @@
 
 ** Word Wrap
 #+begin_src emacs-lisp :tangle ./init.el
-(global-word-wrap-whitespace-mode)
+  (global-word-wrap-whitespace-mode)
 #+end_src
 
 ** Blink Cursor
@@ -1038,7 +1038,7 @@
 
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
-(setq TeX-command-extra-options "-interaction=nonstopmode")
+(setq TeX-command-extra-options "-shell-escape -interaction=nonstopmode")
 (setq-default TeX-engine 'xetex)
 (setq-default TeX-PDF-mode t)
 (setq TeX-source-correlate-mode t)
@@ -1189,10 +1189,12 @@
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-agenda-block-separator ""
       org-agenda-start-with-log-mode nil
+      org-agenda-use-time-grid nil
       org-agenda-include-deadlines t
       org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
       org-agenda-span 'day
       org-extend-today-until 4
+      org-directory "~/Textfiles/Org files"
       org-agenda-files
       '("~/Textfiles/Org files/Tasks.org"
         "~/Textfiles/Org files/Μαθήματα.org"
@@ -1412,13 +1414,11 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 *** Org-refile
 #+begin_src emacs-lisp :tangle ./init.el
-(setq org-refile-targets '((nil :maxlevel . 3)
-                           (("~/Textfiles/Org files/Tasks.org"
-                             "~/Textfiles/Org files/Μαθήματα.org")
-                            :maxlevel . 1)))
-
-(setq org-outline-path-complete-in-steps t)
-(setq org-refile-use-outline-path nil)
+(setq org-refile-targets `((nil :maxlevel . 3)
+                           (,(directory-files-recursively "~/Textfiles/Org files/" "^[A-Za-zΑ-Ωα-ω0-9]*.org$") :maxlevel . 1)))
+                           
+(setq org-outline-path-complete-in-steps nil)
+(setq org-refile-use-outline-path 'file)
 #+end_src
 
 *** Org-store-link
