@@ -184,15 +184,34 @@
 (global-set-key (kbd "C-c C-w") #'eww-follow-link)
 #+end_src
 
+** Modeline
+#+begin_src emacs-lisp :tangle ./init.el
+(setq-default mode-line-format '("%e" mode-line-front-space
+                         (:propertize
+                          ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
+                          display
+                          (min-width
+                           (0.0)))
+                         mode-line-frame-identification
+                         mode-line-buffer-identification
+                         "   "
+                         mode-line-position
+                         (vc-mode vc-mode)
+                         "  "
+                         mode-name
+                         mode-line-misc-info
+                         mode-line-end-spaces))
+#+end_src
+
 * Fonts
 ** Fonts
 #+begin_src emacs-lisp :tangle ./init.el
   (defun set-font-faces ()
         (message "Setting faces!")
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
-        (set-face-attribute 'default nil :font "Iosevka" :height 160)
-        (set-face-attribute 'fixed-pitch nil :font "Iosevka" :height 140)
-        (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :height 160))
+        (set-face-attribute 'default nil :font "Iosevka" :weight 'regular :height 140)
+        (set-face-attribute 'fixed-pitch nil :font "Iosevka" :weight 'regular :height 130)
+        (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'regular :height 140))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -282,10 +301,10 @@
 **** Modus Themes
 #+begin_src emacs-lisp :tangle ./init.el
 (setq modus-themes-headings
-      '((1 . (1.2))
-        (2 . (1.15))
-        (3 . (1.1))
-        (4 . (1.05))
+      '((1 . (1.1))
+        (2 . (1.075))
+        (3 . (1.05))
+        (4 . (1.025))
         (t . (1.0))))
 
 (load-theme 'modus-operandi)
@@ -357,6 +376,41 @@
   (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
   :bind ("<f5>" . modus-themes-toggle)
     )
+#+end_src
+
+*** N A N O Themes
+#+begin_src emacs-lisp :tangle no
+(use-package nano-emacs
+  :straight (nano-emacs :type git :host github :repo "rougier/nano-emacs"))
+
+(setq nano-font-family-monospaced "Roboto Mono")
+(setq nano-font-family-proportional "Roboto")
+(setq nano-font-size 14)
+
+;; Theming Command line options (this will cancel warning messages)
+(add-to-list 'command-switch-alist '("-dark"   . (lambda (args))))
+(add-to-list 'command-switch-alist '("-light"  . (lambda (args))))
+(add-to-list 'command-switch-alist '("-default"  . (lambda (args))))
+(add-to-list 'command-switch-alist '("-no-splash" . (lambda (args))))
+(add-to-list 'command-switch-alist '("-no-help" . (lambda (args))))
+(add-to-list 'command-switch-alist '("-compact" . (lambda (args))))
+
+(require 'nano-faces)
+(require 'nano-theme)
+(require 'nano-theme-dark)
+(require 'nano-theme-light)
+
+(cond
+ ((member "-default" command-line-args) t)
+ ((member "-dark" command-line-args) (nano-theme-set-dark))
+ (t (nano-theme-set-light)))
+(call-interactively 'nano-refresh-theme)
+
+(require 'nano-modeline)
+
+(when (member "-compact" command-line-args)
+  (require 'nano-compact))
+
 #+end_src
 
 ** Fonts & Icons
@@ -1197,7 +1251,7 @@
       org-directory "~/Textfiles/Org files"
       org-agenda-files
       '("~/Textfiles/Org files/Tasks.org"
-        "~/Textfiles/Org files/Μαθήματα.org"
+        "~/Textfiles/Org files/Courses.org"
         "~/Textfiles/Org files/Habits.org"
         ))
 
@@ -1833,7 +1887,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 *** Modeline
 **** Minions
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (use-package minions
   :straight t
   :config (minions-mode 1))
