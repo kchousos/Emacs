@@ -194,12 +194,13 @@
                            (0.0)))
                          mode-line-frame-identification
                          mode-line-buffer-identification
-                         "   "
-                         mode-line-position
-                         (vc-mode vc-mode)
+                         ;; "   "
+                         ;; mode-line-position
                          "  "
                          mode-name
                          mode-line-misc-info
+                         "   "
+                         (vc-mode vc-mode)
                          mode-line-end-spaces))
 #+end_src
 
