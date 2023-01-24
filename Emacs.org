@@ -196,11 +196,12 @@
                          mode-line-buffer-identification
                          ;; "   "
                          ;; mode-line-position
+                         (vc-mode vc-mode)
+                         "  "
                          "  "
                          mode-name
+                         "  "
                          mode-line-misc-info
-                         "   "
-                         (vc-mode vc-mode)
                          mode-line-end-spaces))
 #+end_src
 
@@ -210,9 +211,9 @@
   (defun set-font-faces ()
         (message "Setting faces!")
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
-        (set-face-attribute 'default nil :font "Iosevka" :weight 'regular :height 140)
+        (set-face-attribute 'default nil :font "Iosevka" :weight 'regular :height 130)
         (set-face-attribute 'fixed-pitch nil :font "Iosevka" :weight 'regular :height 130)
-        (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'regular :height 140))
+        (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'regular :height 130))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -1094,7 +1095,7 @@
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
 (setq TeX-command-extra-options "-shell-escape -interaction=nonstopmode")
-(setq-default TeX-engine 'xetex)
+(setq-default TeX-engine 'luatex)
 (setq-default TeX-PDF-mode t)
 (setq TeX-source-correlate-mode t)
 (setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
@@ -1263,8 +1264,6 @@
 #+begin_src emacs-lisp :tangle ./init.el
 ;; (setq org-export-backends '(texinfo md man beamer latex html ascii))
 
-(setq org-export-backends '(md latex html))
-
 (setq org-publish-timestamp-directory '"~/.config/emacs/org-timestamps")
 
 (custom-set-variables
@@ -1300,7 +1299,7 @@
 
 **** Org-Latex
 #+begin_src emacs-lisp :tangle ./init.el
-(setq org-latex-compiler "xelatex --synctex=1 -interaction=batchmode")
+(setq org-latex-compiler "lualatex --synctex=1 -interaction=batchmode")
 
 (setq org-src-preserve-indentation t)
 (setq indent-tabs-mode nil)
@@ -1316,8 +1315,8 @@
 (setq
  org-latex-listings 'minted
  org-latex-pdf-process
- '("xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
-   "xelatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
+ '("lualatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
+   "lualatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
 
 (setq org-export-with-smart-quotes t)
 
@@ -1575,8 +1574,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight t)
 #+end_src
 
+** Org-Roam
 *** Org-Roam
-**** Org-Roam
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam
   :straight t
@@ -1643,7 +1642,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   )
 #+end_src
 
-***** Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
+**** Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
 
 #+begin_src emacs-lisp :tangle ./init.el
 (defun my/preview-fetcher ()
@@ -1657,7 +1656,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-roam-preview-function #'my/preview-fetcher)
 #+end_src
 
-***** Get 'org-roam-preview-visit' and friends to replace the main window. This should be applicable only when  'org-roam-mode' buffer is displayed in a side-window.
+**** Get 'org-roam-preview-visit' and friends to replace the main window. This should be applicable only when  'org-roam-mode' buffer is displayed in a side-window.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'org-roam-mode-hook
@@ -1667,7 +1666,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
                           (main)))))
 #+end_src
 
-***** Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
+**** Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
 
 #+begin_src emacs-lisp :tangle ./init.el
 (add-to-list 'display-buffer-alist
@@ -1682,13 +1681,13 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
                                      (no-delete-other-windows . t)))))
 #+end_src
 
-***** Maximizes org-capture buffer
+**** Maximizes org-capture buffer
 
 #+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 #+end_src
 
-***** Automatically open the *org-roam* buffer when visiting an org-roam file
+**** Automatically open the *org-roam* buffer when visiting an org-roam file
 
 #+begin_src emacs-lisp :tangle no
 (defun tim/org-roam-buffer-show (_)
@@ -1702,9 +1701,9 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
 #+end_src
 
-***** Bindings
+**** Bindings
 
-****** node-insert-immediate
+***** node-insert-immediate
 
 #+begin_src emacs-lisp :tangle ./init.el
 ;; Bind this to C-c n I
@@ -1715,13 +1714,13 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
                                                   '(:immediate-finish t)))))
     (apply #'org-roam-node-insert args)))
 #+end_src
-**** Org-Roam-Ui
+*** Org-Roam-Ui
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam-ui
     :straight t)
 #+end_src
 
-**** Deft
+*** Deft
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package deft
   :after org
@@ -1821,7 +1820,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
   (setq dashboard-set-init-info nil)
-  (setq dashboard-set-footer t)
+  (setq dashboard-set-footer nil)
   (setq dashboard-week-agenda nil)
   (setq dashboard-page-separator "\n\n")
   (setq dashboard-items '(;;(bookmarks . 20)
@@ -1931,18 +1930,18 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq xenops-math-latex-process-alist
       '(
        (dvisvgm :programs
-                ("xelatex" "dvisvgm")
+                ("lualatex" "dvisvgm")
                 :description "xdv > svg"
-                :message "you need to install the programs: xelatex and dvisvgm."
+                :message "you need to install the programs: lualatex and dvisvgm."
                 :image-input-type "xdv"
                 :image-output-type "svg"
                 :image-size-adjust (1.5 . 1.5)
                 :latex-compiler
-                ("xelatex -no-pdf -interaction=nonstopmode -shell-escape -output-directory %o %f")
+                ("lualatex -no-pdf -interaction=nonstopmode -shell-escape -output-directory %o %f")
                 :image-converter
                 ("dvisvgm %f -n -b min -c %S -o %O"))
         (dvipng :programs
-               ("xelatex" "dvipng")
+               ("lualatex" "dvipng")
                :description "dvi > png"
                :message "you need to install the programs: latex and dvipng."
                :image-input-type "dvi"
@@ -1950,7 +1949,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
                :image-size-adjust
                (1.0 . 1.0)
                :latex-compiler
-               ("xelatex -interaction nonstopmode -shell-escape -output-format dvi -output-directory %o %f")
+               ("lualatex -interaction nonstopmode -shell-escape -output-format dvi -output-directory %o %f")
                :image-converter
                ("dvipng -D %D -T tight -o %O %f"))
        (imagemagick :programs

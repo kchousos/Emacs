@@ -15,9 +15,15 @@
 #+LATEX_HEADER: \usepackage{extsizes}
 
 # #+LATEX_HEADER: \usepackage{newcomputermodern}
-#+LATEX_HEADER: \setmainfont{Iosevka Aile Extralight}
+#+LATEX_HEADER: \setmainfont[BoldFont = {Iosevka Aile Light}, ItalicFont = {Iosevka Aile Extralight Italic}]{Iosevka Aile Extralight}
+#+LATEX_HEADER: \setmonofont{Iosevka}
+
+#+LATEX_HEADER: \usepackage{unicode-math}
+#+LATEX_HEADER: \setmathfont{Fira Math}
 
 #+LATEX_HEADER: \usepackage{biblatex}
+# #+LATEX_HEADER: \DefineBibliographyStrings{greek}{pagetotals = {σελίδες}}
+#+LATEX_HEADER: \AtEveryBibitem{\clearfield{pagetotal}}
 
 #+LATEX_HEADER: \usepackage{svg}
 
@@ -27,14 +33,14 @@
 
 #+LATEX_HEADER: \usepackage[font={small}, labelfont={bf}]{caption}
 
-#+LATEX_HEADER: \usemintedstyle{friendly}
+#+LATEX_HEADER: \usemintedstyle{vs}
 #+LATEX_HEADER: \setminted{frame=single, framesep=2mm}
 
 #+LATEX_HEADER: \usepackage{fancyhdr}
 #+LATEX_HEADER: \pagestyle{fancy}
 #+LATEX_HEADER: \rhead{Κωνσταντίνος Χούσος}
 #+LATEX_HEADER: \lhead{\textit{$1}}
-#+LATEX_HEADER: \chead{}
+#+LATEX_HEADER: \chead{$2}
 
 #+LATEX_HEADER: \usepackage{titlesec}
 #+LATEX_HEADER: \titleformat{\section}{\large \center \bf \uppercase}{\thesection}{0.5em}{}{}

@@ -53,6 +53,7 @@
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCaSCt8s_4nfkRglWCvNSDrg][CodeAesthetic]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCmtyQOKKmrMVaKuRXz02jbQ][Sebastian Lague]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCtJPeNYnAXhB1-_h8xbIX_Q][Nemean]]
+***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCV0t1y4h_6-2SqEpXBXgwFQ][AngeTheGreat]]
 **** Game Dev :gamedev:
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCUzQJ3JBuQ9w-po4TXRJHiA][jdh]]
 ***** [[https://www.youtube.com/feeds/videos.xml?channel_id=UCIjUIjWig0r5DIixQrt6A3A][t3ssel8r]]
@@ -90,4 +91,4 @@
 *** [[https://ellak.gr/events/feed/][Εκδηλώσεις ΕΛΛΑΚ]] :greek:foss:
 *** [[https://opensource.ellak.gr/feed/][OpenSource Ellak]] :greek:foss:
 ** Papers :papers:
-*** [[https://export.arxiv.org/api/query?search_query=cat:cs.*&sortBy=lastUpdatedDate&sortOrder=descending][ArXiv CS]]
+# *** [[https://export.arxiv.org/api/query?search_query=cat:cs.*&sortBy=lastUpdatedDate&sortOrder=descending][ArXiv CS]]
