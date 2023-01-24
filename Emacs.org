@@ -211,9 +211,9 @@
   (defun set-font-faces ()
         (message "Setting faces!")
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
-        (set-face-attribute 'default nil :font "Iosevka" :weight 'regular :height 130)
-        (set-face-attribute 'fixed-pitch nil :font "Iosevka" :weight 'regular :height 130)
-        (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'regular :height 130))
+        (set-face-attribute 'default nil :font "Iosevka" :weight 'regular :height 120)
+        (set-face-attribute 'fixed-pitch nil :font "Iosevka" :weight 'regular :height 120)
+        (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'regular :height 120))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -1586,7 +1586,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :custom
   (org-roam-directory "~/Textfiles/Braindump")
   (org-roam-dailies-directory "journal/")
-  (org-roam-completion-everywhere nil)
+  (org-roam-completion-everywhere t)
 
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "\n* %<%H:%M>\n\n %?"
@@ -1806,7 +1806,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner "~/.config/emacs/logos/gnu-emacs.svg")
+  (setq dashboard-startup-banner 'official)
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
@@ -1933,11 +1933,11 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
                 ("lualatex" "dvisvgm")
                 :description "xdv > svg"
                 :message "you need to install the programs: lualatex and dvisvgm."
-                :image-input-type "xdv"
+                :image-input-type "dvi"
                 :image-output-type "svg"
                 :image-size-adjust (1.5 . 1.5)
                 :latex-compiler
-                ("lualatex -no-pdf -interaction=nonstopmode -shell-escape -output-directory %o %f")
+                ("lualatex --output-format=dvi -interaction=nonstopmode -shell-escape -output-directory %o %f")
                 :image-converter
                 ("dvisvgm %f -n -b min -c %S -o %O"))
         (dvipng :programs
