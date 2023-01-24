@@ -1432,7 +1432,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 (setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
 
-(setq org-image-actual-width 800)
+(setq org-image-actual-width (list 800))
 
 (setq org-display-remote-inline-images 'download)
 
