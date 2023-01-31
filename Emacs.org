@@ -1454,6 +1454,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 (setq org-capture-templates
       '(
+        ("d" "default" entry (file+headline "~/Textfiles/Org files/capture.org" "Capture")
+         "* %?")
         ;; todo's for my regular agenda files
         ("t" "Todo" entry (file+headline "~/Textfiles/Org files/Tasks.org" "Capture")
          "* TODO %?")
@@ -1585,7 +1587,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
   :custom
   (org-roam-directory "~/Textfiles/Braindump")
-  (org-roam-dailies-directory "journal/")
+  (org-roam-dailies-directory "journals/")
   (org-roam-completion-everywhere t)
 
   (org-roam-dailies-capture-templates
@@ -1761,6 +1763,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
     :config
     (setq org-modern-table nil)
     (setq org-modern-block-fringe nil)
+    (setq org-modern-star '(""))
     :custom
     (org-modern-hide-stars nil) ; adds extra indentation
     :hook
@@ -1785,7 +1788,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Org-Fancy-Priorities
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (use-package org-fancy-priorities
   :straight t
   :hook (org-mode . org-fancy-priorities-mode))
@@ -1806,7 +1809,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner 'official)
+  (setq dashboard-startup-banner "/home/kchou/Repos/Emacs/logos/gnu-emacs.svg")
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
