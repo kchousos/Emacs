@@ -1086,6 +1086,14 @@
   :straight t)
 #+end_src
 
+**** Treemacs-All-the-Icons
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package treemacs-all-the-icons
+  :straight t
+  :config
+  (treemacs-load-theme "all-the-icons"))
+#+end_src
+
 ** LaTeX
 *** Settings
 #+begin_src emacs-lisp :tangle ./init.el
