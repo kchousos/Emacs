@@ -1258,7 +1258,7 @@
       org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
       org-agenda-span 'day
       org-extend-today-until 4
-      org-directory "~/Textfiles/Org files"
+      org-directory "~/Textfiles/files"
       org-agenda-files
       '("~/Textfiles/Org files/Tasks.org"
         "~/Textfiles/Org files/Courses.org"
@@ -1584,6 +1584,20 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight t)
 #+end_src
 
+*** Org-Pomodoro
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-pomodoro
+  :straight t)
+(setq org-pomodoro-length 30)
+(setq org-pomodoro-short-break-length 6)
+(setq org-pomodoro-long-break-length 20)
+(setq org-pomodoro-manual-break t)
+(setq org-pomodoro-start-sound "~/.config/emacs/clock.wav")
+(setq org-pomodoro-finished-sound "~/.config/emacs/clock.wav")
+(setq org-pomodoro-short-break-sound "~/.config/emacs/clock.wav")
+(setq org-pomodoro-long-break-sound "~/.config/emacs/clock.wav")
+#+end_src
+
 ** Org-Roam
 *** Org-Roam
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1771,7 +1785,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
     :config
     (setq org-modern-table nil)
     (setq org-modern-block-fringe nil)
-    (setq org-modern-star '(""))
+    ;; (setq org-modern-star '(""))
     :custom
     (org-modern-hide-stars nil) ; adds extra indentation
     :hook
