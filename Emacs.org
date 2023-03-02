@@ -594,6 +594,8 @@
           )
           :init
           (global-corfu-mode))
+
+(advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
 #+end_src
 
 ***** Corfu-doc
@@ -1284,7 +1286,7 @@
 #+end_src
 
 **** HTML Export
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (load "/home/kchou/.config/emacs/Org-Export/elisp/file-to-string.el")
 (load "/home/kchou/.config/emacs/Org-Export/elisp/org-html-src-block.el")
 (advice-add 'org-html-src-block :filter-return #'my/org-html-src-block)
@@ -1401,7 +1403,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight t
   :after ox)
 
-(setq org-hugo-base-dir (expand-file-name "~/Repos/test-site"))
+(setq org-hugo-base-dir (expand-file-name "~/Repos/Site"))
+(setq org-hugo-default-section-directory "posts")
 #+end_src
 
 *** Org
@@ -1625,6 +1628,10 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
    '(
      ("m" "main" plain "%?"
       :if-new (file+head "main/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      :unnarrowed t)
+     ("p" "post" plain "%?"
+      :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %U\n#+hugo_base_dir: ~/Repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n\n")
+      ;; :immediate-finish t
       :unnarrowed t)
      ))
 

@@ -87,6 +87,7 @@
 **** [[https://chubek.github.io/feed.xml][Chubak’s Machine Learning Imporium]]
 **** [[https://opensource.ellak.gr/feed/][OpenSource Ellak]] :greek:foss:
 *** Blogs :blog:
+**** [[https://kchousos.github.io/index.xml][kchousos]] :mine:
 **** [[https://blog.tecosaur.com/tmio/rss.xml][This Month in Org]] :emacs:
 # *** [[http://sawv.org/rss.xml][JR's Notes]]
 **** [[https://takeonrules.com/index.xml][Take on Rules]] :prog:
@@ -105,5 +106,6 @@
 **** [[https://lepisma.xyz/atom.xml][lepisma]]
 **** [[https://sqrtminusone.xyz/index.xml][SqrtMinusOne]]
 **** [[https://rubenerd.com/feed/][Rubenerd]]
+**** [[https://evalapply.org/index.xml][eval/apply]]
 ** Papers :papers:
 # *** [[https://export.arxiv.org/api/query?search_query=cat:cs.*&sortBy=lastUpdatedDate&sortOrder=descending][ArXiv CS]]
