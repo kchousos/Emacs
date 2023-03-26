@@ -3,20 +3,21 @@
 # key: <ol
 # --
 :LATEX_PROPERTIES:
-#+LATEX_COMPILER: xelatex
+#+LATEX_COMPILER: lualatex
 #+LATEX_CLASS: article
 #+LATEX_CLASS_OPTIONS: [9pt, a4paper, notitlepage]
+
+# #+LATEX_HEADER: \usepackage{newcomputermodern}
 
 #+LATEX_HEADER: \usepackage{polyglossia}
 #+LATEX_HEADER: \setmainlanguage{greek}
 #+LATEX_HEADER: \setotherlanguage{english}
 
-#+LATEX_HEADER: \usepackage{microtype}
-#+LATEX_HEADER: \usepackage{extsizes}
-
-# #+LATEX_HEADER: \usepackage{newcomputermodern}
 #+LATEX_HEADER: \setmainfont[BoldFont = {Iosevka Aile Light}, ItalicFont = {Iosevka Aile Extralight Italic}]{Iosevka Aile Extralight}
 #+LATEX_HEADER: \setmonofont{Iosevka}
+
+#+LATEX_HEADER: \usepackage{microtype}
+#+LATEX_HEADER: \usepackage{extsizes}
 
 #+LATEX_HEADER: \usepackage{unicode-math}
 #+LATEX_HEADER: \setmathfont{Fira Math}

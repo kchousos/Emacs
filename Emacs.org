@@ -194,9 +194,9 @@
                            (0.0)))
                          mode-line-frame-identification
                          mode-line-buffer-identification
-                         ;; "   "
-                         ;; mode-line-position
                          (vc-mode vc-mode)
+                         "  "
+                         mode-line-position
                          "  "
                          "  "
                          mode-name
@@ -779,6 +779,7 @@
                                 ;; ("\\.html\\'" "firefox" (file))
                                 ("\\.mp4\\'" "setsid -w xdg-open" (file))
                                 ("\\.mkv\\'" "setsid -w xdg-open" (file))
+                                ;; ("zotero://.*" "setsid -w xdg-open" (file))
                                 ;; ("\\.png\\'" "setsid -w xdg-open" (file))
                                 ;; ("\\.jpg\\'" "setsid -w xdg-open" (file))
                                 ;; ("\\.jpeg\\'" "setsid -w xdg-open" (file))
@@ -828,26 +829,27 @@
 
 *** Embark
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package embark
-  :straight t
+   (use-package embark
+     :straight t
 
-  :bind
-  (("C-." . embark-act)         ;; pick some comfortable binding
-   ("C-;" . embark-dwim)        ;; good alternative: M-.
-   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+     :bind
+     (("C-." . embark-act)         ;; pick some comfortable binding
+      ("M-." . embark-dwim)        ;; good alternative: M-.
+      ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
 
-  :init
+     :init
 
-  ;; Optionally replace the key help with a completing-read interface
-  (setq prefix-help-command #'embark-prefix-help-command)
+     ;; Optionally replace the key help with a completing-read interface
+     (setq prefix-help-command #'embark-prefix-help-command)
 
-  :config
+     :config
 
-  ;; Hide the mode line of the Embark live/completions buffers
-  (add-to-list 'display-buffer-alist
-               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-                 nil
-                 (window-parameters (mode-line-format . none)))))
+     ;; ;; Hide the mode line of the Embark live/completions buffers
+     ;; (add-to-list 'display-buffer-alist
+     ;;              '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+     ;;                nil
+     ;;                (window-parameters (mode-line-format . none))))
+     )
 #+end_src
 
 **** Citar-Embark
@@ -900,6 +902,12 @@
 #+begin_src emacs-lisp :tangle ./init.el
 (setq auto-mode-alist
       (cons '("\\.pl$" . prolog-mode) auto-mode-alist))
+#+end_src
+
+***** ECLiPSe
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq prolog-system 'eclipse)
 #+end_src
 
 **** Haskell
@@ -1599,6 +1607,34 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-pomodoro-finished-sound "~/.config/emacs/clock.wav")
 (setq org-pomodoro-short-break-sound "~/.config/emacs/clock.wav")
 (setq org-pomodoro-long-break-sound "~/.config/emacs/clock.wav")
+#+end_src
+
+*** Md-To-Org
+
+#+begin_src emacs-lisp :tangle no
+(defun my-md-to-org-region (start end)
+  "Convert region from markdown to org"
+  (interactive "r")
+  (shell-command-on-region start end "pandoc -f markdown -t org" t t))
+#+end_src
+
+*** Org-Pandoc-Import
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-pandoc-import
+  :straight (:host github
+             :repo "tecosaur/org-pandoc-import"
+             :files ("*.el" "filters" "preprocessors")))
+#+end_src
+
+*** Zotero links
+
+#+begin_src emacs-lisp :tangle ./init.el
+(defun org-zotero-open (path)
+  (browse-url-xdg-open (format "zotero:%s" path)))
+
+(with-eval-after-load 'org
+  (org-link-set-parameters "zotero" :follow #'org-zotero-open))
 #+end_src
 
 ** Org-Roam
