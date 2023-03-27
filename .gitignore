@@ -11,7 +11,7 @@
 
 !.gitignore
 !Emacs.org
-!feeds.org
+!feeds.org.gpg
 
 !clock.wav
 
