@@ -1,13 +1,17 @@
 #+STARTUP: show2levels
 
 * QOL Stuff
+
 ** Keybinds
+
 *** Line Numbers
+
 #+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "M-<f2>") #'(lambda () (interactive) (global-display-line-numbers-mode #'toggle)))
 #+end_src
 
 *** Window Splits
+
 #+begin_src emacs-lisp :tangle ./init.el
 (defun split-and-follow-horizontally ()
   (interactive)
@@ -25,21 +29,25 @@
 #+end_src
 
 *** Input Method
+
 #+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'after-init-hook (lambda () (setq default-input-method "greek")))
 #+end_src
 
 *** Kill This Buffer
+
 #+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "C-x C-k") #'kill-this-buffer)
 #+end_src
 
 *** WoMan
+
 #+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "C-c w") #'woman)
 #+end_src
 
 *** view-mode
+
 #+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "C-z") #'view-mode)
 #+end_src
@@ -51,6 +59,7 @@
 #+end_src
 
 ** Sane Defaults
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq inhibit-startup-message t)
 
@@ -80,6 +89,7 @@
 #+end_src
 
 ** Fringes
+
 #+begin_src emacs-lisp :tangle ./init.el
 ;; Remove the line-wrap fringe indicators
 (setq-default fringe-indicator-alist (assq-delete-all 'truncation fringe-indicator-alist))
@@ -88,26 +98,31 @@
 #+end_src
 
 ** Word Wrap
+
 #+begin_src emacs-lisp :tangle ./init.el
   (global-word-wrap-whitespace-mode)
 #+end_src
 
 ** Blink Cursor
+
 #+begin_src emacs-lisp :tangle ./init.el
 (blink-cursor-mode 1)
 #+end_src
 
 ** Highlight current line
+
 #+begin_src emacs-lisp :tangle ./init.el
 (global-hl-line-mode 0)
 #+end_src
 
 ** Fullscreen by default
+
 #+begin_src emacs-lisp :tangle ./init.el
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 #+end_src
 
 ** Scrolling and Scrollbars
+
 #+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "M-<f3>") 'scroll-bar-mode)
 (scroll-bar-mode 0)
@@ -131,12 +146,14 @@
 #+end_src
 
 ** Disable Backup Files
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq make-backup-files nil)
 (setq auto-save-default nil)
 #+end_src
 
 ** Tab Configuration
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
@@ -144,6 +161,7 @@
 #+end_src
 
 ** Parentheses Pairs
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq electric-pair-pairs '(
                             (?\{ . ?\})
@@ -160,17 +178,20 @@
 #+end_src
 
 ** Line Numbers
+
 #+begin_src emacs-lisp :tangle ./init.el
 (global-display-line-numbers-mode 0)
 (setq display-line-numbers-type 'relative)
 #+end_src
 
 ** Warnings
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq warning-minimum-level :emergency)
 #+end_src
 
 ** Recent files
+
 #+begin_src emacs-lisp :tangle ./init.el
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
@@ -180,17 +201,20 @@
 #+end_src
 
 ** Winner-mode
+
 #+begin_src emacs-lisp :tangle ./init.el
 (winner-mode t)
 #+end_src
 
 ** eww
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq eww-auto-rename-buffer t)
 (global-set-key (kbd "C-c C-w") #'eww-follow-link)
 #+end_src
 
 ** Modeline
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq-default mode-line-format '("%e" mode-line-front-space
                          (:propertize
@@ -212,7 +236,9 @@
 #+end_src
 
 * Fonts
+
 ** Fonts
+
 #+begin_src emacs-lisp :tangle ./init.el
   (defun set-font-faces ()
         (message "Setting faces!")
@@ -229,7 +255,8 @@
     (set-font-faces))
 #+end_src
 
-** Lsp-Ui Fonts
+** COMMENT Lsp-Ui Fonts
+
 #+begin_src emacs-lisp :tangle no
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
@@ -246,13 +273,17 @@
 #+end_src
 
 ** Spacing
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq line-spacing 0.2)
 #+end_src
 
 * Packages
+
 ** Package Management
+
 *** Straight.el
+
 #+begin_src emacs-lisp :tangle ./init.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
@@ -275,27 +306,30 @@
 #+end_src
 
 ** Color Theme
+
 *** Modus Themes
-**** Overrides
+
+**** COMMENT Overrides
+
 #+begin_src emacs-lisp :tangle no
 ;; (set-face-attribute 'mode-line nil :box t)
 
 (setq modus-themes-vivendi-color-overrides
       '(
-        ;; (bg-main . "#1d1f21")
-        ;; ;; (bg-dim . "#faf6ef")
-        ;; ;; (bg-alt . "#f7efe5")
-        ;; ;; (bg-active . "#e8dfd1")
-        ;; (bg-inactive . "#373b41")
+        (bg-main . "#1d1f21")
+        ;; (bg-dim . "#faf6ef")
+        ;; (bg-alt . "#f7efe5")
+        ;; (bg-active . "#e8dfd1")
+        (bg-inactive . "#373b41")
         ))
 
 (setq modus-themes-operandi-color-overrides
       '(
-        ;; (bg-main . "#fefcf4")
-        ;; ;; (bg-dim . "#faf6ef")
-        ;; ;; (bg-alt . "#f7efe5")
-        ;; ;; (bg-active . "#e8dfd1")
-        ;; (bg-inactive . "#e8dfd1")
+        (bg-main . "#fefcf4")
+        ;; (bg-dim . "#faf6ef")
+        ;; (bg-alt . "#f7efe5")
+        ;; (bg-active . "#e8dfd1")
+        (bg-inactive . "#e8dfd1")
         ))
 #+end_src
 
@@ -307,6 +341,7 @@
 #+end_src
 
 **** Modus Themes
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq modus-themes-headings
       '((1 . (1.1))
@@ -386,43 +421,10 @@
     )
 #+end_src
 
-*** N A N O Themes
-#+begin_src emacs-lisp :tangle no
-(use-package nano-emacs
-  :straight (nano-emacs :type git :host github :repo "rougier/nano-emacs"))
-
-(setq nano-font-family-monospaced "Roboto Mono")
-(setq nano-font-family-proportional "Roboto")
-(setq nano-font-size 14)
-
-;; Theming Command line options (this will cancel warning messages)
-(add-to-list 'command-switch-alist '("-dark"   . (lambda (args))))
-(add-to-list 'command-switch-alist '("-light"  . (lambda (args))))
-(add-to-list 'command-switch-alist '("-default"  . (lambda (args))))
-(add-to-list 'command-switch-alist '("-no-splash" . (lambda (args))))
-(add-to-list 'command-switch-alist '("-no-help" . (lambda (args))))
-(add-to-list 'command-switch-alist '("-compact" . (lambda (args))))
-
-(require 'nano-faces)
-(require 'nano-theme)
-(require 'nano-theme-dark)
-(require 'nano-theme-light)
-
-(cond
- ((member "-default" command-line-args) t)
- ((member "-dark" command-line-args) (nano-theme-set-dark))
- (t (nano-theme-set-light)))
-(call-interactively 'nano-refresh-theme)
-
-(require 'nano-modeline)
-
-(when (member "-compact" command-line-args)
-  (require 'nano-compact))
-
-#+end_src
-
 ** Fonts & Icons
+
 *** Mixed-Pitch
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package mixed-pitch
   :straight t
@@ -434,6 +436,7 @@
 #+end_src
 
 *** Ligatures
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package ligature
   :straight t
@@ -450,6 +453,7 @@
 #+end_src
 
 *** Emojify
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package emojify
     :straight t)
@@ -460,12 +464,14 @@
 #+end_src
 
 *** All-the-Icons
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package all-the-icons
   :straight t)
 #+end_src
 
 **** All-The-Icons-Completion
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package all-the-icons-completion
   :straight t
@@ -476,8 +482,11 @@
 #+end_src
 
 ** Misc
+
 *** Window Navigation
+
 **** Ace-Window
+
 #+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "M-o") 'ace-window)
 (setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
@@ -503,6 +512,7 @@
 #+end_src
 
 **** Resize-Window
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq resizewindow-allow-backgrounds nil)
 (global-set-key (kbd "C-c C-;") 'resize-window)
@@ -511,7 +521,9 @@
 #+end_src
 
 *** File History
+
 **** Undo-Tree
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package undo-tree
   :straight t)
@@ -529,8 +541,11 @@
 #+end_src
 
 *** Autocompletion
+
 **** Yasnippet
+
 ***** Yasnippet
+
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package yasnippet
       :straight t
@@ -543,7 +558,9 @@
   (add-hook 'prog-mode-hook 'yas-minor-mode-on)
   (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
 #+end_src
+
 ***** Yasnippet-Snippets
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package yasnippet-snippets
     :straight t)
@@ -552,6 +569,7 @@
 **** Corfu
 
 ***** Corfu
+
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package corfu
     :straight t
@@ -604,7 +622,8 @@
 (advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
 #+end_src
 
-***** Corfu-doc
+***** COMMENT Corfu-doc
+
 #+begin_src emacs-lisp :tangle no
 (use-package corfu-doc
   ;; NOTE 2022-02-05: At the time of writing, `corfu-doc' is not yet on melpa
@@ -629,6 +648,7 @@
 #+end_src
 
 ***** kind-icon
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package kind-icon
   :straight t
@@ -687,7 +707,7 @@
 )
 #+end_src
 
-**** Company
+**** COMMENT Company
 ***** Company
 #+begin_src emacs-lisp :tangle no 
 (use-package company
@@ -723,8 +743,11 @@
 #+end_src
 
 *** Minibuffer
+
 **** Vertico
+
 ***** Vertico
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package vertico
   :straight t
@@ -735,6 +758,7 @@
 #+end_src
 
 ***** Savehist
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package savehist
     :straight t
@@ -742,7 +766,8 @@
   (savehist-mode))
 #+end_src
 
-***** Vertico-Posframe
+***** COMMENT Vertico-Posframe
+
 #+begin_src emacs-lisp :tangle no
 (use-package vertico-posframe
     :straight t
@@ -751,6 +776,7 @@
 #+end_src
 
 **** Marginalia
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package marginalia
   :after vertico
@@ -762,6 +788,7 @@
 #+end_src
 
 **** Orderless
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package orderless
   :straight t
@@ -771,12 +798,14 @@
 #+end_src
 
 *** Vterm
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package vterm
   :straight t)
 #+end_src
 
 *** OpenWith
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package openwith
   :straight (:host github :repo "thisirs/openwith")
@@ -785,15 +814,11 @@
                                 ;; ("\\.html\\'" "firefox" (file))
                                 ("\\.mp4\\'" "setsid -w xdg-open" (file))
                                 ("\\.mkv\\'" "setsid -w xdg-open" (file))
-                                ;; ("zotero://.*" "setsid -w xdg-open" (file))
-                                ;; ("\\.png\\'" "setsid -w xdg-open" (file))
-                                ;; ("\\.jpg\\'" "setsid -w xdg-open" (file))
-                                ;; ("\\.jpeg\\'" "setsid -w xdg-open" (file))
                                 ))
   (openwith-mode t))
 #+end_src
 
-*** Emacs-Everywhere
+*** COMMENT Emacs-Everywhere
 #+begin_src emacs-lisp :tangle no
 (use-package emacs-everywhere
   :straight t)
@@ -806,7 +831,9 @@
 #+end_src
 
 ** Keybinds
+
 *** Shift-number
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package shift-number
   :straight t)
@@ -816,6 +843,7 @@
 #+end_src
 
 *** Which-Key
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package which-key
   :straight t
@@ -826,6 +854,7 @@
 #+end_src
 
 *** Move-Text
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package move-text
   :straight t)
@@ -834,6 +863,7 @@
 #+end_src
 
 *** Embark
+
 #+begin_src emacs-lisp :tangle ./init.el
    (use-package embark
      :straight t
@@ -859,6 +889,7 @@
 #+end_src
 
 **** Citar-Embark
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package citar-embark
   :straight t
@@ -868,8 +899,11 @@
 #+end_src
 
 ** Programming
+
 *** Languages
+
 **** C/C++
+
 #+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'c-mode-hook 'lsp)
 (add-hook 'c++-mode-hook 'lsp)
@@ -942,6 +976,7 @@
 #+end_src
 
 ***** Pyvenv
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package pyvenv
   :straight t
@@ -958,20 +993,8 @@
               (call-interactively #'lsp)))
 #+end_src
 
-***** Conda.el
-#+begin_src emacs-lisp :tangle no
-(use-package conda
-  :straight t
-  :init
-  ;; (setq conda-anaconda-home "/home/kchou/.conda")
-  ;; (setq conda-env-home-directory "/home/kchou/.conda")
-  ;; ;; if you want eshell support, include:
-  (conda-env-initialize-eshell)
-  ;; if you want auto-activation (see below for details), include:
-  (conda-env-autoactivate-mode t))
-#+end_src
-
 ***** LSP
+
 #+begin_src emacs-lisp :tangle ./init.el
 ;; Disables its default "lsp linter", allowing pylint to work
 
@@ -990,6 +1013,7 @@
 #+end_src
 
 *** General
+
 #+begin_src emacs-lisp :tangle ./init.el
   (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1)))
   (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
@@ -1001,7 +1025,9 @@
 #+end_src
 
 *** LSP
+
 **** Lsp-Mode
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-mode
   :straight t
@@ -1014,6 +1040,7 @@
 #+end_src
 
 **** Lsp-Ui
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-ui
   :straight t)
@@ -1025,6 +1052,7 @@
 #+end_src
 
 **** Lsp-Treemacs
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-treemacs
     :straight t)
@@ -1033,6 +1061,7 @@
 #+end_src
 
 *** Flycheck
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package flycheck
   :straight t
@@ -1040,6 +1069,7 @@
 #+end_src
 
 *** Comment-Tags
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package comment-tags
   :straight t
@@ -1047,6 +1077,7 @@
 #+end_src
 
 *** Indent-Guide
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package indent-guide
     :straight t)
@@ -1057,6 +1088,7 @@
 #+end_src
 
 *** Treemacs
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package treemacs
   :straight t
@@ -1096,6 +1128,7 @@
 #+end_src
 
 **** Treemacs-Icons-Dired
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package treemacs-icons-dired
   :hook (dired-mode . treemacs-icons-dired-enable-once)
@@ -1103,6 +1136,7 @@
 #+end_src
 
 **** Treemacs-All-the-Icons
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package treemacs-all-the-icons
   :straight t
@@ -1111,7 +1145,9 @@
 #+end_src
 
 ** LaTeX
+
 *** Settings
+
 #+begin_src emacs-lisp :tangle ./init.el
 (straight-use-package 'auctex)
 (setq-default TeX-master nil)
@@ -1130,6 +1166,7 @@
 #+end_src
 
 *** RefTeX
+
 #+begin_src emacs-lisp :tangle ./init.el
 ;; Turn on RefTeX in AUCTeX
 (add-hook 'LaTeX-mode-hook 'turn-on-reftex)
@@ -1138,6 +1175,7 @@
 #+end_src
 
 *** Texlab/LSP-LaTeX
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package lsp-latex
     :straight t)
@@ -1149,7 +1187,7 @@
 #+end_src
 
 *** CDLaTeX
-#+begin_src emacs-lisp :tangle ./init.ele
+#+begin_src emacs-lisp :tangle ./init.el
 (use-package cdlatex
   :straight t)
 
@@ -1158,7 +1196,9 @@
 #+end_src
 
 ** Writing
+
 *** Flyspell
+
 #+begin_src emacs-lisp :tangle ./init.el
   (with-eval-after-load "ispell"
     (setq ispell-program-name "hunspell")
@@ -1172,6 +1212,7 @@
 #+end_src
 
 *** Olivetti
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq-default olivetti-body-width 130)
 (setq-default olivetti-margin-width 0)
@@ -1190,6 +1231,7 @@
 #+end_src
 
 *** Citar
+
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package citar
     :straight t
@@ -1208,6 +1250,7 @@
 #+end_src
 
 **** Citar-capf
+
 #+begin_src emacs-lisp :tangle ./init.el
 ;; (require 'citar-capf)
 
@@ -1217,6 +1260,7 @@
 #+end_src
 
 **** Citar-Org-Roam
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package citar-org-roam
   :straight t
@@ -1226,7 +1270,9 @@
 #+end_src
 
 ** Git
+
 *** Magit
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package magit
     :straight t
@@ -1234,12 +1280,14 @@
 #+end_src
 
 ** Dired
+
 #+begin_src emacs-lisp :tangle ./init.el
 (put 'dired-find-alternate-file 'disabled nil)
 (add-hook 'dired-mode-hook (lambda () (hl-line-mode 1)))
 #+end_src
 
 *** Dired-Hide-Dotfiles
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package dired-hide-dotfiles
   :straight t)
@@ -1255,6 +1303,7 @@
 #+end_src
 
 *** Dired-copy-paste
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package dired-copy-paste
   :straight (dired-copy-paste :type git :host github :repo "jsilve24/dired-copy-paste"))
@@ -1265,7 +1314,9 @@
 #+end_src
 
 ** Org
+
 *** Org-Agenda
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-agenda-block-separator ""
       org-agenda-start-with-log-mode nil
@@ -1285,6 +1336,7 @@
 #+end_src
 
 *** Org-Export
+
 #+begin_src emacs-lisp :tangle ./init.el
 ;; (setq org-export-backends '(texinfo md man beamer latex html ascii))
 
@@ -1300,19 +1352,12 @@
 #+end_src
 
 **** HTML Export
-#+begin_src emacs-lisp :tangle no
-(load "/home/kchou/.config/emacs/Org-Export/elisp/file-to-string.el")
-(load "/home/kchou/.config/emacs/Org-Export/elisp/org-html-src-block.el")
-(advice-add 'org-html-src-block :filter-return #'my/org-html-src-block)
 
-(setq org-html-htmlize-output-type nil)
+#+begin_src emacs-lisp :tangle no
 (setq org-html-validation-link nil)
-(setq org-html-head-include-default-style nil)
-(setq org-html-head-include-scripts nil)
+(setq org-html-head-include-default-style t)
+(setq org-html-head-include-scripts t)
 (setq org-html-metadata-timestamp-format "%A, %d %b %Y")
-;; (setq org-html-head (file-to-string "/home/kchou/.config/emacs/Org-Export/html/head.html"))
-(setq org-html-preamble nil)
-(setq org-html-postamble (file-to-string "/home/kchou/.config/emacs/Org-Export/html/postamble2.html"))
 #+end_src
 
 **** Org-Reveal
@@ -1357,17 +1402,8 @@ citecolor=red,
 urlcolor=blue}")
 #+end_src
 
-#+begin_src emacs-lisp :tangle no
-(defun org-latex-ref-to-cref (text backend info)
-  "Use \\cref instead of \\ref in latex export."
-  (when (org-export-derived-backend-p backend 'latex)
-    (replace-regexp-in-string "\\\\ref{" "\\\\cref{" text)))
+***** COMMENT engrave-faces
 
-(add-to-list 'org-export-filter-final-output-functions
-             'org-latex-ref-to-cref)
-#+end_src
-
-***** engrave-faces
 #+begin_src emacs-lisp :tangle no
 (use-package engrave-faces
   :straight t)
@@ -1379,6 +1415,7 @@ urlcolor=blue}")
 #+end_src
 
 **** org-contrib
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-contrib
   :straight t)
@@ -1387,7 +1424,8 @@ urlcolor=blue}")
 (ox-extras-activate '(ignore-headlines))
 #+end_src
 
-**** Youtube
+**** Youtube links
+
 Opens youtube links with mpv, and embeds them in the html exports instead of just having the link to it.
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1412,6 +1450,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Ox-Hugo
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package ox-hugo
   :straight t
@@ -1422,6 +1461,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org
   :straight (org :type built-in)
@@ -1465,11 +1505,13 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Org Bookmarks
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-bookmark-names-plist '(:last-capture nil :last-refile nil :last-capture-marker nil))
 #+end_src
 
 *** Org-Capture
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-default-notes-file "~/Textfiles/Org files/capture.org")
 
@@ -1485,7 +1527,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
         ("t" "Todo" entry (file+headline "~/Textfiles/Org files/Tasks.org" "Capture")
          "* TODO %?")
         ;; tasks related to uni
-        ("u" "Uni" entry (file "~/Textfiles/Org files/Μαθήματα.org")
+        ("u" "Uni" entry (file "~/Textfiles/Org files/Courses.org")
          "* TODO %?")
         ;; thought capture for org-roam
         ("s" "slipbox" entry (file "~/Textfiles/Braindump/slipbox.org")
@@ -1494,6 +1536,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org-refile
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-refile-targets `((nil :maxlevel . 3)
                            (,(directory-files-recursively "~/Textfiles/Org files/" "^[A-Za-zΑ-Ωα-ω0-9]*.org$") :maxlevel . 1)))
@@ -1503,16 +1546,19 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org-store-link
+
 #+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "C-c l") #'org-store-link)
 #+end_src
 
 *** Org-Timer
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-clock-sound "~/.config/emacs/clock.wav")
 #+end_src
 
 *** Oxr
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package oxr
   :straight (oxr :type git :host github :repo "bdarcus/oxr")
@@ -1521,6 +1567,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** org-cite-csl-activate
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-cite-csl-activate
   :straight (org-cite-csl-activate :type git :host github :repo "andras-simonyi/org-cite-csl-activate")
@@ -1534,12 +1581,14 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org-Download
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-download
   :straight t)
 #+end_src
 
 *** Org-Babel
+
 #+begin_src emacs-lisp :tangle ./init.el
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -1558,6 +1607,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Ob-Sagemath
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package ob-sagemath
   :straight t)
@@ -1582,6 +1632,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org-Transclusion
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-transclusion
   :straight t
@@ -1593,6 +1644,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org-Plot
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package gnuplot-mode
   :straight t)
@@ -1602,6 +1654,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org-Pomodoro
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-pomodoro
   :straight t)
@@ -1613,15 +1666,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-pomodoro-finished-sound "~/.config/emacs/clock.wav")
 (setq org-pomodoro-short-break-sound "~/.config/emacs/clock.wav")
 (setq org-pomodoro-long-break-sound "~/.config/emacs/clock.wav")
-#+end_src
-
-*** Md-To-Org
-
-#+begin_src emacs-lisp :tangle no
-(defun my-md-to-org-region (start end)
-  "Convert region from markdown to org"
-  (interactive "r")
-  (shell-command-on-region start end "pandoc -f markdown -t org" t t))
 #+end_src
 
 *** Org-Pandoc-Import
@@ -1671,7 +1715,9 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 ** Org-Roam
+
 *** Org-Roam
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam
   :straight t
@@ -1814,13 +1860,16 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
                                                   '(:immediate-finish t)))))
     (apply #'org-roam-node-insert args)))
 #+end_src
+
 *** Org-Roam-Ui
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam-ui
     :straight t)
 #+end_src
 
 *** Deft
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package deft
   :after org
@@ -1853,8 +1902,11 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 ** Ricing
+
 *** Org
+
 **** Org-Modern
+
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package org-modern
     :straight t
@@ -1870,6 +1922,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Org-Modern-Indent
+
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package org-modern-indent
     :straight (:host github :repo "jdtsmith/org-modern-indent")
@@ -1879,29 +1932,15 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** Org-Pretty-Table-Mode
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-pretty-table
   :straight (:host github :repo "Fuco1/org-pretty-table")
   :hook (org-mode . org-pretty-table-mode))
 #+end_src
 
-**** Org-Fancy-Priorities
-#+begin_src emacs-lisp :tangle no
-(use-package org-fancy-priorities
-  :straight t
-  :hook (org-mode . org-fancy-priorities-mode))
-(setq org-priority-highest 0
-      org-priority-default 2
-      org-priority-lowest 4)
-(setq org-fancy-priorities-list '(
-                                  (?0 . "P0")
-                                  (?1 . "P1")
-                                  (?2 . "P2")
-                                  (?3 . "P3")
-                                  (?4 . "P4")))
-#+end_src
-
 *** Dashboard
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package dashboard
   :straight t
@@ -1934,52 +1973,15 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 #+end_src
 
-**** navigator buttons
-#+begin_src emacs-lisp :tangle no
-(setq dashboard-navigator-buttons
-      `(;; line1
-        ;; ((,(all-the-icons-octicon "octoface" :height 1.1 :v-adjust 0.0)
-        ;;   "Homepage"
-        ;;   "Browse homepage"
-        ;;   (lambda (&rest _) (browse-url "https://github.com/Likhon-baRoy/.emacs.d")) nil "" " |")
-        ;;  (,(all-the-icons-faicon "refresh" :height 1.1 :v-adjust 0.0)
-        ;;   "Update"
-        ;;   "Update Zmacs"
-        ;;   (lambda (&rest _) (auto-package-update-maybe)) warning "" " |")
-        ;;  (,(all-the-icons-faicon "flag" :height 1.1 :v-adjust 0.0) nil
-        ;;   "Report a BUG"
-        ;;   (lambda (&rest _) (browse-url "https://github.com/Likhon-baRoy/.emacs.d/issues/new")) error "" ""))
-        ;; ;; line 2
-        ;; ;; ((,(all-the-icons-octicon "mark-github" :height 1.1 :v-adjust 0.0)
-        ;; ;;   "AlienFriend"
-        ;; ;;   "Browse Alien Page"
-        ;; ;;   (lambda (&rest _) (browse-url "https://github.com/b-coimbra/.emacs.d")) nil "" ""))
-        ;; ;; Empty line
-        ;; (("" "\n" "" nil nil "" ""))
-
-        ;; Keybindings
-        ((,(all-the-icons-octicon "search" :height 1.0 :v-adjust 0.0)
-          " Find file" nil
-          (lambda (&rest _) (find-file)) nil "" "           C-x C-f"))
-        ((,(all-the-icons-octicon "file-directory" :height 1.0 :v-adjust 0.0)
-          " Open project" nil
-          (lambda (&rest _) (treemacs)) nil "" "         C-x t t"))
-        ((,(all-the-icons-octicon "three-bars" :height 1.0 :v-adjust 0.0)
-          " File explorer" nil
-          (lambda (&rest _) (dired)) nil "" "        C-x d"))
-        ((,(all-the-icons-octicon "settings" :height 1.0 :v-adjust 0.0)
-          " Open settings" nil
-          (lambda (&rest _) (find-file "~/Repos/Emacs/Emacs.org")) nil "" "        C-c e  ")))
-)
-#+end_src
-
 *** Rainbow-Mode
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package rainbow-mode
   :straight t)
 #+end_src
 
 *** Rainbow-Delimeters
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package rainbow-delimiters
   :straight t
@@ -1987,7 +1989,9 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Modeline
-**** Minions
+
+**** COMMENT Minions
+
 #+begin_src emacs-lisp :tangle no
 (use-package minions
   :straight t
@@ -1996,7 +2000,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq minions-mode-line-lighter ";")
 #+end_src
 
-**** Moody
+**** COMMENT Moody
 #+begin_src emacs-lisp :tangle no
 (use-package moody
  :straight t
@@ -2010,6 +2014,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Beacon-Mode
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package beacon
     :straight t)
@@ -2018,6 +2023,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Xenops
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package xenops
   :straight t
@@ -2074,7 +2080,9 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 ** Elfeed
+
 *** Elfeed-Org
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package elfeed-org
   :straight t)
@@ -2084,6 +2092,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Elfeed
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package elfeed
   :straight t)
@@ -2100,6 +2109,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 **** eww integration
+
 #+begin_src emacs-lisp :tangle ./init.el
 (defun elfeed-eww-open (&optional use-generic-p)
   "open with eww"
@@ -2118,6 +2128,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 ** Anki
 
 *** Anki-Editor
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq-default anki-editor-use-math-jax t)
 
@@ -2164,12 +2175,14 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 *** Org-Anki
+
 #+begin_src emacs-lisp :tangle no
 (use-package org-anki
   :straight t)
 #+end_src
 
 * Buffer Shenanigans
+
 #+begin_src emacs-lisp :tangle ./init.el
 ;; (setq-default message-log-max nil)
 ;; (kill-buffer "*Messages*")
@@ -2184,6 +2197,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+end_src
 
 * Local Variables
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq enable-local-eval t)
 #+end_src
