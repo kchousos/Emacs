@@ -44,6 +44,12 @@
 (global-set-key (kbd "C-z") #'view-mode)
 #+end_src
 
+*** Scroll-Lock-Mode
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "C-<print>") #'scroll-lock-mode)
+#+end_src
+
 ** Sane Defaults
 #+begin_src emacs-lisp :tangle ./init.el
 (setq inhibit-startup-message t)
@@ -1635,6 +1641,33 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 (with-eval-after-load 'org
   (org-link-set-parameters "zotero" :follow #'org-zotero-open))
+#+end_src
+
+*** Org-Crypt
+
+#+begin_src emacs-lisp :tangle ./init.el
+(require 'org-crypt)
+
+(with-eval-after-load "org-crypt"
+  ;; Automatically encrypts everything that has the tag "crypt"
+  ;; when you save the file
+  (org-crypt-use-before-save-magic)
+  (setq org-tags-exclude-from-inheritance '("crypt"))
+
+  (setq org-crypt-key nil)
+  ;; GPG key to use for encryption.
+  ;; nil means  use symmetric encryption unconditionally.
+  ;; "" means use symmetric encryption unless heading sets CRYPTKEY property.
+
+  (setq auto-save-default nil)
+  ;; Auto-saving does not cooperate with org-crypt.el: so you need to
+  ;; turn it off if you plan to use org-crypt.el quite often.  Otherwise,
+  ;; you'll get an (annoying) message each time you start Org.
+
+  ;; To turn it off only locally, you can insert this:
+  ;;
+  ;; # -*- buffer-auto-save-file-name: nil; -*-
+  )
 #+end_src
 
 ** Org-Roam
