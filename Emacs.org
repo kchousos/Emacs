@@ -912,6 +912,7 @@
 #+end_src
 
 **** MIPS Assembly
+
 #+begin_src emacs-lisp :tangle no
 (use-package mips-mode
  :straight t
@@ -919,18 +920,21 @@
 #+end_src
 
 **** Yaml
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package yaml-mode
     :straight t)
 #+end_src
 
 **** Fish Shell
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package fish-mode
     :straight t)
 #+end_src
 
 **** Octave
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq auto-mode-alist
       (cons '("\\.m$" . octave-mode) auto-mode-alist))
@@ -939,7 +943,8 @@
 #+end_src
 
 **** Prolog
-#+begin_src emacs-lisp :tangle ./init.el
+
+#+begin_src emacs-lisp :tangle no
 (setq auto-mode-alist
       (cons '("\\.pl$" . prolog-mode) auto-mode-alist))
 #+end_src
@@ -947,7 +952,12 @@
 ***** ECLiPSe
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq prolog-system 'eclipse)
+;; (setq prolog-system 'eclipse)
+
+(autoload 'eclipse-mode "/home/kchou/.config/emacs/straight/build/eclipse/eclipse.el" "ECLIPSE editing mode" t)
+
+(setq auto-mode-alist (cons '("\\.pl" . eclipse-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.ecl" . eclipse-mode) auto-mode-alist))
 #+end_src
 
 **** Haskell
@@ -1585,6 +1595,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-download
   :straight t)
+
+(global-set-key (kbd "s-y") #'org-download-clipboard)
 #+end_src
 
 *** Org-Babel
@@ -1712,6 +1724,14 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   ;;
   ;; # -*- buffer-auto-save-file-name: nil; -*-
   )
+#+end_src
+
+*** COMMENT Org-Excalidraw
+
+#+begin_src emacs-lisp :tangle no
+(use-package org-excalidraw
+  :straight (:type git :host github :repo "wdavew/org-excalidraw"))
+(setq org-excalidraw-directory "~/Textfiles/Excalidraw/")
 #+end_src
 
 ** Org-Roam
