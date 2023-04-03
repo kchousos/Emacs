@@ -404,7 +404,7 @@
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
         modus-themes-diffs '(desaturated)
 
-        org-highlight-latex-and-related '(latex)
+        org-highlight-latex-and-related '(nil)
 
         modus-themes-lang-checkers '(text-also)
 
@@ -1224,7 +1224,7 @@
 *** Olivetti
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq-default olivetti-body-width 130)
+(setq-default olivetti-body-width 110)
 (setq-default olivetti-margin-width 0)
 (use-package olivetti
   :straight t
@@ -1477,14 +1477,14 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight (org :type built-in)
   :commands (org-capture org-agenda)
   :config
-  (setq org-hide-emphasis-markers nil
+  (setq org-hide-emphasis-markers t
         org-ellipsis "…"
         org-startup-indented t
         org-pretty-entities nil
         org-support-shift-select t
         org-fontify-whole-heading-line t
         org-fontify-done-headline t
-        org-startup-with-inline-images nil
+        org-startup-with-inline-images t
         org-fontify-quote-and-verse-blocks t
         org-deadline-warning-days 14
         org-log-done 'time
@@ -1507,7 +1507,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 (setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
 
-(setq org-image-actual-width (list 800))
+(setq org-image-actual-width (list 700))
 
 (setq org-display-remote-inline-images 'download)
 
@@ -1966,7 +1966,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner "/home/kchou/Repos/Emacs/logos/gnu-emacs.svg")
+  (setq dashboard-startup-banner 'official)
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
@@ -2048,7 +2048,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (use-package xenops
   :straight t
   :config
-  (setq xenops-math-image-scale-factor 1.5)
+  (setq xenops-math-image-scale-factor 1.2)
   )
 
 (add-to-list 'org-latex-packages-alist
