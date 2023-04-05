@@ -333,7 +333,7 @@
         ))
 #+end_src
 
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (defun my-modus-themes-custom-faces ()
   (set-face-attribute 'modus-themes-markup-macro nil :background (modus-themes-color 'bg-main)))
 
@@ -343,12 +343,12 @@
 **** Modus Themes
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq modus-themes-headings
-      '((1 . (1.1))
-        (2 . (1.075))
-        (3 . (1.05))
-        (4 . (1.025))
-        (t . (1.0))))
+;; (setq modus-themes-headings
+;;       '((1 . (1.1))
+;;         (2 . (1.075))
+;;         (3 . (1.05))
+;;         (4 . (1.025))
+;;         (t . (1.0))))
 
 (load-theme 'modus-operandi)
 
@@ -1243,20 +1243,65 @@
 *** Citar
 
 #+begin_src emacs-lisp :tangle ./init.el
-  (use-package citar
-    :straight t
-    :bind (("C-c b" . citar-insert-citation)
-           ;; :map minibuffer-local-map
-           ;; ("M-b" . citar-insert-preset)
-           )
-    :custom
-    (citar-bibliography '("~/Textfiles/biblio.bib")))
+        (use-package citar
+          :straight t
+          :bind (("C-c b" . citar-insert-citation)
+                 ;; :map minibuffer-local-map
+                 ;; ("M-b" . citar-insert-preset)
+                 )
+          :custom
+          (citar-bibliography '("~/Textfiles/biblio.bib"))
+          :config
+            (defvar citar-indicator-files-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-faicon
+              "file-o"
+              :face 'all-the-icons-green
+              :v-adjust -0.1)
+     :function #'citar-has-files
+     :padding "  " ; need this because the default padding is too low for these icons
+     :tag "has:files"))
 
-  (setq citar-symbols
-        `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
-          (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
-          (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
-  (setq citar-symbol-separator "  ")
+  (defvar citar-indicator-links-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-octicon
+              "link"
+              :face 'all-the-icons-orange
+              :v-adjust 0.01)
+     :function #'citar-has-links
+     :padding "  "
+     :tag "has:links"))
+
+  (defvar citar-indicator-notes-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-material
+              "speaker_notes"
+              :face 'all-the-icons-blue
+              :v-adjust -0.3)
+     :function #'citar-has-notes
+     :padding "  "
+     :tag "has:notes"))
+
+  (defvar citar-indicator-cited-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-faicon
+              "circle-o"
+              :face 'all-the-icon-green)
+     :function #'citar-is-cited
+     :padding "  "
+     :tag "is:cited"))
+
+    (setq citar-indicators
+    (list citar-indicator-files-icons
+          citar-indicator-links-icons
+          citar-indicator-notes-icons
+          citar-indicator-cited-icons)))
+
+        ;; (setq citar-symbols
+        ;;       `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
+        ;;         (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
+        ;;         (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
+        ;; (setq citar-symbol-separator "  ")
 #+end_src
 
 **** Citar-capf
@@ -1477,7 +1522,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight (org :type built-in)
   :commands (org-capture org-agenda)
   :config
-  (setq org-hide-emphasis-markers t
+  (setq org-hide-emphasis-markers nil
         org-ellipsis "…"
         org-startup-indented t
         org-pretty-entities nil
@@ -1734,6 +1779,20 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-excalidraw-directory "~/Textfiles/Excalidraw/")
 #+end_src
 
+*** Org-Analyzer
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-analyzer
+  :straight (:host github :repo "rksm/clj-org-analyzer"))
+#+end_src
+
+*** Org-Yt
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-yt
+  :straight (:host github :repo "league/org-yt"))
+#+end_src
+
 ** Org-Roam
 
 *** Org-Roam
@@ -1756,16 +1815,19 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
-      :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      ;; :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      :if-new (file+head "references/${slug}.org" "#+title: ${title}\n\n")
       :unnarrowed t)))
 
   (org-roam-capture-templates
    '(
      ("m" "main" plain "%?"
-      :if-new (file+head "main/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      ;; :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n\n")
       :unnarrowed t)
      ("p" "post" plain "%?"
-      :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %U\n#+hugo_base_dir: ~/Repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n\n")
+      ;; :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %U\n#+hugo_base_dir: ~/Repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n\n")
+      :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+hugo_base_dir: ~/Repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n\n")
       ;; :immediate-finish t
       :unnarrowed t)
      ))
@@ -1810,7 +1872,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 **** Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
 
-#+begin_src emacs-lisp :tangle ./init.el
+#+begin_src emacs-lisp :tangle no
 (defun my/preview-fetcher ()
   (let* ((elem (org-element-context))
          (parent (org-element-property :parent elem)))
@@ -1886,6 +1948,17 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam-ui
     :straight t)
+#+end_src
+
+*** Org-Roam-Timestamps
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-roam-timestamps
+    :straight t
+    :config
+    (org-roam-timestamps-mode))
+
+(setq org-roam-timestamps-remember-timestamps nil)
 #+end_src
 
 *** Deft
@@ -1966,7 +2039,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner 'official)
+  (setq dashboard-startup-banner "/home/kchou/Repos/Emacs/logos/gnu-emacs.svg")
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
