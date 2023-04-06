@@ -1810,7 +1810,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (org-roam-completion-everywhere t)
 
   (org-roam-dailies-capture-templates
-   '(("d" "default" entry "\n* %<%H:%M>\n\n %?"
+   '(("d" "default" entry "* %<%H:%M>\n\n %?"
+      :empty-lines 1
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: :journal:\n\n"))))
 
   (org-roam-capture-ref-templates
