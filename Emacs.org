@@ -1646,23 +1646,6 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 *** Org-Babel
 
-#+begin_src emacs-lisp :tangle ./init.el
-(org-babel-do-load-languages
- 'org-babel-load-languages
- '((emacs-lisp :tangle ./init.el . t)
-   (C . t)
-   (python . t)
-   (octave . t)
-   (R . t)
-   ))
-;; Show syntax highlighting per language native mode in *.org
-(setq org-src-fontify-natively t)
-;; For languages with significant whitespace like Python:
-(setq org-src-preserve-indentation t)
-
-(setq org-confirm-babel-evaluate nil)
-#+end_src
-
 **** Ob-Sagemath
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1686,6 +1669,34 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 ;; ;; Show images after evaluating code blocks.
 ;; (add-hook 'org-babel-after-execute-hook 'org-display-inline-images)
+#+end_src
+
+**** Ob-Prolog
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package ob-prolog
+  :straight (:host github :repo "ljos/ob-prolog"))
+
+(setq org-babel-prolog-command "eclipse")
+#+end_src
+
+**** Global
+#+begin_src emacs-lisp :tangle ./init.el
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((emacs-lisp :tangle ./init.el . t)
+   (C . t)
+   (python . t)
+   (octave . t)
+   (R . t)
+   (prolog . t)
+   ))
+;; Show syntax highlighting per language native mode in *.org
+(setq org-src-fontify-natively t)
+;; For languages with significant whitespace like Python:
+(setq org-src-preserve-indentation t)
+
+(setq org-confirm-babel-evaluate nil)
 #+end_src
 
 *** Org-Transclusion
