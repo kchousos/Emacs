@@ -1387,7 +1387,17 @@
         "~/Textfiles/Org files/Habits.org"
         "~/Textfiles/Org files/Inbox.org"
         "~/Textfiles/Org files/Phone inbox.org"
-        ))
+        )
+      org-tag-alist (quote (("@errand" . ?e)
+                            ("@office" . ?o)
+                            ("@home" . ?h)
+                            ("@uni" . ?s)
+                            ;; (:newline)
+                            ;; ("WAITING" . ?w)
+                            ;; ("HOLD" . ?H)
+                            ;; ("CANCELLED" . ?c)
+                            ))
+      )
 
 (global-set-key (kbd "C-c a") 'org-agenda)
 #+end_src
