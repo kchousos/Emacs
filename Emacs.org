@@ -10,6 +10,12 @@
 (global-set-key (kbd "M-<f2>") #'(lambda () (interactive) (global-display-line-numbers-mode #'toggle)))
 #+end_src
 
+*** Hide modeline
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "M-<f5>") #'(lambda () (interactive) (setq mode-line-format nil)))
+#+end_src
+
 *** Window Splits
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -368,7 +374,7 @@
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented'.  The variable's doc string shows all possible
         ;; combinations.
-        modus-themes-mode-line nil
+        modus-themes-mode-line '(accented)
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -380,7 +386,7 @@
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line nil
+        modus-themes-hl-line '(accented)
 
         modus-themes-paren-match '(intense) ; {nil,'subtle-bold,'intense,'intense-bold}
 
@@ -1201,8 +1207,11 @@
 (use-package cdlatex
   :straight t)
 
-(add-hook 'LaTeX-mode-hook (lambda () (cdlatex-mode t)))
-(add-hook 'TeX-mode-hook (lambda () (cdlatex-mode t)))
+(add-hook 'org-mode-hook #'turn-on-org-cdlatex)
+(add-hook 'LaTeX-mode-hook #'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
+(add-hook 'latex-mode-hook #'turn-on-cdlatex)   ; with Emacs latex mode
+
+(global-set-key (kbd "C-c e") #'cdlatex-environment)
 #+end_src
 
 ** Writing
@@ -1374,11 +1383,11 @@
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-agenda-block-separator "\n"
-      org-agenda-start-with-log-mode nil
+      org-agenda-start-with-log-mode t
       org-agenda-use-time-grid t
       org-agenda-include-deadlines t
       org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
-      org-agenda-span 'day
+      org-agenda-span 'week
       org-extend-today-until 4
       org-directory "~/Textfiles/Org files"
       org-agenda-files
@@ -1425,6 +1434,24 @@
 (setq org-html-head-include-default-style t)
 (setq org-html-head-include-scripts t)
 (setq org-html-metadata-timestamp-format "%A, %d %b %Y")
+#+end_src
+
+***** Htmlize
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package htmlize
+  :straight t)
+#+end_src
+
+***** Org-Tufte
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-tufte
+  :straight (:host github :repo "Zilong-Li/org-tufte")
+  ;; :init (add-to-list 'load-path "PATH*")
+  :config
+  (require 'org-tufte)
+  (setq org-tufte-htmlize-code t))
 #+end_src
 
 **** Org-Reveal
@@ -1527,6 +1554,50 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-hugo-default-section-directory "posts")
 #+end_src
 
+This function exports all org files in a directory---recursively---with ox-hugo.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(defun ox-hugo/export-all (&optional org-files-root-dir dont-recurse)
+  "Export all Org files (including nested) under ORG-FILES-ROOT-DIR.
+
+All valid post subtrees in all Org files are exported using
+`org-hugo-export-wim-to-md'.
+
+If optional arg ORG-FILES-ROOT-DIR is nil, all Org files in
+current buffer's directory are exported.
+
+If optional arg DONT-RECURSE is nil, all Org files in
+ORG-FILES-ROOT-DIR in all subdirectories are exported. Else, only
+the Org files directly present in the current directory are
+exported.  If this function is called interactively with
+\\[universal-argument] prefix, DONT-RECURSE is set to non-nil.
+
+Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
+  (interactive)
+  (setq org-hugo-base-dir "./site")
+  (let* ((org-files-root-dir (or org-files-root-dir default-directory))
+         (dont-recurse (or dont-recurse (and current-prefix-arg t)))
+         (search-path (file-name-as-directory (expand-file-name org-files-root-dir)))
+         (org-files (if dont-recurse
+                        (directory-files search-path :full "\.org$")
+                      (directory-files-recursively search-path "\.org$")))
+         (num-files (length org-files))
+         (cnt 1))
+    (if (= 0 num-files)
+        (message (format "No Org files found in %s" search-path))
+      (progn
+        (message (format (if dont-recurse
+                             "[ox-hugo/export-all] Exporting %d files from %S .."
+                           "[ox-hugo/export-all] Exporting %d files recursively from %S ..")
+                         num-files search-path))
+        (dolist (org-file org-files)
+          (with-current-buffer (find-file-noselect org-file)
+            (message (format "[ox-hugo/export-all file %d/%d] Exporting %s" cnt num-files org-file))
+            (org-hugo-export-wim-to-md :all-subtrees)
+            (setq cnt (1+ cnt))))
+        (message "Done!")))))
+#+end_src
+
 *** Org
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1580,7 +1651,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 *** Org-Capture
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq org-default-notes-file "~/Textfiles/Org files/capture.org")
+(setq org-default-notes-file "Inbox.org")
 
 (global-set-key (kbd "C-c c") #'org-capture)
 
@@ -1600,15 +1671,15 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
         ;; ("s" "slipbox" entry (file "~/Textfiles/Braindump/slipbox.org")
         ;;  "* %?")
         ("c" "org-protocol-capture" entry (file "Inbox.org")
-         "* TODO [[%:link][%:description]]\n\n %i" :immediate-finish t)
+         "* [[%:link][%:description]]\n\n %i" :immediate-finish t)
       ))
 #+end_src
 
 *** Org-refile
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq org-refile-targets `((nil :maxlevel . 3)
-                           (,(directory-files-recursively "~/Textfiles/Org files/" "^[A-Za-zΑ-Ωα-ω0-9]*.org$") :maxlevel . 1)))
+(setq org-refile-targets `((nil :maxlevel . 5)
+                           (,(directory-files-recursively "~/Textfiles/Org files/" "^[A-Za-zΑ-Ωα-ω0-9 ]*.org$") :maxlevel . 4)))
                            
 (setq org-outline-path-complete-in-steps nil)
 (setq org-refile-use-outline-path 'file)
@@ -1694,6 +1765,16 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (setq org-babel-prolog-command "eclipse")
 #+end_src
 
+**** COMMENT Ditaa
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq org-ditaa-jar-path ""
+      org-ditaa-jar-option ""
+      org-babel-ditaa-java-cmd "ditaa"
+      org-babel-default-header-args:ditaa '((:results . "file")
+                                           (:exports . "results")))
+#+end_src
+
 **** Global
 #+begin_src emacs-lisp :tangle ./init.el
 (org-babel-do-load-languages
@@ -1704,6 +1785,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
    (octave . t)
    (R . t)
    (prolog . t)
+   ;; (ditaa . t)
    ))
 ;; Show syntax highlighting per language native mode in *.org
 (setq org-src-fontify-natively t)
@@ -1818,6 +1900,15 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   :straight (:host github :repo "league/org-yt"))
 #+end_src
 
+*** Org-Web-Tools
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-web-tools
+  :straight (:host github :repo "alphapapa/org-web-tools"))
+
+(global-set-key (kbd "C-x p i") 'org-web-tools-insert-link-for-url)
+#+end_src
+
 ** Org-Roam
 
 *** Org-Roam
@@ -1835,25 +1926,23 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   (org-roam-completion-everywhere t)
 
   (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %<%H:%M>\n\n %?"
+   '(("d" "default" entry "* %<%H:%M>: %?"
       :empty-lines 1
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: :journal:\n\n"))))
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
-      ;; :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
-      :if-new (file+head "references/${slug}.org" "#+title: ${title}\n\n")
+      :if-new (file+head "references/${slug}.org" "#+title: ${title}#+date: %U\n\n")
       :unnarrowed t)))
 
   (org-roam-capture-templates
    '(
-     ("m" "main" plain "%?"
-      ;; :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
-      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n\n")
+     ("p" "page" plain "- subject :: %?"
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      :empty-lines 1
       :unnarrowed t)
-     ("p" "post" plain "%?"
-      ;; :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %U\n#+hugo_base_dir: ~/Repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n\n")
-      :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+hugo_base_dir: ~/Repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n\n")
+     ("P" "post" plain "%?"
+      :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %U\n#+hugo_base_dir: ~/Repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n\n")
       ;; :immediate-finish t
       :unnarrowed t)
      ))
@@ -1867,6 +1956,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
          ("C-c n t" . org-roam-tag-add)
          ("C-c n a" . org-roam-alias-add)
          ("C-c n r" . org-roam-ref-add)
+         ("C-c n o" . org-id-get-create)
          :map org-mode-map
          ("C-M-i"    . completion-at-point))
 
@@ -1896,7 +1986,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
   )
 #+end_src
 
-**** Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
+**** COMMENT Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
 
 #+begin_src emacs-lisp :tangle no
 (defun my/preview-fetcher ()
@@ -1907,7 +1997,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
                         (org-element-property :begin parent)
                         (org-element-property :end parent)))))
 
-(setq org-roam-preview-function #'my/preview-fetcher)
+;; (setq org-roam-preview-function #'my/preview-fetcher)
 #+end_src
 
 **** Get 'org-roam-preview-visit' and friends to replace the main window. This should be applicable only when  'org-roam-mode' buffer is displayed in a side-window.
@@ -1955,6 +2045,25 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 (add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
 #+end_src
 
+**** Include org-roam todos in org-agenda
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq who/org-agenda-directory "~/Textfiles/Org files/")
+
+(require 'find-lisp)
+(defun who/find-org-files (directory)
+  (find-lisp-find-files directory "\.org$"))
+
+(defun who-org/agenda-files-update (&rest _)
+  (let ((todo-zettels (->> "rg --files-with-matches '(TODO)|(NEXT)|(HOLD)|(WAITING)' ~/Textfiles/Braindump"
+                           (shell-command-to-string)
+                           (s-lines)
+                           (-filter (lambda (line) (not (s-blank? line)))))))
+    (setq org-agenda-files (append (who/find-org-files who/org-agenda-directory) todo-zettels))))
+
+(advice-add 'org-agenda :before #'who-org/agenda-files-update)
+#+end_src
+
 **** Bindings
 
 ***** node-insert-immediate
@@ -1976,7 +2085,7 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
     :straight t)
 #+end_src
 
-*** Org-Roam-Timestamps
+*** COMMENT Org-Roam-Timestamps
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam-timestamps
