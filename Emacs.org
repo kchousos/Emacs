@@ -241,6 +241,12 @@
                          mode-line-end-spaces))
 #+end_src
 
+** COMMENT Frame title
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq frame-title-format '("%b@" (:eval (or (file-remote-p default-directory 'host) system-name)) " — Emacs"))
+#+end_src
+
 * Fonts
 
 ** Fonts
@@ -1429,7 +1435,7 @@
 
 **** HTML Export
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle ./init.el
 (setq org-html-validation-link nil)
 (setq org-html-head-include-default-style t)
 (setq org-html-head-include-scripts t)
@@ -1443,7 +1449,7 @@
   :straight t)
 #+end_src
 
-***** Org-Tufte
+***** COMMENT Org-Tufte
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-tufte
@@ -1552,6 +1558,8 @@ Opens youtube links with mpv, and embeds them in the html exports instead of jus
 
 (setq org-hugo-base-dir (expand-file-name "~/Repos/Site"))
 (setq org-hugo-default-section-directory "posts")
+(setq org-hugo-front-matter-format "yaml")
+(setq org-hugo-use-code-for-kbd t)
 #+end_src
 
 This function exports all org files in a directory---recursively---with ox-hugo.
@@ -1672,7 +1680,10 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
         ;;  "* %?")
         ("c" "org-protocol-capture" entry (file "Inbox.org")
          "* [[%:link][%:description]]\n\n %i" :immediate-finish t)
-      ))
+        ("w" "word" plain (file "~/Textfiles/Braindump/pages/noteworthy_words.org")
+         "- %? :: "
+         :empty-lines 1)
+        ))
 #+end_src
 
 *** Org-refile
@@ -1725,6 +1736,8 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-download
   :straight t)
+
+(setq org-download-image-org-width 500)
 
 (global-set-key (kbd "s-y") #'org-download-clipboard)
 #+end_src
@@ -1932,7 +1945,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 
   (org-roam-capture-ref-templates
    '(("r" "ref" plain "%?"
-      :if-new (file+head "references/${slug}.org" "#+title: ${title}#+date: %U\n\n")
+      :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
       :unnarrowed t)))
 
   (org-roam-capture-templates
@@ -1940,7 +1953,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
      ("p" "page" plain "- subject :: %?"
       :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
       :empty-lines 1
-      :unnarrowed t)
+      :unnarrowed nil)
      ("P" "post" plain "%?"
       :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %U\n#+hugo_base_dir: ~/Repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n\n")
       ;; :immediate-finish t
@@ -2062,6 +2075,16 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
     (setq org-agenda-files (append (who/find-org-files who/org-agenda-directory) todo-zettels))))
 
 (advice-add 'org-agenda :before #'who-org/agenda-files-update)
+#+end_src
+
+**** All notes start as drafts
+
+Taken from https://jethrokuan.github.io/org-roam-guide/.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(defun jethro/tag-new-node-as-draft ()
+  (org-roam-tag-add '("draft")))
+(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
 #+end_src
 
 **** Bindings
