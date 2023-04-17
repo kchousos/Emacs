@@ -1,135 +1,116 @@
+#+title: My Emacs configuration
+#+subtitle: A literate =init.el=
+#+author: Konstantinos Chousos
+#+language: en
+#+options: num:t toc:nil date:nil timestamp:nil
 #+STARTUP: show2levels
 
-* QOL Stuff
+This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configuration, in the style of [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]], by leveraging [[https://orgmode.org/][Org-Mode]].
 
-** Keybinds
+#+toc: headlines 2
 
-*** Line Numbers
+* Miscellaneous configurations
 
-#+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "M-<f2>") #'(lambda () (interactive) (global-display-line-numbers-mode #'toggle)))
-#+end_src
+This section consists of various little configurations and settings that generally improve the quality of life in Emacs. No packages are configured here, only built-in options and variables.
 
-*** Hide modeline
+This are just little tweaks to make the Emacs experience more pleasurable.
 
-#+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "M-<f5>") #'(lambda () (interactive) (setq mode-line-format nil)))
-#+end_src
+- Disables the start-up message of default emacs.
 
-*** Window Splits
-
-#+begin_src emacs-lisp :tangle ./init.el
-(defun split-and-follow-horizontally ()
-  (interactive)
-  (split-window-below)
-  (balance-windows)
-  (other-window 1))
-(global-set-key (kbd "C-x 2") #'split-and-follow-horizontally)
-
-(defun split-and-follow-vertically ()
-  (interactive)
-  (split-window-right)
-  (balance-windows)
-  (other-window 1))
-(global-set-key (kbd "C-x 3") #'split-and-follow-vertically)
-#+end_src
-
-*** Input Method
-
-#+begin_src emacs-lisp :tangle ./init.el
-(add-hook 'after-init-hook (lambda () (setq default-input-method "greek")))
-#+end_src
-
-*** Kill This Buffer
-
-#+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "C-x C-k") #'kill-this-buffer)
-#+end_src
-
-*** WoMan
-
-#+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "C-c w") #'woman)
-#+end_src
-
-*** view-mode
-
-#+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "C-z") #'view-mode)
-#+end_src
-
-*** Scroll-Lock-Mode
-
-#+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "C-<print>") #'scroll-lock-mode)
-#+end_src
-
-** Sane Defaults
-
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq inhibit-startup-message t)
+  #+end_src
 
-(setq frame-resize-wise t)
+- Remove some visual clutter
 
-(tool-bar-mode -1)          ; Disable the toolbar
-(tooltip-mode -1)           ; Disable tooltips
-;; (menu-bar-mode -1)          ; Disable the menu bar
+  #+begin_src emacs-lisp :tangle ./init.el
+(tool-bar-mode -1)
+(tooltip-mode -1)
+;; (menu-bar-mode -1)
+  #+end_src
 
+- Encoding settings
+
+  #+begin_src emacs-lisp :tangle ./init.el
 (set-language-environment "UTF-8")
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
+  #+end_src
 
+- Wrap lines instead of showing only the first 80-something characters and then having to horizontally scroll to view the rest.
+
+  #+begin_src emacs-lisp :tangle ./init.el
 (set-default 'truncate-lines nil)
+  #+end_src
 
+- Use the system clipboard
+
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq x-select-enable-clipboard t)
+  #+end_src
 
-(setq ring-bell-function 'ignore)
+- Disable the "bell" sound
 
+  #+begin_src emacs-lisp :tangle ./init.el
+(setq ring-bell-function #'ignore)
+  #+end_src
+
+- When asked a =yes or no= question, just typing ~y~ or ~n~ will do the trick.
+
+  #+begin_src emacs-lisp :tangle ./init.el
 (defalias 'yes-or-no-p 'y-or-n-p)
+  #+end_src
 
-(delete-selection-mode 1)
+- Show column number as well in the modeline
 
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq column-number-mode t)
+  #+end_src
 
+- Allow resizing
+
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq frame-inhibit-implied-resize t)
-#+end_src
+  #+end_src
 
-** Fringes
+- Fringes configuration
 
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 ;; Remove the line-wrap fringe indicators
 (setq-default fringe-indicator-alist (assq-delete-all 'truncation fringe-indicator-alist))
 
 (fringe-mode 10)
-#+end_src
+  #+end_src
 
-** Word Wrap
+- Enable word wrap with whit
 
-#+begin_src emacs-lisp :tangle ./init.el
-  (global-word-wrap-whitespace-mode)
-#+end_src
+  #+begin_src emacs-lisp :tangle ./init.el
+(setq global-word-wrap-whitespace-mode t)
+  #+end_src
 
-** Blink Cursor
+- Blink cursor
 
-#+begin_src emacs-lisp :tangle ./init.el
+    #+begin_src emacs-lisp :tangle ./init.el
 (blink-cursor-mode 1)
-#+end_src
+    #+end_src
 
-** Highlight current line
+- Do not highlight the current line
 
-#+begin_src emacs-lisp :tangle ./init.el
+  This is enabled only in programming modes
+
+  #+begin_src emacs-lisp :tangle ./init.el
 (global-hl-line-mode 0)
-#+end_src
+  #+end_src
 
-** Fullscreen by default
+- Make Emacs fullscreen by default
 
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
-#+end_src
+  #+end_src
 
-** Scrolling and Scrollbars
+- Scroll bar configuration
 
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "M-<f3>") 'scroll-bar-mode)
 (scroll-bar-mode 0)
 (window-divider-mode 0)
@@ -149,26 +130,26 @@
 (pixel-scroll-precision-mode t)
 
 ;; (setq scroll-conservatively 100)
-#+end_src
+  #+end_src
 
-** Disable Backup Files
+- Don't clutter the directory of the current file with backups
 
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq make-backup-files nil)
 (setq auto-save-default nil)
-#+end_src
+  #+end_src
 
-** Tab Configuration
+- Tab configuration
 
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq-default indent-tabs-mode nil)
 (setq-default tab-width 4)
 (setq indent-line-function #'insert-tab)
-#+end_src
+  #+end_src
 
-** Parentheses Pairs
+- Enable electric parentheses
 
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq electric-pair-pairs '(
                             (?\{ . ?\})
                             (?\( . ?\))
@@ -176,52 +157,39 @@
                             (?\" . ?\")
                             ))
 (electric-pair-mode t)
+  #+end_src
 
-(add-hook 'org-mode-hook (lambda ()
-           (setq-local electric-pair-inhibit-predicate
-                   `(lambda (c)
-                  (if (char-equal c ?<) t (,electric-pair-inhibit-predicate c))))))
-#+end_src
+- Disable line numbers
 
-** Line Numbers
-
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (global-display-line-numbers-mode 0)
+  #+end_src
+
+- When you do show line numbers, show them relative to current line
+
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq display-line-numbers-type 'relative)
-#+end_src
+  #+end_src
 
-** Warnings
+- Disable meaningless warnings
 
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq warning-minimum-level :emergency)
-#+end_src
+  #+end_src
 
-** Recent files
+- Enable recent files history
 
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (recentf-mode 1)
 (setq recentf-max-menu-items 25)
 (setq recentf-max-saved-items 25)
 (global-set-key "\C-x\ \C-r" 'recentf-open-files)
 (run-at-time nil (* 5 60) 'recentf-save-list)
-#+end_src
+  #+end_src
 
-** Winner-mode
+- Hides minor modes in modeline.
 
-#+begin_src emacs-lisp :tangle ./init.el
-(winner-mode t)
-#+end_src
-
-** eww
-
-#+begin_src emacs-lisp :tangle ./init.el
-(setq eww-auto-rename-buffer t)
-(global-set-key (kbd "C-c C-w") #'eww-follow-link)
-#+end_src
-
-** Modeline
-
-#+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle ./init.el
 (setq-default mode-line-format '("%e" mode-line-front-space
                          (:propertize
                           ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
@@ -239,17 +207,11 @@
                          "  "
                          mode-line-misc-info
                          mode-line-end-spaces))
-#+end_src
-
-** COMMENT Frame title
-
-#+begin_src emacs-lisp :tangle ./init.el
-(setq frame-title-format '("%b@" (:eval (or (file-remote-p default-directory 'host) system-name)) " — Emacs"))
-#+end_src
+  #+end_src
 
 * Fonts
 
-** Fonts
+I dislike Emacs' default fonts. But since I run Emacs in a daemon/client setup, the following function is needed to correctly apply the custom fonts to every new frame.
 
 #+begin_src emacs-lisp :tangle ./init.el
   (defun set-font-faces ()
@@ -267,34 +229,98 @@
     (set-font-faces))
 #+end_src
 
-** COMMENT Lsp-Ui Fonts
-
-#+begin_src emacs-lisp :tangle no
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- '(lsp-ui-doc-header ((t (:family "Iosevka"))))
- '(lsp-ui-doc-highlight-hover ((t (:inherit region :family "Iosevka"))))
- '(markdown-code-face ((t (:inherit nil :weight bold :family "Iosevka"))))
- '(markdown-inline-code-face ((t (:inherit (markdown-code-face font-lock-constant-face) :family "Iosevka"))))
- '(preview-face ((t nil)))
- '(preview-reference-face ((t (:foreground "#fbf1c7")))))
-(put 'erase-buffer 'disabled nil)
-#+end_src
-
-** Spacing
+** Line spacing
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq line-spacing 0.2)
 #+end_src
 
+* Key-binds
+
+Custom key-binds for built-in functionality of Emacs. Mainly used just to speed things up.
+
+** Toggling line numbers
+
+Generally I find line numbers take visual space without giving any valuable information (one exception being programming). Since I use Emacs a lot with prose, I have line numbers disabled. But, if I need them any time there is this keybind.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "M-<f2>") #'(lambda () (interactive)   (display-line-numbers-mode #'toggle)))
+#+end_src
+
+** Vertical and horizontal window splits
+
+As the title suggests, this two keybinds split the frame into two windows.
+
+*** Vertical
+
+#+begin_src emacs-lisp :tangle ./init.el
+(defun split-and-follow-vertically ()
+  (interactive)
+  (split-window-right)
+  (balance-windows)
+  (other-window 1))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "C-x 3") #'split-and-follow-vertically)
+#+end_src
+
+*** Horizontal
+
+#+begin_src emacs-lisp :tangle ./init.el
+(defun split-and-follow-horizontally ()
+  (interactive)
+  (split-window-below)
+  (balance-windows)
+  (other-window 1))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "C-x 2") #'split-and-follow-horizontally)
+#+end_src
+
+** Toggle Greek and English input methods
+
+Since Greek is my mother tongue, I find myself frequently writing in Greek. So, I need a quick way to toggle the input language without losing all the Emacs keybindings.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(add-hook 'after-init-hook (lambda () (setq default-input-method "greek")))
+#+end_src
+
+** Kill this buffer
+
+The default behavior of Emacs is to open the buffer list and "kill" the current one by selecting it. This means that to kill the current buffer you must to type ~C-x k RET~.
+
+This way, you can just simply type ~C-x C-k~.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "C-x C-k") #'kill-this-buffer)
+#+end_src
+
+** =WoMan=
+
+Open =woMan (without man)=, an emacs native program to read man pages.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "C-c w") #'woman)
+#+end_src
+
+** Move lines of text up or down
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "M-S-<up>") 'move-text-line-up)
+(global-set-key (kbd "M-S-<down>") 'move-text-line-down)
+#+end_src
+
 * Packages
 
-** Package Management
+This section consists of various packages, built-in or external, that add many extra features.
 
-*** Straight.el
+** Package management
+
+I use =straight.el= over the default package manager =package.el= simply because the former allows me to install packages from git repos that are not available on the MELPA repos the same way with the ones that are.
+
+We only need to bootstrap =straight.el= and then we can use the =use-package= macro the same way as before.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (defvar bootstrap-version)
@@ -317,42 +343,11 @@
 (setq package-enable-at-startup nil)
 #+end_src
 
-** Color Theme
+** Color theme
 
-*** Modus Themes
+Since I spend a lot of time inside Emacs, I want to have a good-looking, easy-on-the-eyes color scheme. I also need it to play nice with the other packages on my system and also have a light and dark variant, since I switch between them throughout the day.
 
-**** COMMENT Overrides
-
-#+begin_src emacs-lisp :tangle no
-;; (set-face-attribute 'mode-line nil :box t)
-
-(setq modus-themes-vivendi-color-overrides
-      '(
-        (bg-main . "#1d1f21")
-        ;; (bg-dim . "#faf6ef")
-        ;; (bg-alt . "#f7efe5")
-        ;; (bg-active . "#e8dfd1")
-        (bg-inactive . "#373b41")
-        ))
-
-(setq modus-themes-operandi-color-overrides
-      '(
-        (bg-main . "#fefcf4")
-        ;; (bg-dim . "#faf6ef")
-        ;; (bg-alt . "#f7efe5")
-        ;; (bg-active . "#e8dfd1")
-        (bg-inactive . "#e8dfd1")
-        ))
-#+end_src
-
-#+begin_src emacs-lisp :tangle no
-(defun my-modus-themes-custom-faces ()
-  (set-face-attribute 'modus-themes-markup-macro nil :background (modus-themes-color 'bg-main)))
-
-(add-hook 'modus-themes-after-load-theme-hook #'my-modus-themes-custom-faces)
-#+end_src
-
-**** Modus Themes
+[[https://protesilaos.com/emacs/modus-themes][Modus themes]], developed by [[https://protesilaos.com/][Protesilaos Stavrou]], are one of the best color schemes for Emacs right now. They became bundled with Emacs, so it isn't even needed to install anything. They are modular, well documented, easily hackable and robust.
 
 #+begin_src emacs-lisp :tangle ./init.el
 ;; (setq modus-themes-headings
@@ -433,959 +428,57 @@
     )
 #+end_src
 
-** Fonts & Icons
-
-*** Mixed-Pitch
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package mixed-pitch
-  :straight t
-  :hook
-  ;; If you want it in all text modes:
-  (text-mode . mixed-pitch-mode))
-
-(setq mixed-pitch-variable-pitch-cursor 'box)
-#+end_src
-
-*** Ligatures
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package ligature
-  :straight t
-  ;; Enable traditional ligature support in eww-mode, if the
-  ;; `variable-pitch' face supports it
-  :config
-  ;; Enable all programming ligatures in programming modes
-  (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
-                                       "<<" "??" ";;" "->" "<-" "-->" "<--"
-                                       ))
-  ;; Enables ligature checks globally in all buffers. You can also do it
-  ;; per mode with `ligature-mode'.
-  (global-ligature-mode t))
-#+end_src
-
-*** Emojify
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package emojify
-    :straight t)
-
-(setq emojify-display-style 'unicode)
-
-;(global-emojify-mode)
-#+end_src
-
-*** All-the-Icons
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package all-the-icons
-  :straight t)
-#+end_src
-
-**** All-The-Icons-Completion
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package all-the-icons-completion
-  :straight t
-  :after (marginalia all-the-icons)
-  :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
-  :init
-  (all-the-icons-completion-mode))
-#+end_src
-
-** Misc
-
-*** Window Navigation
-
-**** Ace-Window
-
-#+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "M-o") 'ace-window)
-(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
-(setq aw-dispatch-always nil)
-(setq aw-background nil)
-(defvar aw-dispatch-alist
-  '((?x aw-delete-window "Delete Window")
-    (?m aw-swap-window "Swap Windows")
-    (?M aw-move-window "Move Window")
-    (?c aw-copy-window "Copy Window")
-    (?j aw-switch-buffer-in-window "Select Buffer")
-    (?n aw-flip-window)
-    (?u aw-switch-buffer-other-window "Switch Buffer Other Window")
-    (?c aw-split-window-fair "Split Fair Window")
-    (?v aw-split-window-vert "Split Vert Window")
-    (?b aw-split-window-horz "Split Horz Window")
-    (?o delete-other-windows "Delete Other Windows")
-    (?? aw-show-dispatch-help))
-  "List of actions for `aw-dispatch-default'.")
-
-(use-package ace-window
-  :straight t)
-#+end_src
-
-**** Resize-Window
-
-#+begin_src emacs-lisp :tangle ./init.el
-(setq resizewindow-allow-backgrounds nil)
-(global-set-key (kbd "C-c C-;") 'resize-window)
-(use-package resize-window
-  :straight t)
-#+end_src
-
-*** File History
-
-**** Undo-Tree
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package undo-tree
-  :straight t)
-
-(setq undo-tree-auto-save-history t)
-
-(defadvice undo-tree-make-history-save-file-name
-    (after undo-tree activate)
-  (setq ad-return-value (concat ad-return-value ".gz")))
-
-(setq undo-tree-visualizer-diff t)
-(setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
-
-(global-undo-tree-mode)
-#+end_src
-
-*** Autocompletion
-
-**** Yasnippet
-
-***** Yasnippet
-
-#+begin_src emacs-lisp :tangle ./init.el
-  (use-package yasnippet
-      :straight t
-      :config
-      (setq yas-snippet-dirs '("~/.config/emacs/snippets")))
-
-  ;; (require 'company-yasnippet)
-
-  (add-hook 'org-mode-hook  'yas-minor-mode-on)
-  (add-hook 'prog-mode-hook 'yas-minor-mode-on)
-  (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
-#+end_src
-
-***** Yasnippet-Snippets
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package yasnippet-snippets
-    :straight t)
-#+end_src
-
-**** Corfu
-
-***** Corfu
-
-#+begin_src emacs-lisp :tangle ./init.el
-  (use-package corfu
-    :straight t
-
-    :custom
-    (corfu-cycle t)                       ;; Enable cycling for `corfu-next/previous'
-    (corfu-auto t)                        ;; Enable auto completion
-    (corfu-separator ?\s)                 ;; Orderless field separator
-    (corfu-quit-at-boundary 'separator)   ;; Never quit at completion boundary
-    ;; (corfu-quit-no-match nil)          ;; Never quit, even if there is no match
-    (corfu-preview-current 'insert)       ;; Disable current candidate preview
-    (corfu-preselect 'prompt)             ;; Preselect the prompt
-    (corfu-on-exact-match nil)            ;; Configure handling of exact matches
-    ;; (corfu-scroll-margin 5)            ;; Use scroll margin
-    (corfu-auto-delay 0)
-    (corfu-auto-prefix 1)
-
-    (completion-cycle-threshold nil)
-    (tab-always-indent 'complete)
-
-    ;; (corfu-min-width 80)
-    ;; (corfu-max-width corfu-min-width)
-
-    (lsp-completion-provider :none) ; Use corfu instead the default for lsp completions
-
-    :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
-
-    :config
-    ;; Setup lsp to use corfu for lsp completion
-    (defun kb/corfu-setup-lsp ()
-      "Use orderless completion style with lsp-capf instead of the
-    default lsp-passthrough."
-      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-            '(orderless)))
-
-    :bind
-    (:map corfu-map
-          ("C-n" . #'corfu-next)
-          ("C-p" . #'corfu-previous)
-          ("<escape>" . #'corfu-quit)
-          ("<return>" . #'corfu-insert)
-          ("<return>" . #'corfu-complete)
-          ("C-<tab>" . corfu-insert-separator)
-          ;; ("M-d" . #'corfu-show-documentation)
-          ;; ("M-l" . #'corfu-show-location)
-          )
-          :init
-          (global-corfu-mode))
-
-(advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
-#+end_src
-
-***** COMMENT Corfu-doc
-
-#+begin_src emacs-lisp :tangle no
-(use-package corfu-doc
-  ;; NOTE 2022-02-05: At the time of writing, `corfu-doc' is not yet on melpa
-  :straight t
-  :after corfu
-  :hook (corfu-mode . corfu-doc-mode)
-  :bind(:map corfu-map
-             ;; This is a manual toggle for the documentation popup.
-             ([remap corfu-show-documentation] . #'corfu-doc-toggle) ; Remap the default doc command
-             ;; Scroll in the documentation window
-             ("M-n" . #'corfu-doc-scroll-up)
-             ("M-p" . #'corfu-doc-scroll-down))
-  :custom
-  (corfu-doc-delay 0.5)
-  (corfu-doc-max-width 70)
-  (corfu-doc-max-height 20)
-
-  ;; NOTE 2022-02-05: I've also set this in the `corfu' use-package to be
-  ;; extra-safe that this is set when corfu-doc is loaded. I do not want
-  ;; documentation shown in both the echo area and in the `corfu-doc' popup.
-  (corfu-echo-documentation nil))
-#+end_src
-
-***** kind-icon
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package kind-icon
-  :straight t
-  :after corfu
-  :custom
-  (kind-icon-use-icons t)
-  (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face background
-  (kind-icon-blend-background nil)  ; Use midpoint color between foreground and background colors ("blended")?
-  (kind-icon-blend-frac 0.08)
-
-  :config
-  ;; enable kind-icon only in prog-mode
-  (defun my/enable-kind-icon ()
-    (setq-local corfu-margin-formatters '(kind-icon-margin-formatter)))
-  :hook  ((prog-mode . my/enable-kind-icon))
-  )
-#+end_src
-
-**** Cape
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package cape
-  :straight t
-  ;; ;; Bind dedicated completion commands
-  ;; ;; Alternative prefix keys: C-c p, M-p, M-+, ...
-  ;; :bind (("C-c p p" . completion-at-point) ;; capf
-  ;;        ("C-c p t" . complete-tag)        ;; etags
-  ;;        ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
-  ;;        ("C-c p h" . cape-history)
-  ;;        ("C-c p f" . cape-file)
-  ;;        ("C-c p k" . cape-keyword)
-  ;;        ("C-c p s" . cape-symbol)
-  ;;        ("C-c p a" . cape-abbrev)
-  ;;        ("C-c p i" . cape-ispell)
-  ;;        ("C-c p l" . cape-line)
-  ;;        ("C-c p w" . cape-dict)
-  ;;        ("C-c p \\" . cape-tex)
-  ;;        ("C-c p _" . cape-tex)
-  ;;        ("C-c p ^" . cape-tex)
-  ;;        ("C-c p &" . cape-sgml)
-  ;;        ("C-c p r" . cape-rfc1345))
-  :init
-  ;; Add `completion-at-point-functions', used by `completion-at-point'.
-  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
-  ;; (add-to-list 'completion-at-point-functions #'cape-file)
-  ;;(add-to-list 'completion-at-point-functions #'cape-history)
-  (add-to-list 'completion-at-point-functions #'cape-keyword)
-  (add-to-list 'completion-at-point-functions #'cape-tex)
-  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
-  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
-  (add-to-list 'completion-at-point-functions #'cape-abbrev)
-  ;; (add-to-list 'completion-at-point-functions #'cape-ispell)
-  ;; (add-to-list 'completion-at-point-functions #'cape-dict)
-  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
-  ;; (add-to-list 'completion-at-point-functions #'cape-line)
-)
-#+end_src
-
-**** COMMENT Company
-***** Company
-#+begin_src emacs-lisp :tangle no 
-(use-package company
-  :straight t
-  :custom
-  (company-minimum-prefix-length 1)
-  (company-idle-delay 0.0))
-
-(global-company-mode)
-#+end_src
-
-***** Company-Posframe
-#+begin_src emacs-lisp :tangle no
-(use-package company-posframe
-  :straight t)
-(company-posframe-mode 1)
-#+end_src
-
-***** Company-Quickhelp
-#+begin_src emacs-lisp :tangle no
-(use-package company-quickhelp
-  :straight t)
-
-(company-quickhelp-mode)
-#+end_src
-
-***** Company-Lsp
-#+begin_src emacs-lisp :tangle no
-(use-package company-lsp
-  :straight t)
-(push 'company-lsp company-backends)
-(setq company-lsp-enable-snippet t)
-#+end_src
-
-*** Minibuffer
-
-**** Vertico
-
-***** Vertico
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package vertico
-  :straight t
-  :custom
-  (vertico-cycle t)
-  :init
-  (vertico-mode))
-#+end_src
-
-***** Savehist
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package savehist
-    :straight t
-  :init
-  (savehist-mode))
-#+end_src
-
-***** COMMENT Vertico-Posframe
-
-#+begin_src emacs-lisp :tangle no
-(use-package vertico-posframe
-    :straight t
-  :init
-  (vertico-posframe-mode))
-#+end_src
-
-**** Marginalia
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package marginalia
-  :after vertico
-  :straight t
-  :custom
-  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
-  :init
-  (marginalia-mode))
-#+end_src
-
-**** Orderless
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package orderless
-  :straight t
-  :custom
-  (completion-styles '(orderless basic))
-  (completion-category-overrides '((file (styles basic partial-completion)))))
-#+end_src
-
-*** Vterm
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package vterm
-  :straight t)
-#+end_src
-
-*** OpenWith
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package openwith
-  :straight (:host github :repo "thisirs/openwith")
-  :config
-  (setq openwith-associations '(("\\.pdf\\'" "setsid -w xdg-open" (file))
-                                ;; ("\\.html\\'" "firefox" (file))
-                                ("\\.mp4\\'" "setsid -w xdg-open" (file))
-                                ("\\.mkv\\'" "setsid -w xdg-open" (file))
-                                ))
-  (openwith-mode t))
-#+end_src
-
-*** COMMENT Emacs-Everywhere
-#+begin_src emacs-lisp :tangle no
-(use-package emacs-everywhere
-  :straight t)
-#+end_src
-
-*** Elpher
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package elpher
-  :straight t)
-#+end_src
-
-** Keybinds
-
-*** Shift-number
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package shift-number
-  :straight t)
-
-(global-set-key (kbd "C-+") 'shift-number-up)
-(global-set-key (kbd "C--") 'shift-number-down)
-#+end_src
-
-*** Which-Key
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package which-key
-  :straight t
-  :init (which-key-mode)
-  :diminish which-key-mode
-  :config
-  (setq which-key-idle-delay 1.5))
-#+end_src
-
-*** Move-Text
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package move-text
-  :straight t)
-(global-set-key (kbd "M-S-<up>") 'move-text-up)
-(global-set-key (kbd "M-S-<down>") 'move-text-down)
-#+end_src
-
-*** Embark
-
-#+begin_src emacs-lisp :tangle ./init.el
-   (use-package embark
-     :straight t
-
-     :bind
-     (("C-." . embark-act)         ;; pick some comfortable binding
-      ("M-." . embark-dwim)        ;; good alternative: M-.
-      ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
-
-     :init
-
-     ;; Optionally replace the key help with a completing-read interface
-     (setq prefix-help-command #'embark-prefix-help-command)
-
-     :config
-
-     ;; ;; Hide the mode line of the Embark live/completions buffers
-     ;; (add-to-list 'display-buffer-alist
-     ;;              '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
-     ;;                nil
-     ;;                (window-parameters (mode-line-format . none))))
-     )
-#+end_src
-
-**** Citar-Embark
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package citar-embark
-  :straight t
-  :after citar embark
-  :no-require
-  :config (citar-embark-mode))
-#+end_src
-
-** Programming
-
-*** Languages
-
-**** C/C++
-
-#+begin_src emacs-lisp :tangle ./init.el
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
-
-(setq lsp-clients-clangd-arg "--header-insertion=never")
-#+end_src
-
-**** MIPS Assembly
-
-#+begin_src emacs-lisp :tangle no
-(use-package mips-mode
- :straight t
- :mode "\\.s$")
-#+end_src
-
-**** Yaml
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package yaml-mode
-    :straight t)
-#+end_src
-
-**** Fish Shell
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package fish-mode
-    :straight t)
-#+end_src
-
-**** Octave
-
-#+begin_src emacs-lisp :tangle ./init.el
-(setq auto-mode-alist
-      (cons '("\\.m$" . octave-mode) auto-mode-alist))
-
-(setq-default inferior-octave-startup-args '("-i" "-q" "--line-editing"))
-#+end_src
-
-**** Prolog
-
-#+begin_src emacs-lisp :tangle no
-(setq auto-mode-alist
-      (cons '("\\.pl$" . prolog-mode) auto-mode-alist))
-#+end_src
-
-***** ECLiPSe
-
-#+begin_src emacs-lisp :tangle ./init.el
-;; (setq prolog-system 'eclipse)
-
-(autoload 'eclipse-mode "/home/kchou/.config/emacs/straight/build/eclipse/eclipse.el" "ECLIPSE editing mode" t)
-
-(setq auto-mode-alist (cons '("\\.pl" . eclipse-mode) auto-mode-alist))
-(setq auto-mode-alist (cons '("\\.ecl" . eclipse-mode) auto-mode-alist))
-#+end_src
-
-**** Haskell
-
-***** haskell-mode
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package haskell-mode
-  :straight t)
-
-(setq auto-mode-alist
-      (cons '("\\.hs$" . haskell-mode) auto-mode-alist))
-#+end_src
-
-***** lsp-haskell
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-haskell
-  :straight t)
-
-(add-hook 'haskell-mode-hook 'lsp)
-#+end_src
-
-**** Python
-
-#+begin_src emacs-lisp :tangle ./init.el
-(add-hook 'python-mode #'lsp)
-#+end_src
-
-***** Pyvenv
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package pyvenv
-  :straight t
-  :init
-  (setenv "WORKON_HOME" (expand-file-name "~/.conda/envs"))
-  :config
-  (pyvenv-mode 1)
-  )
-
-;; (add-hook 'python-mode-hook #'pyvenv-mode)
-;; (add-hook 'python-mode-hook (lambda () (pyvenv-workon 'ai)))
-(add-hook 'pyvenv-post-activate-hooks
-          #'(lambda ()
-              (call-interactively #'lsp)))
-#+end_src
-
-***** LSP
-
-#+begin_src emacs-lisp :tangle ./init.el
-;; Disables its default "lsp linter", allowing pylint to work
-
-(add-hook 'python-mode-hook
-      (lambda ()
-        (make-local-variable 'lsp-diagnostic-provider)
-        (setq lsp-diagnostic-provider :none)))
-#+end_src
-
-**** Sagemath
-
-***** Sage-shell-mode
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package sage-shell-mode
-  :straight t)
-#+end_src
-
-*** General
-
-#+begin_src emacs-lisp :tangle ./init.el
-  (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1)))
-  (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
-  (add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
-  (add-hook 'prog-mode-hook (lambda () (setq truncate-lines t)))
-
-  (setq gc-cons-threshold 100000000)
-  (setq read-process-output-max (* 1024 1024)) ;; 1mb
-#+end_src
-
-*** LSP
-
-**** Lsp-Mode
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-mode
-  :straight t
-  :commands (lsp lsp-deferred)
-  :config
-  (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-  (lsp-enable-which-key-integration t))
-
-;; (setq lsp-diagnostics-provider :flycheck)
-#+end_src
-
-**** Lsp-Ui
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-ui
-  :straight t)
-(setq lsp-ui-sideline-enable t)
-(setq lsp-ui-doc-enable t)
-(setq lsp-ui-doc-position 'at-point)
-(setq lsp-ui-doc-show-with-cursor t)
-(setq lsp-ui-doc-show-with-mouse t)
-#+end_src
-
-**** Lsp-Treemacs
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-treemacs
-    :straight t)
-
-(lsp-treemacs-sync-mode 1)
-#+end_src
-
-*** Flycheck
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package flycheck
-  :straight t
-  :init (global-flycheck-mode))
-#+end_src
-
-*** Comment-Tags
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package comment-tags
-  :straight t
-  :hook ((prog-mode . comment-tags-mode)))
-#+end_src
-
-*** Indent-Guide
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package indent-guide
-    :straight t)
-(setq indent-guide-char "│")
-(setq indent-guide-recursive t)
-
-(add-hook 'prog-mode-hook #'indent-guide-mode)
-#+end_src
-
-*** Treemacs
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package treemacs
-  :straight t
-  :init
-  :config
-  (progn
-    (setq treemacs-display-in-side-window          t
-          treemacs-expand-after-init               t
-          treemacs-find-workspace-method           'find-for-file-or-pick-first
-          treemacs-indentation                     2
-          treemacs-show-cursor                     nil
-          treemacs-show-hidden-files               nil
-          treemacs-silent-filewatch                nil
-          treemacs-silent-refresh                  nil
-          treemacs-sorting                         'alphabetic-asc
-          treemacs-select-when-already-in-treemacs 'move-back
-          treemacs-space-between-root-nodes        t
-          treemacs-tag-follow-cleanup              t
-          treemacs-text-scale                      nil
-          treemacs-user-mode-line-format           nil
-          treemacs-user-header-line-format         nil
-          treemacs-wide-toggle-width               70
-          treemacs-width                           30
-          treemacs-width-increment                 1
-          treemacs-width-is-initially-locked       t
-          treemacs-workspace-switch-cleanup        nil)
-
-    (treemacs-follow-mode nil)
-    (treemacs-filewatch-mode nil)
-    (treemacs-fringe-indicator-mode 'always)
-
-    (treemacs-hide-gitignored-files-mode nil))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t t"   . treemacs)))
-#+end_src
-
-**** Treemacs-Icons-Dired
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package treemacs-icons-dired
-  :hook (dired-mode . treemacs-icons-dired-enable-once)
-  :straight t)
-#+end_src
-
-**** Treemacs-All-the-Icons
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package treemacs-all-the-icons
-  :straight t
-  :config
-  (treemacs-load-theme "all-the-icons"))
-#+end_src
-
-** LaTeX
-
-*** Settings
-
-#+begin_src emacs-lisp :tangle ./init.el
-(straight-use-package 'auctex)
-(setq-default TeX-master nil)
-
-(setq TeX-auto-save t)
-(setq TeX-parse-self t)
-(setq TeX-command-extra-options "-shell-escape -interaction=nonstopmode")
-(setq-default TeX-engine 'luatex)
-(setq-default TeX-PDF-mode t)
-(setq TeX-source-correlate-mode t)
-(setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
-(setq TeX-view-program-selection '((output-pdf "Evince")))
-(setq font-latex-fontify-script nil)
-(add-hook 'LaTeX-mode-hook (lambda () (visual-line-mode t)))
-(add-hook 'TeX-mode-hook (lambda () (visual-line-mode t)))
-#+end_src
-
-*** RefTeX
-
-#+begin_src emacs-lisp :tangle ./init.el
-;; Turn on RefTeX in AUCTeX
-(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
-;; Activate nice interface between RefTeX and AUCTeX
-(setq reftex-plug-into-AUCTeX t)
-#+end_src
-
-*** Texlab/LSP-LaTeX
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-latex
-    :straight t)
-
-(with-eval-after-load "tex-mode"
- (add-hook 'TeX-mode-hook 'lsp)
- ;; (add-hook 'latex-mode-hook 'lsp)
- )
-#+end_src
-
-*** CDLaTeX
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package cdlatex
-  :straight t)
-
-(add-hook 'org-mode-hook #'turn-on-org-cdlatex)
-(add-hook 'LaTeX-mode-hook #'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
-(add-hook 'latex-mode-hook #'turn-on-cdlatex)   ; with Emacs latex mode
-
-(global-set-key (kbd "C-c e") #'cdlatex-environment)
-#+end_src
-
-** Writing
-
-*** Flyspell
-
-#+begin_src emacs-lisp :tangle ./init.el
-  (with-eval-after-load "ispell"
-    (setq ispell-program-name "hunspell")
-    (setq ispell-dictionary "el_GR,en_US")
-    (ispell-set-spellchecker-params)
-    (ispell-hunspell-add-multi-dic "el_GR,en_US")
-    (setq ispell-personal-dictionary "~/.hunspell_personal"))
-
-(add-hook 'org-mode-hook (lambda () (flyspell-mode 1)))
-;; (add-hook 'prog-mode-hook (lambda () (flyspell-prog-mode 1)))
-#+end_src
-
-*** Olivetti
-
-#+begin_src emacs-lisp :tangle ./init.el
-(setq-default olivetti-body-width 110)
-(setq-default olivetti-margin-width 0)
-(use-package olivetti
-  :straight t
-  :hook
-  (org-mode . olivetti-mode)
-  (markdown-mode . olivetti-mode)
-  (Info-mode . olivetti-mode)
-  (elpher-mode . olivetti-mode)
-  (eww-mode . olivetti-mode)
-  (TeX-mode . olivetti-mode)
-  (tex-mode . olivetti-mode)
-  (LaTeX-mode . olivetti-mode)
-  (latex-mode . olivetti-mode))
-#+end_src
-
-*** Citar
-
-#+begin_src emacs-lisp :tangle ./init.el
-        (use-package citar
-          :straight t
-          :bind (("C-c b" . citar-insert-citation)
-                 ;; :map minibuffer-local-map
-                 ;; ("M-b" . citar-insert-preset)
-                 )
-          :custom
-          (citar-bibliography '("~/Textfiles/biblio.bib"))
-          :config
-            (defvar citar-indicator-files-icons
-    (citar-indicator-create
-     :symbol (all-the-icons-faicon
-              "file-o"
-              :face 'all-the-icons-green
-              :v-adjust -0.1)
-     :function #'citar-has-files
-     :padding "  " ; need this because the default padding is too low for these icons
-     :tag "has:files"))
-
-  (defvar citar-indicator-links-icons
-    (citar-indicator-create
-     :symbol (all-the-icons-octicon
-              "link"
-              :face 'all-the-icons-orange
-              :v-adjust 0.01)
-     :function #'citar-has-links
-     :padding "  "
-     :tag "has:links"))
-
-  (defvar citar-indicator-notes-icons
-    (citar-indicator-create
-     :symbol (all-the-icons-material
-              "speaker_notes"
-              :face 'all-the-icons-blue
-              :v-adjust -0.3)
-     :function #'citar-has-notes
-     :padding "  "
-     :tag "has:notes"))
-
-  (defvar citar-indicator-cited-icons
-    (citar-indicator-create
-     :symbol (all-the-icons-faicon
-              "circle-o"
-              :face 'all-the-icon-green)
-     :function #'citar-is-cited
-     :padding "  "
-     :tag "is:cited"))
-
-    (setq citar-indicators
-    (list citar-indicator-files-icons
-          citar-indicator-links-icons
-          citar-indicator-notes-icons
-          citar-indicator-cited-icons)))
-
-        ;; (setq citar-symbols
-        ;;       `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
-        ;;         (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
-        ;;         (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
-        ;; (setq citar-symbol-separator "  ")
-#+end_src
-
-**** Citar-capf
-
-#+begin_src emacs-lisp :tangle ./init.el
-;; (require 'citar-capf)
-
-(add-hook 'completion-at-point-functions
-          #'citar-capf
-          'append)
-#+end_src
-
-**** Citar-Org-Roam
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package citar-org-roam
-  :straight t
-  :after citar org-roam
-  :no-require
-  :config (citar-org-roam-mode))
-#+end_src
-
-** Git
-
-*** Magit
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package magit
-    :straight t
-  :commands magit-status)
-#+end_src
-
-** Dired
-
-#+begin_src emacs-lisp :tangle ./init.el
-(put 'dired-find-alternate-file 'disabled nil)
-(add-hook 'dired-mode-hook (lambda () (hl-line-mode 1)))
-#+end_src
-
-*** Dired-Hide-Dotfiles
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package dired-hide-dotfiles
-  :straight t)
-
-(defun my-dired-mode-hook ()
-  "My `dired' mode hook."
-  ;; To hide dot-files by default
-  (dired-hide-dotfiles-mode))
-
-;; To toggle hiding
-(define-key dired-mode-map "." #'dired-hide-dotfiles-mode)
-(add-hook 'dired-mode-hook #'my-dired-mode-hook)
-#+end_src
-
-*** Dired-copy-paste
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package dired-copy-paste
-  :straight (dired-copy-paste :type git :host github :repo "jsilve24/dired-copy-paste"))
-
-(define-key dired-mode-map "\C-c\C-x" 'dired-copy-paste-do-cut)
-(define-key dired-mode-map "\C-c\C-c" 'dired-copy-paste-do-copy)
-(define-key dired-mode-map "\C-c\C-v" 'dired-copy-paste-do-paste)
-#+end_src
-
 ** Org
 
+This behemoth of a node contains all my configuration regarding org-mode.
+
+*** Org
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org
+  :straight (org :type built-in)
+  :commands (org-capture org-agenda)
+  :config
+  (setq org-hide-emphasis-markers nil
+        org-ellipsis "…"
+        org-startup-indented t
+        org-pretty-entities nil
+        org-support-shift-select t
+        org-fontify-whole-heading-line t
+        org-fontify-done-headline t
+        org-startup-with-inline-images t
+        org-fontify-quote-and-verse-blocks t
+        org-deadline-warning-days 14
+        org-log-done 'time
+        org-log-into-drawer t
+        org-auto-align-tags nil
+        org-tags-column 0
+        org-return-follows-link t
+        ))
+
+(add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
+
+(setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
+                             (vm-imap . vm-visit-imap-folder-other-frame)
+                             (gnus . org-gnus-no-new-news)
+                             (file . find-file)
+                             (wl . wl-other-frame)))
+
+(with-eval-after-load 'org
+  (add-to-list 'org-modules 'org-habit t))
+
+(setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
+
+(setq org-image-actual-width (list 700))
+
+(setq org-display-remote-inline-images 'download)
+
+(setq org-link-file-path-type 'relative)
+#+end_src
+
 *** Org-Agenda
+
+Settings for org-agenda.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-agenda-block-separator "\n"
@@ -1397,21 +490,21 @@
       org-extend-today-until 4
       org-directory "~/Textfiles/Org files"
       org-agenda-files
-      '("~/Textfiles/Org files/Tasks.org"
-        "~/Textfiles/Org files/Courses.org"
-        "~/Textfiles/Org files/Habits.org"
-        "~/Textfiles/Org files/Inbox.org"
-        "~/Textfiles/Org files/Phone inbox.org"
+      '("Tasks.org"
+        "Courses.org"
+        "Habits.org"
+        "Inbox.org"
+        "Phone inbox.org"
         )
-      org-tag-alist (quote (("@errand" . ?e)
-                            ("@office" . ?o)
-                            ("@home" . ?h)
-                            ("@uni" . ?s)
+      ;; org-tag-alist (quote (("@errand" . ?e)
+      ;;                       ("@office" . ?o)
+      ;;                       ("@home" . ?h)
+      ;;                       ("@uni" . ?s)
                             ;; (:newline)
                             ;; ("WAITING" . ?w)
                             ;; ("HOLD" . ?H)
                             ;; ("CANCELLED" . ?c)
-                            ))
+                            ;; ))
       )
 
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -1419,14 +512,26 @@
 
 *** Org-Export
 
+Settings regarding the various export features of org-mode.
+
 #+begin_src emacs-lisp :tangle ./init.el
 ;; (setq org-export-backends '(texinfo md man beamer latex html ascii))
+#+end_src
 
+#+begin_src emacs-lisp :tangle ./init.el
 (setq org-publish-timestamp-directory '"~/.config/emacs/org-timestamps")
+#+end_src
 
+This directory contains =.csl= files, to be used when using the =csl= backend for exporting citations.
+
+#+begin_src emacs-lisp :tangle ./init.el
 (custom-set-variables
  '(org-cite-csl-styles-dir "/home/kchou/HDD/Έγγραφα/Zotero/styles"))
+#+end_src
 
+When exporting to latex, use =biblatex= as the citation backend, else use =csl=.
+
+#+begin_src emacs-lisp :tangle ./init.el
 (setq org-cite-export-processors
        '((latex . (biblatex))
          (t . (csl "ieee.csl"))
@@ -1434,6 +539,8 @@
 #+end_src
 
 **** HTML Export
+
+Settings for exporting to html.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-html-validation-link nil)
@@ -1444,29 +551,26 @@
 
 ***** Htmlize
 
+Code highlighting using Emacs when exporting to html.
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package htmlize
   :straight t)
 #+end_src
 
-***** COMMENT Org-Tufte
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package org-tufte
-  :straight (:host github :repo "Zilong-Li/org-tufte")
-  ;; :init (add-to-list 'load-path "PATH*")
-  :config
-  (require 'org-tufte)
-  (setq org-tufte-htmlize-code t))
-#+end_src
-
 **** Org-Reveal
+
+Exporter for [[https://revealjs.com/][Reveal.js]].
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package ox-reveal
   :straight t)
 #+end_src
 
 **** Org-Latex
+
+Settings for when exporting to latex.
+
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-latex-compiler "lualatex --synctex=1 -interaction=batchmode")
 
@@ -1494,27 +598,17 @@ pdfauthor={%a},
 pdftitle={%t},
 pdfkeywords={%k},
 pdfsubject={%d},
-pdfcreator={%c}, 
+pdfcreator={%c},
 pdflang={%L},
-colorlinks,    
+colorlinks,
 linkcolor=blue,
 citecolor=red,
 urlcolor=blue}")
 #+end_src
 
-***** COMMENT engrave-faces
-
-#+begin_src emacs-lisp :tangle no
-(use-package engrave-faces
-  :straight t)
-
-(setq
-  ;; org-latex-listings 'minted
- org-latex-listings 'engraved
- org-latex-engraved-theme "modus-operandi")
-#+end_src
-
 **** org-contrib
+
+Enable some functions from the =contrib= part of org-mode.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-contrib
@@ -1524,32 +618,9 @@ urlcolor=blue}")
 (ox-extras-activate '(ignore-headlines))
 #+end_src
 
-**** Youtube links
-
-Opens youtube links with mpv, and embeds them in the html exports instead of just having the link to it.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(defun spook-org--follow-yt-link (path prefix)
-  (let* ((url (format "https:%s" path))
-         (display-buffer-alist `((,shell-command-buffer-name-async . (display-buffer-no-window)))))
-    (if (and prefix (executable-find "mpv"))
-        (browse-url url)
-      (async-shell-command (format "mpv \"%s\"" url))
-      (message "Launched mpv with \"%s\"" url))))
-
-(defun spook-org--export-yt-link (path desc backend)
-  (when (eq backend 'html)
-    (let* ((video-id (cadar (url-parse-query-string path)))
-           (url (if (string-empty-p video-id) path
-                  (format "https://youtube.com/embed/%s" video-id))))
-      (format
-       "<iframe width=\"1000\" height=\"562.5\" src=\"%s\" title=\"%s\" frameborder=\"0\" allowfullscreen></iframe>"
-       url desc))))
-
-(org-link-set-parameters "yt" :follow #'spook-org--follow-yt-link :export #'spook-org--export-yt-link)
-#+end_src
-
 **** Ox-Hugo
+
+Export to markdown files to create a website using [[https://gohugo.io/][Hugo]].
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package ox-hugo
@@ -1606,51 +677,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
         (message "Done!")))))
 #+end_src
 
-*** Org
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package org
-  :straight (org :type built-in)
-  :commands (org-capture org-agenda)
-  :config
-  (setq org-hide-emphasis-markers nil
-        org-ellipsis "…"
-        org-startup-indented t
-        org-pretty-entities nil
-        org-support-shift-select t
-        org-fontify-whole-heading-line t
-        org-fontify-done-headline t
-        org-startup-with-inline-images t
-        org-fontify-quote-and-verse-blocks t
-        org-deadline-warning-days 14
-        org-log-done 'time
-        org-log-into-drawer t
-        org-auto-align-tags nil
-        org-tags-column 0
-        org-return-follows-link t
-        ))
-
-(add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
-
-(setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
-                             (vm-imap . vm-visit-imap-folder-other-frame)
-                             (gnus . org-gnus-no-new-news)
-                             (file . find-file)
-                             (wl . wl-other-frame)))
-
-(with-eval-after-load 'org
-  (add-to-list 'org-modules 'org-habit t))
-
-(setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
-
-(setq org-image-actual-width (list 700))
-
-(setq org-display-remote-inline-images 'download)
-
-(setq org-link-file-path-type 'relative)
-#+end_src
-
-**** Org Bookmarks
+*** Org Bookmarks
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-bookmark-names-plist '(:last-capture nil :last-refile nil :last-capture-marker nil))
@@ -1691,7 +718,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-refile-targets `((nil :maxlevel . 5)
                            (,(directory-files-recursively "~/Textfiles/Org files/" "^[A-Za-zΑ-Ωα-ω0-9 ]*.org$") :maxlevel . 4)))
-                           
+
 (setq org-outline-path-complete-in-steps nil)
 (setq org-refile-use-outline-path 'file)
 #+end_src
@@ -1710,6 +737,8 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 
 *** Oxr
 
+Autocomplete for figures in file.
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package oxr
   :straight (oxr :type git :host github :repo "bdarcus/oxr")
@@ -1717,7 +746,9 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
   (("C-c r" . oxr-insert-ref)))
 #+end_src
 
-*** org-cite-csl-activate
+*** COMMENT org-cite-csl-activate
+
+Render citations in Chicago-style.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-cite-csl-activate
@@ -1733,6 +764,8 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 
 *** Org-Download
 
+Utility to paste screenshots or drag-and-drop images in the org buffer.
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-download
   :straight t)
@@ -1743,6 +776,8 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 #+end_src
 
 *** Org-Babel
+
+Enables you to execute source blocks in buffer.
 
 **** Ob-Sagemath
 
@@ -1778,17 +813,8 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 (setq org-babel-prolog-command "eclipse")
 #+end_src
 
-**** COMMENT Ditaa
-
-#+begin_src emacs-lisp :tangle ./init.el
-(setq org-ditaa-jar-path ""
-      org-ditaa-jar-option ""
-      org-babel-ditaa-java-cmd "ditaa"
-      org-babel-default-header-args:ditaa '((:results . "file")
-                                           (:exports . "results")))
-#+end_src
-
 **** Global
+
 #+begin_src emacs-lisp :tangle ./init.el
 (org-babel-do-load-languages
  'org-babel-load-languages
@@ -1810,6 +836,8 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 
 *** Org-Transclusion
 
+Provides transclusion of other org files.
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-transclusion
   :straight t
@@ -1821,6 +849,8 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 #+end_src
 
 *** Org-Plot
+
+Gives the ability to create a plot from data in a org table.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package gnuplot-mode
@@ -1856,6 +886,8 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 
 *** Zotero links
 
+Open =zotero://= links from org buffers.
+
 #+begin_src emacs-lisp :tangle ./init.el
 (defun org-zotero-open (path)
   (browse-url-xdg-open (format "zotero:%s" path)))
@@ -1865,6 +897,8 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 #+end_src
 
 *** Org-Crypt
+
+Allows you to encrypt specific org headings, when tagged with =crypt=.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (require 'org-crypt)
@@ -1891,15 +925,9 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
   )
 #+end_src
 
-*** COMMENT Org-Excalidraw
-
-#+begin_src emacs-lisp :tangle no
-(use-package org-excalidraw
-  :straight (:type git :host github :repo "wdavew/org-excalidraw"))
-(setq org-excalidraw-directory "~/Textfiles/Excalidraw/")
-#+end_src
-
 *** Org-Analyzer
+
+Provides a web interface to analyze clocked time data from your agenda files.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-analyzer
@@ -1908,12 +936,16 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 
 *** Org-Yt
 
+Adds thumbnail of youtube video when there is a yt video link.
+
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-yt
   :straight (:host github :repo "league/org-yt"))
 #+end_src
 
 *** Org-Web-Tools
+
+Various functions for operations between html and org.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-web-tools
@@ -1922,9 +954,51 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 (global-set-key (kbd "C-x p i") 'org-web-tools-insert-link-for-url)
 #+end_src
 
-** Org-Roam
+*** Org-Modern
+
+Prettifies org files.
+
+#+begin_src emacs-lisp :tangle ./init.el
+  (use-package org-modern
+    :straight t
+    :config
+    (setq org-modern-table nil)
+    (setq org-modern-block-fringe nil)
+    ;; (setq org-modern-star '(""))
+    :custom
+    (org-modern-hide-stars nil) ; adds extra indentation
+    :hook
+    (org-mode . org-modern-mode)
+    (org-agenda-finalize . org-modern-agenda))
+#+end_src
+
+*** Org-Modern-Indent
+
+Makes code blocks pretty.
+
+#+begin_src emacs-lisp :tangle ./init.el
+  (use-package org-modern-indent
+    :straight (:host github :repo "jdtsmith/org-modern-indent")
+    :hook
+    (org-mode . org-modern-indent-mode)
+    )
+#+end_src
+
+*** Org-Pretty-Table-Mode
+
+Prettifies org tables.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-pretty-table
+  :straight (:host github :repo "Fuco1/org-pretty-table")
+  :hook (org-mode . org-pretty-table-mode))
+#+end_src
 
 *** Org-Roam
+
+**** Org-Roam
+
+Note taking, zettelkasten inspired system using org files and leveraging backlinks.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam
@@ -1999,7 +1073,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
   )
 #+end_src
 
-**** COMMENT Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
+***** COMMENT Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
 
 #+begin_src emacs-lisp :tangle no
 (defun my/preview-fetcher ()
@@ -2013,7 +1087,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 ;; (setq org-roam-preview-function #'my/preview-fetcher)
 #+end_src
 
-**** Get 'org-roam-preview-visit' and friends to replace the main window. This should be applicable only when  'org-roam-mode' buffer is displayed in a side-window.
+***** Get 'org-roam-preview-visit' and friends to replace the main window. This should be applicable only when  'org-roam-mode' buffer is displayed in a side-window.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'org-roam-mode-hook
@@ -2023,7 +1097,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
                           (main)))))
 #+end_src
 
-**** Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
+***** Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
 
 #+begin_src emacs-lisp :tangle ./init.el
 (add-to-list 'display-buffer-alist
@@ -2038,13 +1112,13 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
                                      (no-delete-other-windows . t)))))
 #+end_src
 
-**** Maximizes org-capture buffer
+***** Maximizes org-capture buffer
 
 #+begin_src emacs-lisp :tangle ./init.el
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 #+end_src
 
-**** Automatically open the *org-roam* buffer when visiting an org-roam file
+***** Automatically open the *org-roam* buffer when visiting an org-roam file
 
 #+begin_src emacs-lisp :tangle no
 (defun tim/org-roam-buffer-show (_)
@@ -2058,7 +1132,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 (add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
 #+end_src
 
-**** Include org-roam todos in org-agenda
+***** Include org-roam todos in org-agenda
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq who/org-agenda-directory "~/Textfiles/Org files/")
@@ -2077,7 +1151,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 (advice-add 'org-agenda :before #'who-org/agenda-files-update)
 #+end_src
 
-**** All notes start as drafts
+***** All notes start as drafts
 
 Taken from https://jethrokuan.github.io/org-roam-guide/.
 
@@ -2087,9 +1161,9 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
 (add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
 #+end_src
 
-**** Bindings
+***** Bindings
 
-***** node-insert-immediate
+****** node-insert-immediate
 
 #+begin_src emacs-lisp :tangle ./init.el
 ;; Bind this to C-c n I
@@ -2101,25 +1175,14 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
     (apply #'org-roam-node-insert args)))
 #+end_src
 
-*** Org-Roam-Ui
+**** Org-Roam-Ui
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam-ui
     :straight t)
 #+end_src
 
-*** COMMENT Org-Roam-Timestamps
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package org-roam-timestamps
-    :straight t
-    :config
-    (org-roam-timestamps-mode))
-
-(setq org-roam-timestamps-remember-timestamps nil)
-#+end_src
-
-*** Deft
+**** Deft
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package deft
@@ -2152,128 +1215,820 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
                 "\\)")))
 #+end_src
 
-** Ricing
+** Programming
 
-*** Org
+Configurations and packages related to programming in Emacs.
 
-**** Org-Modern
+*** Languages
+
+Settings divided by language.
+
+**** C/C++
 
 #+begin_src emacs-lisp :tangle ./init.el
-  (use-package org-modern
-    :straight t
-    :config
-    (setq org-modern-table nil)
-    (setq org-modern-block-fringe nil)
-    ;; (setq org-modern-star '(""))
-    :custom
-    (org-modern-hide-stars nil) ; adds extra indentation
-    :hook
-    (org-mode . org-modern-mode)
-    (org-agenda-finalize . org-modern-agenda))
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
+
+(setq lsp-clients-clangd-arg "--header-insertion=never")
 #+end_src
 
-**** Org-Modern-Indent
+**** MIPS Assembly
 
 #+begin_src emacs-lisp :tangle ./init.el
-  (use-package org-modern-indent
-    :straight (:host github :repo "jdtsmith/org-modern-indent")
-    :hook
-    (org-mode . org-modern-indent-mode)
-    )
+(use-package mips-mode
+ :straight t
+ :mode "\\.s$")
 #+end_src
 
-**** Org-Pretty-Table-Mode
+**** Yaml
 
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package org-pretty-table
-  :straight (:host github :repo "Fuco1/org-pretty-table")
-  :hook (org-mode . org-pretty-table-mode))
+(use-package yaml-mode
+    :straight t)
 #+end_src
 
-*** Dashboard
+**** Fish Shell
 
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package dashboard
+(use-package fish-mode
+    :straight t)
+#+end_src
+
+**** Octave
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq auto-mode-alist
+      (cons '("\\.m$" . octave-mode) auto-mode-alist))
+
+(setq-default inferior-octave-startup-args '("-i" "-q" "--line-editing"))
+#+end_src
+
+**** Prolog
+
+#+begin_src emacs-lisp :tangle no
+(setq auto-mode-alist
+      (cons '("\\.pl$" . prolog-mode) auto-mode-alist))
+#+end_src
+
+***** ECLiPSe
+
+#+begin_src emacs-lisp :tangle ./init.el
+;; (setq prolog-system 'eclipse)
+
+(autoload 'eclipse-mode "/home/kchou/.config/emacs/straight/build/eclipse/eclipse.el" "ECLIPSE editing mode" t)
+
+(setq auto-mode-alist (cons '("\\.pl" . eclipse-mode) auto-mode-alist))
+(setq auto-mode-alist (cons '("\\.ecl" . eclipse-mode) auto-mode-alist))
+#+end_src
+
+**** Haskell
+
+***** haskell-mode
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package haskell-mode
+  :straight t)
+
+(setq auto-mode-alist
+      (cons '("\\.hs$" . haskell-mode) auto-mode-alist))
+#+end_src
+
+***** lsp-haskell
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package lsp-haskell
+  :straight t)
+
+(add-hook 'haskell-mode-hook 'lsp)
+#+end_src
+
+**** Python
+
+#+begin_src emacs-lisp :tangle ./init.el
+(add-hook 'python-mode #'lsp)
+#+end_src
+
+***** Pyvenv
+
+Makes Emacs recognize different python virtual environments.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package pyvenv
   :straight t
+  :init
+  (setenv "WORKON_HOME" (expand-file-name "~/.conda/envs"))
   :config
-  ;; Set the banner
-  (setq dashboard-startup-banner "/home/kchou/Repos/Emacs/logos/gnu-emacs.svg")
-  ;; Value can be
-  ;; 'official which displays the official emacs logo
-  ;; 'logo which displays an alternative emacs logo
-  ;; 1, 2 or 3 which displays one of the text banners
-  ;; "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever image/text you would prefer
-  ;; Content is not centered by default. To center, set
-  (setq dashboard-set-navigator t)
-  (setq dashboard-center-content t)
-  (setq dashboard-banner-logo-title nil)
-  (setq dashboard-show-shortcuts nil)
-  (setq dashboard-set-heading-icons t)
-  (setq dashboard-set-file-icons t)
-  (setq dashboard-set-init-info nil)
-  (setq dashboard-set-footer nil)
-  (setq dashboard-week-agenda nil)
-  (setq dashboard-page-separator "\n\n")
-  (setq dashboard-items '(;;(bookmarks . 20)
-                          ;; (recents . 5)
-                          ;; (agenda . 10)
-                          ))
+  (pyvenv-mode 1)
+  )
 
-  (dashboard-setup-startup-hook))
-
-(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+;; (add-hook 'python-mode-hook #'pyvenv-mode)
+;; (add-hook 'python-mode-hook (lambda () (pyvenv-workon 'ai)))
+(add-hook 'pyvenv-post-activate-hooks
+          #'(lambda ()
+              (call-interactively #'lsp)))
 #+end_src
 
-*** Rainbow-Mode
+***** LSP settings for python
 
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package rainbow-mode
+;; Disables its default "lsp linter", allowing pylint to work
+
+(add-hook 'python-mode-hook
+      (lambda ()
+        (make-local-variable 'lsp-diagnostic-provider)
+        (setq lsp-diagnostic-provider :none)))
+#+end_src
+
+**** Sagemath
+
+***** Sage-shell-mode
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package sage-shell-mode
   :straight t)
 #+end_src
 
-*** Rainbow-Delimeters
+*** General
+
+Some general settings for all programming modes.
 
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package rainbow-delimiters
-  :straight t
-  :hook (prog-mode . rainbow-delimiters-mode))
+  (add-hook 'prog-mode-hook (lambda () (display-line-numbers-mode 1)))
+  (add-hook 'prog-mode-hook (lambda () (hl-line-mode 1)))
+  (add-hook 'prog-mode-hook (lambda () (display-fill-column-indicator-mode 1)))
+  (add-hook 'prog-mode-hook (lambda () (setq truncate-lines t)))
+
+  (setq gc-cons-threshold 100000000)
+  (setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
 
-*** Modeline
+*** LSP
 
-**** COMMENT Minions
+Language-Server-Protocol. Offers IDE features in Emacs, regardless of the language.
 
-#+begin_src emacs-lisp :tangle no
-(use-package minions
+**** Lsp-Mode
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package lsp-mode
   :straight t
-  :config (minions-mode 1))
-
-(setq minions-mode-line-lighter ";")
-#+end_src
-
-**** COMMENT Moody
-#+begin_src emacs-lisp :tangle no
-(use-package moody
- :straight t
+  :commands (lsp lsp-deferred)
   :config
-  (setq x-underline-at-descent-line t)
-  (moody-replace-mode-line-buffer-identification)
-  (moody-replace-vc-mode)
-  (moody-replace-eldoc-minibuffer-message-function))
+  (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
+  (lsp-enable-which-key-integration t))
 
-(setq moody-mode-line-height 40)
+;; (setq lsp-diagnostics-provider :flycheck)
 #+end_src
 
-*** Beacon-Mode
+**** Lsp-Ui
+
+Offers some nicer UI when programming.
 
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package beacon
+(use-package lsp-ui
+  :straight t)
+(setq lsp-ui-sideline-enable t)
+(setq lsp-ui-doc-enable t)
+(setq lsp-ui-doc-position 'at-point)
+(setq lsp-ui-doc-show-with-cursor t)
+(setq lsp-ui-doc-show-with-mouse t)
+#+end_src
+
+**** Lsp-Treemacs
+
+Integration with treemacs.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package lsp-treemacs
     :straight t)
 
-(beacon-mode)
+(lsp-treemacs-sync-mode 1)
+#+end_src
+
+*** Flycheck
+
+On-the-fly linting and syntax checking.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package flycheck
+  :straight t
+  :init (global-flycheck-mode))
+#+end_src
+
+*** Comment-Tags
+
+Makes keywords like TODO, BUG, FIXED etc. in comments standout.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package comment-tags
+  :straight t
+  :hook ((prog-mode . comment-tags-mode)))
+#+end_src
+
+*** Indent-Guide
+
+Shows indentation guides.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package indent-guide
+    :straight t)
+(setq indent-guide-char "│")
+(setq indent-guide-recursive t)
+
+(add-hook 'prog-mode-hook #'indent-guide-mode)
+#+end_src
+
+*** Treemacs
+
+A project and file viewer.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package treemacs
+  :straight t
+  :init
+  :config
+  (progn
+    (setq treemacs-display-in-side-window          t
+          treemacs-expand-after-init               t
+          treemacs-find-workspace-method           'find-for-file-or-pick-first
+          treemacs-indentation                     2
+          treemacs-show-cursor                     nil
+          treemacs-show-hidden-files               nil
+          treemacs-silent-filewatch                nil
+          treemacs-silent-refresh                  nil
+          treemacs-sorting                         'alphabetic-asc
+          treemacs-select-when-already-in-treemacs 'move-back
+          treemacs-space-between-root-nodes        t
+          treemacs-tag-follow-cleanup              t
+          treemacs-text-scale                      nil
+          treemacs-user-mode-line-format           nil
+          treemacs-user-header-line-format         nil
+          treemacs-wide-toggle-width               70
+          treemacs-width                           30
+          treemacs-width-increment                 1
+          treemacs-width-is-initially-locked       t
+          treemacs-workspace-switch-cleanup        nil)
+
+    (treemacs-follow-mode nil)
+    (treemacs-filewatch-mode nil)
+    (treemacs-fringe-indicator-mode 'always)
+
+    (treemacs-hide-gitignored-files-mode nil))
+  :bind
+  (:map global-map
+        ("M-0"       . treemacs-select-window)
+        ("C-x t t"   . treemacs)))
+#+end_src
+
+**** Treemacs-Icons-Dired
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package treemacs-icons-dired
+  :hook (dired-mode . treemacs-icons-dired-enable-once)
+  :straight t)
+#+end_src
+
+**** Treemacs-All-the-Icons
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package treemacs-all-the-icons
+  :straight t
+  :config
+  (treemacs-load-theme "all-the-icons"))
+#+end_src
+
+** Typography
+
+Packages to control fonts, icons and other typographic features of Emacs.
+
+*** Mixed-Pitch
+
+Allows you to have both variable and fixed pitch fonts depending on the context of the text. For example, normal text is rendered in a variable font, but code in a fixed one.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package mixed-pitch
+  :straight t
+  :hook
+  ;; If you want it in all text modes:
+  (text-mode . mixed-pitch-mode))
+
+(setq mixed-pitch-variable-pitch-cursor 'box)
+#+end_src
+
+*** Font ligatures
+
+This package enables font ligatures (if the font supports them).
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package ligature
+  :straight t
+  ;; Enable traditional ligature support in eww-mode, if the
+  ;; `variable-pitch' face supports it
+  :config
+  ;; Enable all programming ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
+                                       "<<" "??" ";;" "->" "<-" "-->" "<--"
+                                       ))
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
+#+end_src
+
+*** All-the-Icons
+
+This is a font that consists of different icons, mainly used to indicate filetypes, programming languages etc.
+
+- Main package
+
+    #+begin_src emacs-lisp :tangle ./init.el
+    (use-package all-the-icons
+      :straight t)
+    #+end_src
+
+ - Use icons in the mini-buffer
+
+    #+begin_src emacs-lisp :tangle ./init.el
+    (use-package all-the-icons-completion
+      :straight t
+      :after (marginalia all-the-icons)
+      :hook (marginalia-mode . all-the-icons-completion-marginalia-setup)
+      :init
+      (all-the-icons-completion-mode))
+    #+end_src
+
+** Window and frame handling
+
+This packages are for navigation and handling of buffers, frames and windows.
+
+*** Winner-mode
+
+Built-in package that saves window states and can cycle through them.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(winner-mode t)
+#+end_src
+
+*** Ace-Window
+
+Move around windows without having to cycle through them.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "M-o") 'ace-window)
+(setq aw-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l))
+(setq aw-dispatch-always nil)
+(setq aw-background nil)
+(defvar aw-dispatch-alist
+  '((?x aw-delete-window "Delete Window")
+    (?m aw-swap-window "Swap Windows")
+    (?M aw-move-window "Move Window")
+    (?c aw-copy-window "Copy Window")
+    (?j aw-switch-buffer-in-window "Select Buffer")
+    (?n aw-flip-window)
+    (?u aw-switch-buffer-other-window "Switch Buffer Other Window")
+    (?c aw-split-window-fair "Split Fair Window")
+    (?v aw-split-window-vert "Split Vert Window")
+    (?b aw-split-window-horz "Split Horz Window")
+    (?o delete-other-windows "Delete Other Windows")
+    (?? aw-show-dispatch-help))
+  "List of actions for `aw-dispatch-default'.")
+
+(use-package ace-window
+  :straight t)
+#+end_src
+
+*** Resize-Window
+
+Resize windows with keybinds.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq resizewindow-allow-backgrounds nil)
+(global-set-key (kbd "C-c C-;") 'resize-window)
+(use-package resize-window
+  :straight t)
+#+end_src
+
+** File history
+
+Default undo/redo doesn't allow going back to previous "futures". This package treats file history as a tree and therefore offers much more flexibility.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package undo-tree
+  :straight t)
+
+(setq undo-tree-auto-save-history t)
+
+(defadvice undo-tree-make-history-save-file-name
+    (after undo-tree activate)
+  (setq ad-return-value (concat ad-return-value ".gz")))
+
+(setq undo-tree-visualizer-diff t)
+(setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
+
+(global-undo-tree-mode)
+#+end_src
+
+** Snippets
+
+I use yasnippet to manage my snippets.
+
+*** Yasnippet
+
+#+begin_src emacs-lisp :tangle ./init.el
+  (use-package yasnippet
+      :straight t
+      :config
+      (setq yas-snippet-dirs '("~/.config/emacs/snippets")))
+
+  (add-hook 'org-mode-hook  'yas-minor-mode-on)
+  (add-hook 'prog-mode-hook 'yas-minor-mode-on)
+  (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
+#+end_src
+
+*** Yasnippet-Snippets
+
+Includes some default useful snippets.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package yasnippet-snippets
+    :straight t)
+#+end_src
+
+** Autocompletion buffer
+
+For this I use corfu. I used company before, but corfu seems faster, more minimal, renders better and uses more built-in features.
+
+*** Corfu
+
+#+begin_src emacs-lisp :tangle ./init.el
+  (use-package corfu
+    :straight t
+
+    :custom
+    (corfu-cycle t)                       ;; Enable cycling for `corfu-next/previous'
+    (corfu-auto t)                        ;; Enable auto completion
+    (corfu-separator ?\s)                 ;; Orderless field separator
+    (corfu-quit-at-boundary 'separator)   ;; Never quit at completion boundary
+    ;; (corfu-quit-no-match nil)          ;; Never quit, even if there is no match
+    (corfu-preview-current 'insert)       ;; Disable current candidate preview
+    (corfu-preselect 'prompt)             ;; Preselect the prompt
+    (corfu-on-exact-match nil)            ;; Configure handling of exact matches
+    ;; (corfu-scroll-margin 5)            ;; Use scroll margin
+    (corfu-auto-delay 0)
+    (corfu-auto-prefix 1)
+
+    (completion-cycle-threshold nil)
+    (tab-always-indent 'complete)
+
+    ;; (corfu-min-width 80)
+    ;; (corfu-max-width corfu-min-width)
+
+    (lsp-completion-provider :none) ; Use corfu instead the default for lsp completions
+
+    :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
+
+    :config
+    ;; Setup lsp to use corfu for lsp completion
+    (defun kb/corfu-setup-lsp ()
+      "Use orderless completion style with lsp-capf instead of the
+    default lsp-passthrough."
+      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+            '(orderless)))
+
+    :bind
+    (:map corfu-map
+          ("C-n" . #'corfu-next)
+          ("C-p" . #'corfu-previous)
+          ("<escape>" . #'corfu-quit)
+          ("<return>" . #'corfu-insert)
+          ("<return>" . #'corfu-complete)
+          ("C-<tab>" . corfu-insert-separator)
+          ;; ("M-d" . #'corfu-show-documentation)
+          ;; ("M-l" . #'corfu-show-location)
+          )
+          :init
+          (global-corfu-mode))
+
+(advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
+#+end_src
+
+**** Corfu-doc
+
+Displays a pop-up window showing the documentation for the thing at point.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package corfu-doc
+  ;; NOTE 2022-02-05: At the time of writing, `corfu-doc' is not yet on melpa
+  :straight t
+  :after corfu
+  :hook (corfu-mode . corfu-doc-mode)
+  :bind(:map corfu-map
+             ;; This is a manual toggle for the documentation popup.
+             ([remap corfu-show-documentation] . #'corfu-doc-toggle) ; Remap the default doc command
+             ;; Scroll in the documentation window
+             ("M-n" . #'corfu-doc-scroll-up)
+             ("M-p" . #'corfu-doc-scroll-down))
+  :custom
+  (corfu-doc-delay 0.5)
+  (corfu-doc-max-width 70)
+  (corfu-doc-max-height 20)
+
+  ;; NOTE 2022-02-05: I've also set this in the `corfu' use-package to be
+  ;; extra-safe that this is set when corfu-doc is loaded. I do not want
+  ;; documentation shown in both the echo area and in the `corfu-doc' popup.
+  (corfu-echo-documentation nil))
+#+end_src
+
+*** kind-icon
+
+Icons to show for autocompletion items.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package kind-icon
+  :straight t
+  :after corfu
+  :custom
+  (kind-icon-use-icons t)
+  (kind-icon-default-face 'corfu-default) ; Have background color be the same as `corfu' face background
+  (kind-icon-blend-background nil)  ; Use midpoint color between foreground and background colors ("blended")?
+  (kind-icon-blend-frac 0.08)
+
+  :config
+  ;; enable kind-icon only in prog-mode
+  (defun my/enable-kind-icon ()
+    (setq-local corfu-margin-formatters '(kind-icon-margin-formatter)))
+  :hook  ((prog-mode . my/enable-kind-icon))
+  )
+#+end_src
+
+*** Cape
+
+Package to manage what completions are enabled.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package cape
+  :straight t
+  ;; ;; Bind dedicated completion commands
+  ;; ;; Alternative prefix keys: C-c p, M-p, M-+, ...
+  ;; :bind (("C-c p p" . completion-at-point) ;; capf
+  ;;        ("C-c p t" . complete-tag)        ;; etags
+  ;;        ("C-c p d" . cape-dabbrev)        ;; or dabbrev-completion
+  ;;        ("C-c p h" . cape-history)
+  ;;        ("C-c p f" . cape-file)
+  ;;        ("C-c p k" . cape-keyword)
+  ;;        ("C-c p s" . cape-symbol)
+  ;;        ("C-c p a" . cape-abbrev)
+  ;;        ("C-c p i" . cape-ispell)
+  ;;        ("C-c p l" . cape-line)
+  ;;        ("C-c p w" . cape-dict)
+  ;;        ("C-c p \\" . cape-tex)
+  ;;        ("C-c p _" . cape-tex)
+  ;;        ("C-c p ^" . cape-tex)
+  ;;        ("C-c p &" . cape-sgml)
+  ;;        ("C-c p r" . cape-rfc1345))
+  :init
+  ;; Add `completion-at-point-functions', used by `completion-at-point'.
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-file)
+  ;;(add-to-list 'completion-at-point-functions #'cape-history)
+  (add-to-list 'completion-at-point-functions #'cape-keyword)
+  (add-to-list 'completion-at-point-functions #'cape-tex)
+  ;;(add-to-list 'completion-at-point-functions #'cape-sgml)
+  ;;(add-to-list 'completion-at-point-functions #'cape-rfc1345)
+  (add-to-list 'completion-at-point-functions #'cape-abbrev)
+  ;; (add-to-list 'completion-at-point-functions #'cape-ispell)
+  ;; (add-to-list 'completion-at-point-functions #'cape-dict)
+  ;;(add-to-list 'completion-at-point-functions #'cape-symbol)
+  ;; (add-to-list 'completion-at-point-functions #'cape-line)
+)
+#+end_src
+
+** Minibuffer
+
+*** Vertico
+
+Show candidates as you type.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package vertico
+  :straight t
+  :custom
+  (vertico-cycle t)
+  :init
+  (vertico-mode))
+#+end_src
+
+*** Savehist
+
+Show most recent commands higher.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package savehist
+    :straight t
+  :init
+  (savehist-mode))
+#+end_src
+
+*** Marginalia
+
+Displays a small sentence describing what the command does.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package marginalia
+  :after vertico
+  :straight t
+  :custom
+  (marginalia-annotators '(marginalia-annotators-heavy marginalia-annotators-light nil))
+  :init
+  (marginalia-mode))
+#+end_src
+
+*** Orderless
+
+Enables fuzzy searching.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package orderless
+  :straight t
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+#+end_src
+
+** Terminal emulation
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package vterm
+  :straight t)
+#+end_src
+
+** File handling
+
+*** OpenWith
+
+Allows to match programs with filetypes and open files with those programs instead of Emacs.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package openwith
+  :straight (:host github :repo "thisirs/openwith")
+  :config
+  (setq openwith-associations '(("\\.pdf\\'" "setsid -w xdg-open" (file))
+                                ;; ("\\.html\\'" "firefox" (file))
+                                ("\\.mp4\\'" "setsid -w xdg-open" (file))
+                                ("\\.mkv\\'" "setsid -w xdg-open" (file))
+                                ))
+  (openwith-mode t))
+#+end_src
+
+** Web
+
+*** Eww
+
+  Emacs has an awesome built-in browser called EWW (Emacs Web Wowser). Not the greatest name, but it gets the job done.
+
+  This makes EWW automatically rename EWW buffers once the page is rendered.
+
+  #+begin_src emacs-lisp :tangle ./init.el
+(setq eww-auto-rename-buffer t)
+  #+end_src
+
+*** Elpher
+
+A browser for the gemini and gopher protocols.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package elpher
+  :straight t)
+#+end_src
+
+** Keybinds
+
+*** Shift-number
+
+Allows to change the first number after the cursor on the same line.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package shift-number
+  :straight t)
+
+(global-set-key (kbd "C-+") 'shift-number-up)
+(global-set-key (kbd "C--") 'shift-number-down)
+#+end_src
+
+*** Which-Key
+
+When you start a key-chord and don't finish it, =which-key= shows you available keybinds.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package which-key
+  :straight t
+  :init (which-key-mode)
+  :diminish which-key-mode
+  :config
+  (setq which-key-idle-delay 1.5))
+#+end_src
+
+*** Embark
+
+Depending on where the cursor is, =embark= shows you available actions and displays a keymap with each one matched to a key.
+
+#+begin_src emacs-lisp :tangle ./init.el
+   (use-package embark
+     :straight t
+
+     :bind
+     (("C-." . embark-act)         ;; pick some comfortable binding
+      ("M-." . embark-dwim)        ;; good alternative: M-.
+      ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+     :init
+
+     ;; Optionally replace the key help with a completing-read interface
+     (setq prefix-help-command #'embark-prefix-help-command)
+
+     :config
+
+     ;; ;; Hide the mode line of the Embark live/completions buffers
+     ;; (add-to-list 'display-buffer-alist
+     ;;              '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+     ;;                nil
+     ;;                (window-parameters (mode-line-format . none))))
+     )
+#+end_src
+
+**** Citar-Embark
+
+Integration with the citar package.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package citar-embark
+  :straight t
+  :after citar embark
+  :no-require
+  :config (citar-embark-mode))
+#+end_src
+
+** LaTeX
+
+Even though I personally don't write much latex anymore ---since I write my documents in org-mode and if need be I export to latex---, the following configuration is used rarely. But nonetheless, it makes Emacs a powerful latex editor.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(straight-use-package 'auctex)
+(setq-default TeX-master nil)
+
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+(setq TeX-command-extra-options "-shell-escape -interaction=nonstopmode")
+(setq-default TeX-engine 'luatex)
+(setq-default TeX-PDF-mode t)
+(setq TeX-source-correlate-mode t)
+(setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
+(setq TeX-view-program-selection '((output-pdf "Evince")))
+(setq font-latex-fontify-script nil)
+(add-hook 'LaTeX-mode-hook (lambda () (visual-line-mode t)))
+(add-hook 'TeX-mode-hook (lambda () (visual-line-mode t)))
+#+end_src
+
+*** RefTeX
+
+A package that helps manage references in tex files.
+
+#+begin_src emacs-lisp :tangle ./init.el
+;; Turn on RefTeX in AUCTeX
+(add-hook 'LaTeX-mode-hook 'turn-on-reftex)
+;; Activate nice interface between RefTeX and AUCTeX
+(setq reftex-plug-into-AUCTeX t)
+#+end_src
+
+*** Texlab/LSP-LaTeX
+
+An LSP server for latex.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package lsp-latex
+    :straight t)
+
+(with-eval-after-load "tex-mode"
+ (add-hook 'TeX-mode-hook 'lsp)
+ ;; (add-hook 'latex-mode-hook 'lsp)
+ )
+#+end_src
+
+*** CDLaTeX
+
+Speeds up typing latex. Also works in org-mode.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package cdlatex
+  :straight t)
+
+(add-hook 'org-mode-hook #'turn-on-org-cdlatex)
+(add-hook 'LaTeX-mode-hook #'turn-on-cdlatex)   ; with AUCTeX LaTeX mode
+(add-hook 'latex-mode-hook #'turn-on-cdlatex)   ; with Emacs latex mode
+
+(global-set-key (kbd "C-c e") #'cdlatex-environment)
 #+end_src
 
 *** Xenops
+
+When writing latex equations and math, xenops creates a mini file that contains only the equation, compiles it with the specified latex compiler and creates a png or svg image that renders instead of the equation. This results in latex previews while writing in the buffer.
+
+The neat part is that this package recognizes the latex preamble, so the compilation uses the included packages, and not only a default subset.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package xenops
@@ -2283,7 +2038,7 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
   )
 
 (add-to-list 'org-latex-packages-alist
-	     '("cache=false" "minted" t))
+         '("cache=false" "minted" t))
 
 (setq xenops-math-latex-process-alist
       '(
@@ -2330,9 +2085,270 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
 (add-hook 'org-mode-hook #'xenops-mode)
 #+end_src
 
-** Elfeed
+** Spell checking
 
-*** Elfeed-Org
+Since I write a lot of prose, spell checking is a must for any text editor.
+
+*** Flyspell
+
+Combines both Greek and English dictionaries.
+
+#+begin_src emacs-lisp :tangle ./init.el
+  (with-eval-after-load "ispell"
+    (setq ispell-program-name "hunspell")
+    (setq ispell-dictionary "el_GR,en_US")
+    (ispell-set-spellchecker-params)
+    (ispell-hunspell-add-multi-dic "el_GR,en_US")
+    (setq ispell-personal-dictionary "~/.hunspell_personal"))
+
+(add-hook 'org-mode-hook (lambda () (flyspell-mode 1)))
+;; (add-hook 'prog-mode-hook (lambda () (flyspell-prog-mode 1)))
+#+end_src
+
+** Writing
+
+*** Olivetti
+
+Centers text in the buffer.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq-default olivetti-body-width 110)
+(setq-default olivetti-margin-width 0)
+(use-package olivetti
+  :straight t
+  :hook
+  (org-mode . olivetti-mode)
+  (markdown-mode . olivetti-mode)
+  (Info-mode . olivetti-mode)
+  (elpher-mode . olivetti-mode)
+  (eww-mode . olivetti-mode)
+  (TeX-mode . olivetti-mode)
+  (tex-mode . olivetti-mode)
+  (LaTeX-mode . olivetti-mode)
+  (latex-mode . olivetti-mode))
+#+end_src
+
+** Bibliography management
+
+*** Citar
+
+Reads Bibliography from the =.bib= file that Zotero exports and allows inserting it in org-mode and latex buffers, viewing the associated files, making notes on the entry etc.
+
+#+begin_src emacs-lisp :tangle ./init.el
+        (use-package citar
+          :straight t
+          :bind (("C-c b" . citar-insert-citation)
+                 ;; :map minibuffer-local-map
+                 ;; ("M-b" . citar-insert-preset)
+                 )
+          :custom
+          (citar-bibliography '("~/Textfiles/biblio.bib"))
+          :config
+            (defvar citar-indicator-files-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-faicon
+              "file-o"
+              :face 'all-the-icons-green
+              :v-adjust -0.1)
+     :function #'citar-has-files
+     :padding "  " ; need this because the default padding is too low for these icons
+     :tag "has:files"))
+
+  (defvar citar-indicator-links-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-octicon
+              "link"
+              :face 'all-the-icons-orange
+              :v-adjust 0.01)
+     :function #'citar-has-links
+     :padding "  "
+     :tag "has:links"))
+
+  (defvar citar-indicator-notes-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-material
+              "speaker_notes"
+              :face 'all-the-icons-blue
+              :v-adjust -0.3)
+     :function #'citar-has-notes
+     :padding "  "
+     :tag "has:notes"))
+
+  (defvar citar-indicator-cited-icons
+    (citar-indicator-create
+     :symbol (all-the-icons-faicon
+              "circle-o"
+              :face 'all-the-icon-green)
+     :function #'citar-is-cited
+     :padding "  "
+     :tag "is:cited"))
+
+    (setq citar-indicators
+    (list citar-indicator-files-icons
+          citar-indicator-links-icons
+          citar-indicator-notes-icons
+          citar-indicator-cited-icons)))
+
+        ;; (setq citar-symbols
+        ;;       `((file ,(all-the-icons-faicon "file-o" :face 'all-the-icons-green :v-adjust -0.1) . " ")
+        ;;         (note ,(all-the-icons-material "speaker_notes" :face 'all-the-icons-blue :v-adjust -0.3) . " ")
+        ;;         (link ,(all-the-icons-octicon "link" :face 'all-the-icons-orange :v-adjust 0.01) . " ")))
+        ;; (setq citar-symbol-separator "  ")
+#+end_src
+
+**** Citar-capf
+
+Adds autocompletion for bibliography entries.
+
+#+begin_src emacs-lisp :tangle ./init.el
+;; (require 'citar-capf)
+
+(add-hook 'completion-at-point-functions
+          #'citar-capf
+          'append)
+#+end_src
+
+**** Citar-Org-Roam
+
+Compatibility layer that allows the citar notes to be part of org-roam.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package citar-org-roam
+  :straight t
+  :after citar org-roam
+  :no-require
+  :config (citar-org-roam-mode))
+#+end_src
+
+** Version control
+
+*** Magit
+
+A front-end for using git. Very powerful, provides complicated actions at the press of a button.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package magit
+    :straight t
+    :commands magit-status)
+#+end_src
+
+** File management
+
+*** Dired
+
+Dired is the default file viewer of Emacs. It is very powerful in and of itself, but the following configuration extends its capabilities even more.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(put 'dired-find-alternate-file 'disabled nil)
+(add-hook 'dired-mode-hook (lambda () (hl-line-mode 1)))
+#+end_src
+
+*** Dired-Hide-Dotfiles
+
+Allows you to hide dotfiles in dired by default and toggle them.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package dired-hide-dotfiles
+  :straight t)
+
+(defun my-dired-mode-hook ()
+  "My `dired' mode hook."
+  ;; To hide dot-files by default
+  (dired-hide-dotfiles-mode))
+
+;; To toggle hiding
+(define-key dired-mode-map "." #'dired-hide-dotfiles-mode)
+(add-hook 'dired-mode-hook #'my-dired-mode-hook)
+#+end_src
+
+*** Dired-copy-paste
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package dired-copy-paste
+  :straight (dired-copy-paste :type git :host github :repo "jsilve24/dired-copy-paste"))
+
+(define-key dired-mode-map "\C-c\C-x" 'dired-copy-paste-do-cut)
+(define-key dired-mode-map "\C-c\C-c" 'dired-copy-paste-do-copy)
+(define-key dired-mode-map "\C-c\C-v" 'dired-copy-paste-do-paste)
+#+end_src
+
+** Aesthetic enhancements
+
+This part consists of packages that make Emacs prettier.
+
+*** Dashboard
+
+Provides a start-up welcome screen for Emacs.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package dashboard
+  :straight t
+  :config
+  ;; Set the banner
+  (setq dashboard-startup-banner 'official)
+  ;; Value can be
+  ;; 'official which displays the official emacs logo
+  ;; 'logo which displays an alternative emacs logo
+  ;; 1, 2 or 3 which displays one of the text banners
+  ;; "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever image/text you would prefer
+  ;; Content is not centered by default. To center, set
+  (setq dashboard-set-navigator t)
+  (setq dashboard-center-content t)
+  (setq dashboard-banner-logo-title nil)
+  (setq dashboard-show-shortcuts nil)
+  (setq dashboard-set-heading-icons t)
+  (setq dashboard-set-file-icons t)
+  (setq dashboard-set-init-info nil)
+  (setq dashboard-set-footer nil)
+  (setq dashboard-week-agenda nil)
+  (setq dashboard-page-separator "\n\n")
+  (setq dashboard-items '(;;(bookmarks . 20)
+                          ;; (recents . 5)
+                          ;; (agenda . 10)
+                          ))
+
+  (dashboard-setup-startup-hook))
+
+(setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
+#+end_src
+
+*** Rainbow-Mode
+
+Colors hex values accordingly.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package rainbow-mode
+  :straight t)
+#+end_src
+
+*** Rainbow-Delimeters
+
+Colors the same color matching delimeters.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package rainbow-delimiters
+  :straight t
+  :hook (prog-mode . rainbow-delimiters-mode))
+#+end_src
+
+*** Beacon-Mode
+
+When switching to a new window or buffer, the line that the cursor is located flashes, making it easier to locate.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package beacon
+    :straight t)
+
+(beacon-mode)
+#+end_src
+
+** Media consumption
+
+*** RSS
+
+**** Elfeed-Org
+
+Allows to specify your RSS feeds with an org-file, instead of appending links to a variable.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package elfeed-org
@@ -2342,7 +2358,9 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
 (setq rmh-elfeed-org-files (list "~/.config/emacs/feeds.org"))
 #+end_src
 
-*** Elfeed
+**** Elfeed
+
+An RSS reader.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package elfeed
@@ -2359,7 +2377,9 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
 (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
 #+end_src
 
-**** eww integration
+***** eww integration
+
+A function to open the link at point in EWW.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (defun elfeed-eww-open (&optional use-generic-p)
@@ -2376,9 +2396,11 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
 (define-key elfeed-search-mode-map (kbd "w") 'elfeed-eww-open)
 #+end_src
 
-** Anki
+** Spaced repetition
 
 *** Anki-Editor
+
+Allows to create anki cards from org-mode nodes and sync them with anki.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq-default anki-editor-use-math-jax t)
@@ -2402,18 +2424,18 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
     (anki-editor-cloze-region my-anki-editor-cloze-number "")
     (setq my-anki-editor-cloze-number (1+ my-anki-editor-cloze-number))
     (forward-sexp))
-  
+
   (defun anki-editor-cloze-region-dont-incr (&optional arg)
     "Cloze region without hint using the previous card number."
     (interactive)
     (anki-editor-cloze-region (1- my-anki-editor-cloze-number) "")
     (forward-sexp))
-  
+
   (defun anki-editor-reset-cloze-number (&optional arg)
     "Reset cloze number to ARG or 1"
     (interactive)
     (setq my-anki-editor-cloze-number (or arg 1)))
-  
+
   (defun anki-editor-push-tree ()
     "Push all notes under a tree."
     (interactive)
@@ -2425,33 +2447,14 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
 )
 #+end_src
 
-*** Org-Anki
-
-#+begin_src emacs-lisp :tangle no
-(use-package org-anki
-  :straight t)
-#+end_src
-
-* Buffer Shenanigans
-
-#+begin_src emacs-lisp :tangle ./init.el
-;; (setq-default message-log-max nil)
-;; (kill-buffer "*Messages*")
-
-(defun remove-scratch-buffer ()
-  (if (get-buffer "*scratch*")
-      (kill-buffer "*scratch*")))
-;; (add-hook 'after-change-major-mode-hook 'remove-scratch-buffer)
-
-(kill-buffer "*straight-process*")
-(kill-buffer "*elfeed-log*")
-#+end_src
-
 * Local Variables
+
+With this setting, upon saving this file all the code snippets are tangled to =init.el= asynchronously and automatically.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq enable-local-eval t)
 #+end_src
+
 ;; Local Variables:
 ;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t)
 ;; End:

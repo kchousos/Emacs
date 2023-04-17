@@ -1,0 +1,11 @@
+# -*- mode: snippet -*-
+# name: Org Base (English)
+# key: <ob
+# --
+#+title: $1
+#+subtitle: $2
+#+author: Konstantinos Chousos
+#+language: en
+#+options: num:t toc:nil date:nil timestamp:nil
+
+$0
