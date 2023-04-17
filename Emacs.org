@@ -1160,19 +1160,29 @@ Even though I personally don't write much latex anymore ---since I write my docu
 
 #+begin_src emacs-lisp :tangle ./init.el
 (straight-use-package 'auctex)
-(setq-default TeX-master nil)
 
+(setq-default TeX-master nil)
 (setq TeX-auto-save t)
 (setq TeX-parse-self t)
-(setq TeX-command-extra-options "-shell-escape -interaction=nonstopmode")
-(setq-default TeX-engine 'luatex)
-(setq-default TeX-PDF-mode t)
+;; (setq TeX-command-extra-options "-shell-escape -interaction=nonstopmode")
+;; (setq-default TeX-engine 'luatex)
+;; (setq-default TeX-PDF-mode t)
 (setq TeX-source-correlate-mode t)
 (setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
 (setq TeX-view-program-selection '((output-pdf "Evince")))
 (setq font-latex-fontify-script nil)
 (add-hook 'LaTeX-mode-hook (lambda () (visual-line-mode t)))
 (add-hook 'TeX-mode-hook (lambda () (visual-line-mode t)))
+#+end_src
+
+*** AucTeX-LaTeXmk
+
+Adds LatexMk support to AUCTeX.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package auctex-latexmk
+  :straight t)
+(auctex-latexmk-setup)
 #+end_src
 
 *** RefTeX
@@ -1587,7 +1597,22 @@ A function to open the link at point in EWW.
 (define-key elfeed-search-mode-map (kbd "w") 'elfeed-eww-open)
 #+end_src
 
-** Spaced repetition
+*** Epub
+
+**** Nov.el
+
+A package to read =.epub= documents inside Emacs.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package nov
+  :straight t)
+
+(add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
+(setq nov-text-width t)
+(add-hook 'nov-mode-hook 'olivetti-mode)
+#+end_src
+
+** Spaced Repetition Systems
 
 *** Anki-Editor
 
@@ -1782,7 +1807,7 @@ Exporter for [[https://revealjs.com/][Reveal.js]].
 Settings for when exporting to latex.
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq org-latex-compiler "lualatex --synctex=1 -interaction=batchmode")
+(setq org-latex-compiler "latexmk")
 
 (setq org-src-preserve-indentation t)
 (setq indent-tabs-mode nil)
@@ -1791,15 +1816,14 @@ Settings for when exporting to latex.
 (add-hook 'org-mode-hook
           '(lambda ()
              (delete '("\\.pdf\\'" . default) org-file-apps)
-             (add-to-list 'org-file-apps '("\\.pdf\\'" . "evince %s"))))
+             (add-to-list 'org-file-apps '("\\.pdf\\'" . "xdg-open %s"))))
 
 ;; For syntax highlighting in exported code blocks
 ;; !!Needs python-pygments installed!!
 (setq
  org-latex-listings 'minted
  org-latex-pdf-process
- '("lualatex -shell-escape -interaction=nonstopmode -output-directory %o %f"
-   "lualatex -shell-escape -interaction=nonstopmode -output-directory %o %f"))
+ '("latexmk -output-directory=%o %f"))
 
 (setq org-export-with-smart-quotes t)
 
