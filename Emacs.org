@@ -2,7 +2,7 @@
 #+subtitle: A literate =init.el=
 #+author: Konstantinos Chousos
 #+language: en
-#+options: num:t toc:nil date:nil timestamp:nil
+#+options: num:2 toc:nil date:nil timestamp:nil
 #+STARTUP: show2levels
 
 This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configuration, in the style of [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]], by leveraging [[https://orgmode.org/][Org-Mode]].
