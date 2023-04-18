@@ -310,13 +310,6 @@ Open =woMan (without man)=, an emacs native program to read man pages.
 (global-set-key (kbd "C-c w") #'woman)
 #+end_src
 
-** Move lines of text up or down
-
-#+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "M-S-<up>") 'move-text-line-up)
-(global-set-key (kbd "M-S-<down>") 'move-text-line-down)
-#+end_src
-
 * Packages
 
 This section consists of various packages, built-in or external, that add many extra features.
@@ -1088,6 +1081,16 @@ A browser for the gemini and gopher protocols.
 #+end_src
 
 ** Keybinds
+
+*** Move-Text
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package move-text
+  :straight t)
+
+(global-set-key (kbd "M-S-<up>") 'move-text-line-up)
+(global-set-key (kbd "M-S-<down>") 'move-text-line-down)
+#+end_src
 
 *** Shift-number
 
