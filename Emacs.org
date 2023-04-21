@@ -330,6 +330,12 @@ I use =straight.el= over the default package manager =package.el= simply because
 
 We only need to bootstrap =straight.el= and then we can use the =use-package= macro the same way as before.
 
+This line is needed for =straight.el= to install in Emacs 29 (see [[https://github.com/radian-software/straight.el/issues/1076][here]]).
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq native-comp-deferred-compilation-deny-list nil)
+#+end_src
+
 #+begin_src emacs-lisp :tangle ./init.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
