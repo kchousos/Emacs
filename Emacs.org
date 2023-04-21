@@ -9,6 +9,16 @@ This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configurat
 
 #+toc: headlines 2
 
+* TODOs
+
+** TODO Organize packages in better categories
+
+** TODO Replace lsp with eglot
+
+** TODO Replace straight.el with package.el (?)
+
+** TODO Add tree-sitter support
+
 * Miscellaneous configurations
 
 This section consists of various little configurations and settings that generally improve the quality of life in Emacs. No packages are configured here, only built-in options and variables.
@@ -434,15 +444,6 @@ Configurations and packages related to programming in Emacs.
 
 Settings divided by language.
 
-**** C/C++
-
-#+begin_src emacs-lisp :tangle ./init.el
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
-
-(setq lsp-clients-clangd-arg "--header-insertion=never")
-#+end_src
-
 **** MIPS Assembly
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -503,19 +504,7 @@ Settings divided by language.
       (cons '("\\.hs$" . haskell-mode) auto-mode-alist))
 #+end_src
 
-***** lsp-haskell
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-haskell
-  :straight t)
-
-(add-hook 'haskell-mode-hook 'lsp)
-#+end_src
-
 **** Python
-
-#+begin_src emacs-lisp :tangle ./init.el
-(add-hook 'python-mode #'lsp)
-#+end_src
 
 ***** Pyvenv
 
@@ -532,20 +521,9 @@ Makes Emacs recognize different python virtual environments.
 
 ;; (add-hook 'python-mode-hook #'pyvenv-mode)
 ;; (add-hook 'python-mode-hook (lambda () (pyvenv-workon 'ai)))
-(add-hook 'pyvenv-post-activate-hooks
-          #'(lambda ()
-              (call-interactively #'lsp)))
-#+end_src
-
-***** LSP settings for python
-
-#+begin_src emacs-lisp :tangle ./init.el
-;; Disables its default "lsp linter", allowing pylint to work
-
-(add-hook 'python-mode-hook
-      (lambda ()
-        (make-local-variable 'lsp-diagnostic-provider)
-        (setq lsp-diagnostic-provider :none)))
+;; (add-hook 'pyvenv-post-activate-hooks
+;;           #'(lambda ()
+;;               (call-interactively #'lsp)))
 #+end_src
 
 **** Sagemath
@@ -570,7 +548,7 @@ Some general settings for all programming modes.
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
 
-*** LSP
+*** COMMENT LSP
 
 Language-Server-Protocol. Offers IDE features in Emacs, regardless of the language.
 
@@ -585,6 +563,50 @@ Language-Server-Protocol. Offers IDE features in Emacs, regardless of the langua
   (lsp-enable-which-key-integration t))
 
 ;; (setq lsp-diagnostics-provider :flycheck)
+#+end_src
+
+These are language-specific settings.
+
+***** C/C++
+#+begin_src emacs-lisp :tangle ./init.el
+(add-hook 'c-mode-hook 'lsp)
+(add-hook 'c++-mode-hook 'lsp)
+
+(setq lsp-clients-clangd-arg "--header-insertion=never")
+#+end_src
+
+***** Haskell
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package lsp-haskell
+  :straight t)
+
+(add-hook 'haskell-mode-hook 'lsp)
+#+end_src
+
+***** Python
+
+#+begin_src emacs-lisp :tangle ./init.el
+(add-hook 'python-mode #'lsp)
+
+;; Disables its default "lsp linter", allowing pylint to work
+(add-hook 'python-mode-hook
+      (lambda ()
+        (make-local-variable 'lsp-diagnostic-provider)
+        (setq lsp-diagnostic-provider :none)))
+#+end_src
+
+***** Texlab/LSP-LaTeX
+
+An LSP server for latex.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package lsp-latex
+    :straight t)
+
+(with-eval-after-load "tex-mode"
+ (add-hook 'TeX-mode-hook 'lsp)
+ ;; (add-hook 'latex-mode-hook 'lsp)
+ )
 #+end_src
 
 **** Lsp-Ui
@@ -889,17 +911,17 @@ For this I use corfu. I used company before, but corfu seems faster, more minima
     ;; (corfu-min-width 80)
     ;; (corfu-max-width corfu-min-width)
 
-    (lsp-completion-provider :none) ; Use corfu instead the default for lsp completions
+    ;; (lsp-completion-provider :none) ; Use corfu instead the default for lsp completions
 
-    :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
+    ;; :hook (lsp-completion-mode . kb/corfu-setup-lsp) ; Use corfu for lsp completion
 
     :config
     ;; Setup lsp to use corfu for lsp completion
-    (defun kb/corfu-setup-lsp ()
-      "Use orderless completion style with lsp-capf instead of the
-    default lsp-passthrough."
-      (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
-            '(orderless)))
+    ;; (defun kb/corfu-setup-lsp ()
+    ;;   "Use orderless completion style with lsp-capf instead of the
+    ;; default lsp-passthrough."
+    ;;   (setf (alist-get 'styles (alist-get 'lsp-capf completion-category-defaults))
+    ;;         '(orderless)))
 
     :bind
     (:map corfu-map
@@ -915,7 +937,7 @@ For this I use corfu. I used company before, but corfu seems faster, more minima
           :init
           (global-corfu-mode))
 
-(advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
+;; (advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
 #+end_src
 
 *** kind-icon
@@ -1199,20 +1221,6 @@ A package that helps manage references in tex files.
 (setq reftex-plug-into-AUCTeX t)
 #+end_src
 
-*** Texlab/LSP-LaTeX
-
-An LSP server for latex.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-latex
-    :straight t)
-
-(with-eval-after-load "tex-mode"
- (add-hook 'TeX-mode-hook 'lsp)
- ;; (add-hook 'latex-mode-hook 'lsp)
- )
-#+end_src
-
 *** CDLaTeX
 
 Speeds up typing latex. Also works in org-mode.
@@ -1306,7 +1314,7 @@ Combines both Greek and English dictionaries.
     (setq ispell-personal-dictionary "~/.hunspell_personal"))
 
 (add-hook 'org-mode-hook (lambda () (flyspell-mode 1)))
-(add-hook 'prog-mode-hook (lambda () (flyspell-prog-mode 1)))
+;; (add-hook 'prog-mode-hook (lambda () (flyspell-prog-mode 1)))
 #+end_src
 
 ** Dictionary
@@ -1316,7 +1324,7 @@ Combines both Greek and English dictionaries.
 #+end_src
 
 #+begin_src emacs-lisp :tangle ./init.el
-;; (setq dictionary-server "localhost")
+(setq dictionary-server "dict.org")
 #+end_src
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1325,7 +1333,7 @@ Combines both Greek and English dictionaries.
 (add-to-list 'display-buffer-alist
    '("^\\*Dictionary\\*" display-buffer-in-side-window
      (side . right)
-     (window-width . 0.33)))
+     (window-width . 0.45)))
 #+end_src
 
 ** Writing
@@ -1737,6 +1745,8 @@ This behemoth of a node contains all my configuration regarding org-mode.
         org-auto-align-tags nil
         org-tags-column 0
         org-return-follows-link t
+        org-agenda-show-outline-path 'title
+        org-refile-use-outline-path 'title
         ))
 
 (add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
@@ -1988,7 +1998,9 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
         ;; ("s" "slipbox" entry (file "~/Textfiles/Braindump/slipbox.org")
         ;;  "* %?")
         ("c" "org-protocol-capture" entry (file "Inbox.org")
-         "* [[%:link][%:description]]\n\n %i" :immediate-finish t)
+         "* [[%:link][%:description]]\n\n %i"
+         :empty-lines 1
+         :immediate-finish t)
         ("w" "word" plain (file "~/Textfiles/Braindump/pages/noteworthy_words.org")
          "- %? :: "
          :empty-lines 1)
@@ -2028,14 +2040,14 @@ Autocomplete for figures in file.
   (("C-c r" . oxr-insert-ref)))
 #+end_src
 
-*** COMMENT org-cite-csl-activate
+*** org-cite-csl-activate
 
 Render citations in Chicago-style.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-cite-csl-activate
   :straight (org-cite-csl-activate :type git :host github :repo "andras-simonyi/org-cite-csl-activate")
-  :after citar)
+  :after citar org)
 
 (add-hook 'org-mode-hook (lambda () (cursor-sensor-mode 1)))
 
