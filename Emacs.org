@@ -2560,6 +2560,21 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
     :straight t)
 #+end_src
 
+**** Org-Tidy
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-tidy
+  :straight (:host github :repo "jxq0/org-tidy")
+  :config
+  (add-hook 'org-mode-hook #'org-tidy-mode))
+
+(setq org-tidy-properties-style 'inline)
+(setq org-tidy-properties-inline-symbol "#")
+
+(global-set-key (kbd "C-c u t") #'org-tidy-buffer)
+(global-set-key (kbd "C-c u u") #'org-tidy-untidy-buffer)
+#+end_src
+
 **** Deft
 
 #+begin_src emacs-lisp :tangle ./init.el
