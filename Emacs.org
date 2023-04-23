@@ -1797,6 +1797,13 @@ Utilities to manage my PTA (Plain Text Accounting) files.
   ;; (define-key beancount-mode-map [(control c)(control u)] #'outline-up-heading)
 #+end_src
 
+** Markdown
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package markdown-mode
+  :straight t)
+#+end_src
+
 ** Org
 
 This behemoth of a node contains all my configuration regarding org-mode.
