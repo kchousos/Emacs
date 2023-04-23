@@ -472,6 +472,21 @@ Since I spend a lot of time inside Emacs, I want to have a good-looking, easy-on
 
 Configurations and packages related to programming in Emacs.
 
+*** Eglot
+
+Emacs' native LSP client.
+
+**** Eldoc-Box
+
+This package displays ElDoc documentations in a childframe. The childfrme is selectable and scrollable with mouse, even thought the cursor is hidden.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package eldoc-box
+  :straight t)
+
+(add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode t)
+#+end_src
+
 *** Languages
 
 Settings divided by language.
