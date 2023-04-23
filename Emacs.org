@@ -967,7 +967,7 @@ For this I use corfu. I used company before, but corfu seems faster, more minima
 
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package corfu
-    :straight t
+    :straight (:files (:defaults "extensions/*"))
 
     :custom
     (corfu-cycle t)                       ;; Enable cycling for `corfu-next/previous'
@@ -1008,11 +1008,12 @@ For this I use corfu. I used company before, but corfu seems faster, more minima
           ("<return>" . #'corfu-insert)
           ("<return>" . #'corfu-complete)
           ("C-<tab>" . corfu-insert-separator)
-          ;; ("M-d" . #'corfu-show-documentation)
+          ("M-h" . #'corfu-popupinfo-documentation)
           ;; ("M-l" . #'corfu-show-location)
           )
           :init
-          (global-corfu-mode))
+          (global-corfu-mode)
+          (corfu-popupinfo-mode))
 
 ;; (advice-add #'lsp-completion-at-point :around #'cape-wrap-noninterruptible)
 #+end_src
