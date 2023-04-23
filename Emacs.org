@@ -1824,7 +1824,7 @@ This behemoth of a node contains all my configuration regarding org-mode.
         org-fontify-done-headline t
         org-startup-with-inline-images t
         org-fontify-quote-and-verse-blocks t
-        org-deadline-warning-days 14
+        org-deadline-warning-days 30
         org-log-done 'time
         org-log-into-drawer t
         org-auto-align-tags nil
