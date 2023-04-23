@@ -773,6 +773,36 @@ A project and file viewer.
   (treemacs-load-theme "all-the-icons"))
 #+end_src
 
+** Project management
+
+*** Project.el
+
+Adds the option to specify explicitly the root of a project by using a hidden file. This way, the built-in =project.el= will always work and won't rely only on heuristics.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package project
+  :straight (:type built-in)
+  :config
+  (defvar project-root-markers '(".project")
+    "Files or directories that indicate the root of a project.")
+  (defun aorst/project-find-root (path)
+    "Tail-recursive search in PATH for root markers."
+    (let* ((this-dir (file-name-as-directory (file-truename path)))
+           (parent-dir (expand-file-name (concat this-dir "../")))
+           (system-root-dir (expand-file-name "/")))
+      (cond
+       ((aorst/project-root-p this-dir) (cons 'transient this-dir))
+       ((equal system-root-dir this-dir) nil)
+       (t (aorst/project-find-root parent-dir)))))
+  (defun aorst/project-root-p (path)
+    "Check if current PATH has any of project root markers."
+    (let ((results (mapcar (lambda (marker)
+                             (file-exists-p (concat path marker)))
+                           project-root-markers)))
+      (eval `(or ,@ results))))
+  (add-to-list 'project-find-functions #'aorst/project-find-root))
+#+end_src
+
 ** Typography
 
 Packages to control fonts, icons and other typographic features of Emacs.
