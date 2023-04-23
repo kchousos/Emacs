@@ -25,6 +25,32 @@ This section consists of various little configurations and settings that general
 
 This are just little tweaks to make the Emacs experience more pleasurable.
 
+- Startup Performance
+
+  #+begin_src emacs-lisp :tangle ./init.el
+;; -*- lexical-binding: t; -*-
+
+;; The default is 800 kilobytes.  Measured in bytes.
+(setq gc-cons-threshold (* 50 1000 1000))
+
+;; Profile emacs startup
+(add-hook 'emacs-startup-hook
+          (lambda ()
+            (message "*** Emacs loaded in %s seconds with %d garbage collections."
+                     (emacs-init-time "%.2f")
+                     gcs-done)))
+  #+end_src
+
+- Native compilation
+
+  #+begin_src emacs-lisp :tangle ./init.el
+;; Silence compiler warnings as they can be pretty disruptive
+(setq native-comp-async-report-warnings-errors nil)
+
+;; Set the right directory to store the native comp cache
+(add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
+  #+end_src
+
 - Disables the start-up message of default emacs.
 
   #+begin_src emacs-lisp :tangle ./init.el
