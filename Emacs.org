@@ -1333,7 +1333,7 @@ The neat part is that this package recognizes the latex preamble, so the compila
 (setq xenops-math-latex-process-alist
       '(
        (dvisvgm :programs
-                ("lualatex" "dvisvgm")
+                ("xelatex" "dvisvgm")
                 :description "xdv > svg"
                 :message "you need to install the programs: lualatex and dvisvgm."
                 :image-input-type "dvi"
@@ -1815,7 +1815,7 @@ This behemoth of a node contains all my configuration regarding org-mode.
   :straight (org :type built-in)
   :commands (org-capture org-agenda)
   :config
-  (setq org-hide-emphasis-markers nil
+  (setq org-hide-emphasis-markers t
         org-ellipsis "…"
         org-startup-indented t
         org-pretty-entities nil
@@ -2370,6 +2370,17 @@ Prettifies org tables.
 (use-package org-pretty-table
   :straight (:host github :repo "Fuco1/org-pretty-table")
   :hook (org-mode . org-pretty-table-mode))
+#+end_src
+
+*** Org-appear
+
+Org mode provides a way to toggle visibility of hidden elements such as emphasis markers, links, etc. by customising specific variables, e.g., org-hide-emphasis-markers. However, it is currently not possible to do this interactively and on an element-by-element basis. This package, inspired by org-fragtog, enables automatic visibility toggling depending on cursor position. Hidden element parts appear when the cursor enters an element and disappear when it leaves.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-appear
+  :straight t)
+(add-hook 'org-mode-hook 'org-appear-mode)
+(setq org-appear-trigger 'always)
 #+end_src
 
 *** Org-Roam
