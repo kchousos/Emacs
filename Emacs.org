@@ -57,6 +57,13 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 (setq inhibit-startup-message t)
   #+end_src
 
+- Frame sizing
+
+  #+begin_src emacs-lisp :tangle ./init.el
+(add-to-list 'default-frame-alist '(height . 60))
+(add-to-list 'default-frame-alist '(width . 220))
+  #+end_src
+
 - Remove some visual clutter
 
   #+begin_src emacs-lisp :tangle ./init.el
@@ -106,7 +113,7 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 - Allow resizing
 
   #+begin_src emacs-lisp :tangle ./init.el
-(setq frame-inhibit-implied-resize t)
+;; (setq frame-inhibit-implied-resize t)
   #+end_src
 
 - Fringes configuration
@@ -141,7 +148,7 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 - Make Emacs fullscreen by default
 
   #+begin_src emacs-lisp :tangle ./init.el
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
   #+end_src
 
 - Scroll bar configuration
@@ -681,7 +688,7 @@ Integration with treemacs.
 (lsp-treemacs-sync-mode 1)
 #+end_src
 
-*** Flycheck
+*** COMMENT Flycheck
 
 On-the-fly linting and syntax checking.
 
@@ -714,7 +721,7 @@ Shows indentation guides.
 (add-hook 'prog-mode-hook #'indent-guide-mode)
 #+end_src
 
-*** Treemacs
+*** COMMENT Treemacs
 
 A project and file viewer.
 
@@ -769,6 +776,7 @@ A project and file viewer.
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package treemacs-all-the-icons
   :straight t
+  :after all-the-icons
   :config
   (treemacs-load-theme "all-the-icons"))
 #+end_src
@@ -777,30 +785,10 @@ A project and file viewer.
 
 *** Project.el
 
-Adds the option to specify explicitly the root of a project by using a hidden file. This way, the built-in =project.el= will always work and won't rely only on heuristics.
+In addition to files/folders like =.git=, now =project.el= will recognize projects by placing a =.project= file in the root directory of the project.
 
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package project
-  :straight (:type built-in)
-  :config
-  (defvar project-root-markers '(".project")
-    "Files or directories that indicate the root of a project.")
-  (defun aorst/project-find-root (path)
-    "Tail-recursive search in PATH for root markers."
-    (let* ((this-dir (file-name-as-directory (file-truename path)))
-           (parent-dir (expand-file-name (concat this-dir "../")))
-           (system-root-dir (expand-file-name "/")))
-      (cond
-       ((aorst/project-root-p this-dir) (cons 'transient this-dir))
-       ((equal system-root-dir this-dir) nil)
-       (t (aorst/project-find-root parent-dir)))))
-  (defun aorst/project-root-p (path)
-    "Check if current PATH has any of project root markers."
-    (let ((results (mapcar (lambda (marker)
-                             (file-exists-p (concat path marker)))
-                           project-root-markers)))
-      (eval `(or ,@ results))))
-  (add-to-list 'project-find-functions #'aorst/project-find-root))
+(setq project-vc-extra-root-markers '(".project"))
 #+end_src
 
 ** Typography
@@ -1134,11 +1122,28 @@ Enables fuzzy searching.
   (completion-category-overrides '((file (styles basic partial-completion)))))
 #+end_src
 
-** Terminal emulation
+** Shells and terminal emulation
+
+*** Vterm
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package vterm
   :straight t)
+#+end_src
+
+*** Eshell
+
+Turns =eshell='s prompt to a =λ=.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq eshell-prompt-function
+      (lambda ()
+        (concat
+         (propertize "λ " 'face `(:foreground "medium orchid") 'rear-nonsticky t))))
+
+(setq eshell-prompt-regexp "^λ")
+(setq eshell-highlight-prompt nil)
+(setq eshell-banner-message "\n")
 #+end_src
 
 ** File handling
@@ -1321,58 +1326,58 @@ When writing latex equations and math, xenops creates a mini file that contains 
 The neat part is that this package recognizes the latex preamble, so the compilation uses the included packages, and not only a default subset.
 
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package xenops
-  :straight t
-  :config
-  (setq xenops-math-image-scale-factor 1.2)
-  )
+  (use-package xenops
+    :straight t
+    :config
+    (setq xenops-math-image-scale-factor 1.2)
 
-(add-to-list 'org-latex-packages-alist
-         '("cache=false" "minted" t))
+    (add-to-list 'org-latex-packages-alist
+                 '("cache=false" "minted" t))
 
-(setq xenops-math-latex-process-alist
-      '(
-       (dvisvgm :programs
-                ("xelatex" "dvisvgm")
-                :description "xdv > svg"
-                :message "you need to install the programs: lualatex and dvisvgm."
-                :image-input-type "dvi"
-                :image-output-type "svg"
-                :image-size-adjust (1.5 . 1.5)
-                :latex-compiler
-                ("lualatex --output-format=dvi -interaction=nonstopmode -shell-escape -output-directory %o %f")
-                :image-converter
-                ("dvisvgm %f -n -b min -c %S -o %O"))
-        (dvipng :programs
-               ("lualatex" "dvipng")
-               :description "dvi > png"
-               :message "you need to install the programs: latex and dvipng."
-               :image-input-type "dvi"
-               :image-output-type "png"
-               :image-size-adjust
-               (1.0 . 1.0)
-               :latex-compiler
-               ("lualatex -interaction nonstopmode -shell-escape -output-format dvi -output-directory %o %f")
-               :image-converter
-               ("dvipng -D %D -T tight -o %O %f"))
-       (imagemagick :programs
-                    ("latex" "convert")
-                    :description "pdf > png"
-                    :message "you need to install the programs: latex and imagemagick."
-                    :image-input-type "pdf"
+    (setq xenops-math-latex-process-alist
+          '(
+            (dvisvgm :programs
+                     ("lualatex" "dvisvgm")
+                     :description "xdv > svg"
+                     :message "you need to install the programs: lualatex and dvisvgm."
+                     :image-input-type "dvi"
+                     :image-output-type "svg"
+                     :image-size-adjust (1.5 . 1.5)
+                     :latex-compiler
+                     ("lualatex --output-format=dvi -interaction=nonstopmode -shell-escape -output-directory %o %f")
+                     :image-converter
+                     ("dvisvgm %f -n -b min -c %S -o %O"))
+            (dvipng :programs
+                    ("lualatex" "dvipng")
+                    :description "dvi > png"
+                    :message "you need to install the programs: latex and dvipng."
+                    :image-input-type "dvi"
                     :image-output-type "png"
                     :image-size-adjust
                     (1.0 . 1.0)
                     :latex-compiler
-                    ("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")
+                    ("lualatex -interaction nonstopmode -shell-escape -output-format dvi -output-directory %o %f")
                     :image-converter
-                    ("convert -density %D -trim -antialias %f -quality 100 %O"))))
+                    ("dvipng -D %D -T tight -o %O %f"))
+            (imagemagick :programs
+                         ("latex" "convert")
+                         :description "pdf > png"
+                         :message "you need to install the programs: latex and imagemagick."
+                         :image-input-type "pdf"
+                         :image-output-type "png"
+                         :image-size-adjust
+                         (1.0 . 1.0)
+                         :latex-compiler
+                         ("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")
+                         :image-converter
+                         ("convert -density %D -trim -antialias %f -quality 100 %O"))))
 
-(setq xenops-math-latex-process 'dvisvgm)
-(add-hook 'latex-mode-hook #'xenops-mode)
-(add-hook 'LaTeX-mode-hook #'xenops-mode)
-(add-hook 'TeX-mode-hook #'xenops-mode)
-(add-hook 'org-mode-hook #'xenops-mode)
+    (setq xenops-math-latex-process 'dvisvgm)
+    (add-hook 'latex-mode-hook #'xenops-mode)
+    (add-hook 'LaTeX-mode-hook #'xenops-mode)
+    (add-hook 'TeX-mode-hook #'xenops-mode)
+    (add-hook 'org-mode-hook #'xenops-mode)
+    :after org)
 #+end_src
 
 ** Spell checking
@@ -1594,7 +1599,7 @@ Provides a start-up welcome screen for Emacs.
   :straight t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner 'official)
+  (setq dashboard-startup-banner "/home/kchou/Repos/Emacs/logos/gnu-emacs.svg")
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
@@ -1848,8 +1853,6 @@ This behemoth of a node contains all my configuration regarding org-mode.
 (setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
 
 (setq org-image-actual-width (list 700))
-
-(setq org-display-remote-inline-images 'download)
 
 (setq org-link-file-path-type 'relative)
 #+end_src
@@ -2381,6 +2384,20 @@ Org mode provides a way to toggle visibility of hidden elements such as emphasis
   :straight t)
 (add-hook 'org-mode-hook 'org-appear-mode)
 (setq org-appear-trigger 'always)
+#+end_src
+
+*** Org-Remoteimg
+
+This package displays remote images inline in org-mode with automatic caching. The next time you visit the file or fetch the image, it will be instantly fetched from the cache.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-remoteimg
+  :straight (org-remoteimg :type git :host github :repo "gaoDean/org-remoteimg"))
+
+;; optional: set this to wherever you want the cache to be stored
+(setq url-cache-directory "~/.cache/emacs/url")
+
+(setq org-display-remote-inline-images 'cache) ;; enable caching
 #+end_src
 
 *** Org-Roam
