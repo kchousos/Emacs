@@ -1141,7 +1141,7 @@ Turns =eshell='s prompt to a =λ=.
         (concat
          (propertize "λ " 'face `(:foreground "medium orchid") 'rear-nonsticky t))))
 
-(setq eshell-prompt-regexp "^λ")
+(setq eshell-prompt-regexp "[#λ] ")
 (setq eshell-highlight-prompt nil)
 (setq eshell-banner-message "\n")
 #+end_src
