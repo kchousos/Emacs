@@ -69,7 +69,7 @@ This are just little tweaks to make the Emacs experience more pleasurable.
   #+begin_src emacs-lisp :tangle ./init.el
 (tool-bar-mode -1)
 (tooltip-mode -1)
-;; (menu-bar-mode -1)
+(menu-bar-mode -1)
   #+end_src
 
 - Encoding settings
@@ -1851,8 +1851,7 @@ This behemoth of a node contains all my configuration regarding org-mode.
 
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package org
-    :straight (org :type git
-                   :repo "https://git.tecosaur.net/tec/org-mode.git")
+    :straight (org :type git :repo "https://git.tecosaur.net/tec/org-mode.git"); (org :type built-in)
     :commands (org-capture org-agenda)
     :config
     (setq org-hide-emphasis-markers t
@@ -1871,8 +1870,7 @@ This behemoth of a node contains all my configuration regarding org-mode.
           org-tags-column 0
           org-return-follows-link t
           org-agenda-show-outline-path 'title
-          org-refile-use-outline-path 'title
-          ))
+          org-refile-use-outline-path 'title))
 
   (add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
 
@@ -1990,7 +1988,7 @@ Exporter for [[https://revealjs.com/][Reveal.js]].
 Settings for when exporting to latex.
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq org-latex-compiler "latexmk")
+;; (setq org-latex-compiler "latexmk")
 
 (setq org-src-preserve-indentation t)
 (setq indent-tabs-mode nil)
@@ -2671,6 +2669,25 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
                 "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n" ;; org-roam ID
                 "\\|\\[\\[\\(.*\\]\\)" ;; any link
                 "\\)")))
+#+end_src
+
+*** Org-Latex-Preview
+
+This section contains all settings relevant to the overhauled =org-latex-preview=, written by [[https://github.com/tecosaur][TEC]]. It is supposed to become integrated to Org in version =9.7=, but until then I use his [[https://git.tecosaur.net/tec/org-mode][Org-Mode fork]].
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq org-latex-preview-auto-generate 'live
+      org-latex-preview-persist nil
+      org-latex-preview-processing-indicator 'fringe
+      org-latex-preview-numbered t
+      org-latex-preview-width 0.9
+      org-latex-preview-use-precompilation t
+      ;; org-latex-preview-live-display-type 'eldoc
+      org-latex-preview-auto-generate t)
+
+(plist-put org-format-latex-options :zoom 1.0) ; Calibrated based on the TeX font and org-buffer font.
+
+(add-hook 'org-mode-hook #'org-latex-preview-auto-mode)
 #+end_src
 
 * Local Variables
