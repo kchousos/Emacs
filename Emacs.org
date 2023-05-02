@@ -3,7 +3,7 @@
 #+author: Konstantinos Chousos
 #+language: en
 #+options: num:2 toc:nil date:nil timestamp:nil
-#+STARTUP: show2levels
+#+STARTUP: overview
 
 This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configuration, in the style of [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]], by leveraging [[https://orgmode.org/][Org-Mode]].
 
@@ -265,15 +265,15 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 
 * Fonts
 
-I dislike Emacs' default fonts. But since I run Emacs in a daemon/client setup, the following function is needed to correctly apply the custom fonts to every new frame.
+I dislike Emacs' default fonts. Since I run Emacs in a daemon/client setup, the following function is needed to correctly apply the custom fonts to every new frame.
 
 #+begin_src emacs-lisp :tangle ./init.el
   (defun set-font-faces ()
         (message "Setting faces!")
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
-        (set-face-attribute 'default nil :font "Iosevka" :weight 'regular :height 120)
-        (set-face-attribute 'fixed-pitch nil :font "Iosevka" :weight 'regular :height 120)
-        (set-face-attribute 'variable-pitch nil :font "Iosevka Aile" :weight 'regular :height 120))
+        (set-face-attribute 'default nil :family "Iosevka" :height 120)
+        (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 1.0)
+        (set-face-attribute 'variable-pitch nil :family "Iosevka Aile"))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -351,7 +351,7 @@ This way, you can just simply type ~C-x C-k~.
 (global-set-key (kbd "C-x C-k") #'kill-this-buffer)
 #+end_src
 
-** =WoMan=
+** WoMan
 
 Open =woMan (without man)=, an emacs native program to read man pages.
 
@@ -608,102 +608,6 @@ Some general settings for all programming modes.
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
 
-*** COMMENT LSP
-
-Language-Server-Protocol. Offers IDE features in Emacs, regardless of the language.
-
-**** Lsp-Mode
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-mode
-  :straight t
-  :commands (lsp lsp-deferred)
-  :config
-  (define-key lsp-mode-map (kbd "C-c l") lsp-command-map)
-  (lsp-enable-which-key-integration t))
-
-;; (setq lsp-diagnostics-provider :flycheck)
-#+end_src
-
-These are language-specific settings.
-
-***** C/C++
-#+begin_src emacs-lisp :tangle ./init.el
-(add-hook 'c-mode-hook 'lsp)
-(add-hook 'c++-mode-hook 'lsp)
-
-(setq lsp-clients-clangd-arg "--header-insertion=never")
-#+end_src
-
-***** Haskell
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-haskell
-  :straight t)
-
-(add-hook 'haskell-mode-hook 'lsp)
-#+end_src
-
-***** Python
-
-#+begin_src emacs-lisp :tangle ./init.el
-(add-hook 'python-mode #'lsp)
-
-;; Disables its default "lsp linter", allowing pylint to work
-(add-hook 'python-mode-hook
-      (lambda ()
-        (make-local-variable 'lsp-diagnostic-provider)
-        (setq lsp-diagnostic-provider :none)))
-#+end_src
-
-***** Texlab/LSP-LaTeX
-
-An LSP server for latex.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-latex
-    :straight t)
-
-(with-eval-after-load "tex-mode"
- (add-hook 'TeX-mode-hook 'lsp)
- ;; (add-hook 'latex-mode-hook 'lsp)
- )
-#+end_src
-
-**** Lsp-Ui
-
-Offers some nicer UI when programming.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-ui
-  :straight t)
-(setq lsp-ui-sideline-enable t)
-(setq lsp-ui-doc-enable t)
-(setq lsp-ui-doc-position 'at-point)
-(setq lsp-ui-doc-show-with-cursor t)
-(setq lsp-ui-doc-show-with-mouse t)
-#+end_src
-
-**** Lsp-Treemacs
-
-Integration with treemacs.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package lsp-treemacs
-    :straight t)
-
-(lsp-treemacs-sync-mode 1)
-#+end_src
-
-*** COMMENT Flycheck
-
-On-the-fly linting and syntax checking.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package flycheck
-  :straight t
-  :init (global-flycheck-mode))
-#+end_src
-
 *** Comment-Tags
 
 Makes keywords like TODO, BUG, FIXED etc. in comments standout.
@@ -725,66 +629,6 @@ Shows indentation guides.
 (setq indent-guide-recursive t)
 
 (add-hook 'prog-mode-hook #'indent-guide-mode)
-#+end_src
-
-*** COMMENT Treemacs
-
-A project and file viewer.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package treemacs
-  :straight t
-  :init
-  :config
-  (progn
-    (setq treemacs-display-in-side-window          t
-          treemacs-expand-after-init               t
-          treemacs-find-workspace-method           'find-for-file-or-pick-first
-          treemacs-indentation                     2
-          treemacs-show-cursor                     nil
-          treemacs-show-hidden-files               nil
-          treemacs-silent-filewatch                nil
-          treemacs-silent-refresh                  nil
-          treemacs-sorting                         'alphabetic-asc
-          treemacs-select-when-already-in-treemacs 'move-back
-          treemacs-space-between-root-nodes        t
-          treemacs-tag-follow-cleanup              t
-          treemacs-text-scale                      nil
-          treemacs-user-mode-line-format           nil
-          treemacs-user-header-line-format         nil
-          treemacs-wide-toggle-width               70
-          treemacs-width                           30
-          treemacs-width-increment                 1
-          treemacs-width-is-initially-locked       t
-          treemacs-workspace-switch-cleanup        nil)
-
-    (treemacs-follow-mode nil)
-    (treemacs-filewatch-mode nil)
-    (treemacs-fringe-indicator-mode 'always)
-
-    (treemacs-hide-gitignored-files-mode nil))
-  :bind
-  (:map global-map
-        ("M-0"       . treemacs-select-window)
-        ("C-x t t"   . treemacs)))
-#+end_src
-
-**** Treemacs-Icons-Dired
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package treemacs-icons-dired
-  :hook (dired-mode . treemacs-icons-dired-enable-once)
-  :straight t)
-#+end_src
-
-**** Treemacs-All-the-Icons
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package treemacs-all-the-icons
-  :straight t
-  :after all-the-icons
-  :config
-  (treemacs-load-theme "all-the-icons"))
 #+end_src
 
 ** Project management
@@ -812,7 +656,8 @@ Allows you to have both variable and fixed pitch fonts depending on the context 
   ;; If you want it in all text modes:
   (text-mode . mixed-pitch-mode))
 
-(setq mixed-pitch-variable-pitch-cursor 'box)
+(setq mixed-pitch-variable-pitch-cursor nil)
+(setq mixed-pitch-set-height nil)
 #+end_src
 
 *** Font ligatures
@@ -1352,67 +1197,6 @@ Source: https://karthinks.com/software/latex-input-for-impatient-scholars/#fnref
   ;; (define-key org-mode-map (kbd "C-S-e") 'latex-math-from-calc)
 #+end_src
 
-*** COMMENT Xenops
-
-When writing latex equations and math, xenops creates a mini file that contains only the equation, compiles it with the specified latex compiler and creates a png or svg image that renders instead of the equation. This results in latex previews while writing in the buffer.
-
-The neat part is that this package recognizes the latex preamble, so the compilation uses the included packages, and not only a default subset.
-
-#+begin_src emacs-lisp :tangle ./init.el
-  (use-package xenops
-    :straight t
-    :config
-    (setq xenops-math-image-scale-factor 1.2)
-
-    (add-to-list 'org-latex-packages-alist
-                 '("cache=false" "minted" t))
-
-    (setq xenops-math-latex-process-alist
-          '(
-            (dvisvgm :programs
-                     ("lualatex" "dvisvgm")
-                     :description "xdv > svg"
-                     :message "you need to install the programs: lualatex and dvisvgm."
-                     :image-input-type "dvi"
-                     :image-output-type "svg"
-                     :image-size-adjust (1.5 . 1.5)
-                     :latex-compiler
-                     ("lualatex --output-format=dvi -interaction=nonstopmode -shell-escape -output-directory %o %f")
-                     :image-converter
-                     ("dvisvgm %f -n -b min -c %S -o %O"))
-            (dvipng :programs
-                    ("lualatex" "dvipng")
-                    :description "dvi > png"
-                    :message "you need to install the programs: latex and dvipng."
-                    :image-input-type "dvi"
-                    :image-output-type "png"
-                    :image-size-adjust
-                    (1.0 . 1.0)
-                    :latex-compiler
-                    ("lualatex -interaction nonstopmode -shell-escape -output-format dvi -output-directory %o %f")
-                    :image-converter
-                    ("dvipng -D %D -T tight -o %O %f"))
-            (imagemagick :programs
-                         ("latex" "convert")
-                         :description "pdf > png"
-                         :message "you need to install the programs: latex and imagemagick."
-                         :image-input-type "pdf"
-                         :image-output-type "png"
-                         :image-size-adjust
-                         (1.0 . 1.0)
-                         :latex-compiler
-                         ("pdflatex -interaction nonstopmode -shell-escape -output-directory %o %f")
-                         :image-converter
-                         ("convert -density %D -trim -antialias %f -quality 100 %O"))))
-
-    (setq xenops-math-latex-process 'dvisvgm)
-    (add-hook 'latex-mode-hook #'xenops-mode)
-    (add-hook 'LaTeX-mode-hook #'xenops-mode)
-    (add-hook 'TeX-mode-hook #'xenops-mode)
-    (add-hook 'org-mode-hook #'xenops-mode)
-    :after org)
-#+end_src
-
 ** Spell checking
 
 Since I write a lot of prose, spell checking is a must for any text editor.
@@ -1459,7 +1243,7 @@ Combines both Greek and English dictionaries.
 Centers text in the buffer.
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq-default olivetti-body-width 110)
+(setq-default olivetti-body-width 130)
 (setq-default olivetti-margin-width 0)
 (use-package olivetti
   :straight t
@@ -1632,7 +1416,7 @@ Provides a start-up welcome screen for Emacs.
   :straight t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner "/home/kchou/Repos/Emacs/logos/gnu-emacs.svg")
+  (setq dashboard-startup-banner "/home/kchou/.config/emacs/logos/gnu-emacs.svg")
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
@@ -1817,23 +1601,22 @@ Utilities to manage my PTA (Plain Text Accounting) files.
 *** Beancount-mode
 
 #+begin_src emacs-lisp :tangle ./init.el
-  (use-package beancount-mode
-    :straight (:host github :repo "beancount/beancount-mode"))
+   (use-package beancount-mode
+     :straight (:host github :repo "beancount/beancount-mode"))
 
-  ;; ;; Automatically open .beancount files in beancount-mode.
-  ;; (add-to-list 'auto-mode-alist '("\\.beancount$" . beancount-mode))
+   ;; ;; Automatically open .beancount files in beancount-mode.
+   ;; (add-to-list 'auto-mode-alist '("\\.beancount$" . beancount-mode))
 
-  ;; ;; ;;
-  ;; Make sure we don't accidentally pick up ;;; as headers. Use org section headers only.
-  ;; (setq beancount-outline-regexp "\\(\\*+\\)")
+   ;; ;; Make sure we don't accidentally pick up ;;; as headers. Use org section headers only.
+   ;; (setq beancount-outline-regexp "\\(\\*+\\)")
 
-  ;; ;; Automatically enable outline-mode.
-  ;; (add-hook 'beancount-mode-hook #'outline-minor-mode)
+   ;; ;; Automatically enable outline-mode.
+   ;; (add-hook 'beancount-mode-hook #'outline-minor-mode)
 
-  ;; ;; Add movement between sections.
-  ;; (define-key beancount-mode-map [(control c)(control n)] #'outline-next-visible-heading)
-  ;; (define-key beancount-mode-map [(control c)(control p)] #'outline-previous-visible-heading)
-  ;; (define-key beancount-mode-map [(control c)(control u)] #'outline-up-heading)
+   ;; ;; Add movement between sections.
+   ;; (define-key beancount-mode-map [(control c)(control n)] #'outline-next-visible-heading)
+   ;; (define-key beancount-mode-map [(control c)(control p)] #'outline-previous-visible-heading)
+   ;; (define-key beancount-mode-map [(control c)(control u)] #'outline-up-heading)
 #+end_src
 
 ** Markdown
@@ -1857,7 +1640,7 @@ This behemoth of a node contains all my configuration regarding org-mode.
     (setq org-hide-emphasis-markers t
           org-ellipsis "…"
           org-startup-indented t
-          org-pretty-entities nil
+          org-pretty-entities t
           org-support-shift-select t
           org-fontify-whole-heading-line t
           org-fontify-done-headline t
@@ -1988,8 +1771,6 @@ Exporter for [[https://revealjs.com/][Reveal.js]].
 Settings for when exporting to latex.
 
 #+begin_src emacs-lisp :tangle ./init.el
-;; (setq org-latex-compiler "latexmk")
-
 (setq org-src-preserve-indentation t)
 (setq indent-tabs-mode nil)
 (setq org-latex-caption-above '(table))
@@ -2592,16 +2373,6 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 (advice-add 'org-agenda :before #'who-org/agenda-files-update)
 #+end_src
 
-***** COMMENT All notes start as drafts
-
-Taken from https://jethrokuan.github.io/org-roam-guide/.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(defun jethro/tag-new-node-as-draft ()
-  (org-roam-tag-add '("draft")))
-(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
-#+end_src
-
 ***** Bindings
 
 ****** node-insert-immediate
@@ -2676,18 +2447,44 @@ Taken from https://jethrokuan.github.io/org-roam-guide/.
 This section contains all settings relevant to the overhauled =org-latex-preview=, written by [[https://github.com/tecosaur][TEC]]. It is supposed to become integrated to Org in version =9.7=, but until then I use his [[https://git.tecosaur.net/tec/org-mode][Org-Mode fork]].
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq org-latex-preview-auto-generate 'live
+(setq org-latex-compiler "lualatex"
+      org-latex-preview-auto-generate 'live
       org-latex-preview-persist nil
       org-latex-preview-processing-indicator 'fringe
       org-latex-preview-numbered t
-      org-latex-preview-width 0.9
-      org-latex-preview-use-precompilation t
+      org-latex-preview-width 0.75
+      org-latex-preview-use-precompilation nil
       ;; org-latex-preview-live-display-type 'eldoc
+      org-startup-with-latex-preview t
       org-latex-preview-auto-generate t)
 
-(plist-put org-format-latex-options :zoom 1.0) ; Calibrated based on the TeX font and org-buffer font.
+(setq org-latex-preview-preamble
+      "\\documentclass{article}
+\\usepackage{amsmath}
+\\usepackage{amssymb}
+\\usepackage{amsfonts}
+[DEFAULT-PACKAGES]
+[PACKAGES]
+\\usepackage{xcolor}")
+
+;; \\usepackage{polyglossia}  
+;; \\setmainlanguage{greek}   
+;; \\setotherlanguage{english}
+
+(plist-put org-format-latex-options :zoom 1.2) ; Calibrated based on the TeX font and org-buffer font.
 
 (add-hook 'org-mode-hook #'org-latex-preview-auto-mode)
+#+end_src
+
+*** Org-preview-html
+
+This minor mode provides an easy preview of your org-exported HTML files using either the eww or xwidget WebKit browser. By default, when org-preview-html-mode is enabled a save will trigger a refresh of the preview. Refresh frequency can be configured using org-preview-html-refresh-configuration.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-preview-html
+  :straight t
+  :config
+  (setq org-preview-html-viewer #'xwidget))
 #+end_src
 
 * Local Variables
