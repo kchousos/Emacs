@@ -51,6 +51,12 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
   #+end_src
 
+- Full name
+
+  #+begin_src emacs-lisp :tangle ./init.el
+(setq user-full-name "Konstantinos Chousos")
+  #+end_src
+
 - Disables the start-up message of default emacs.
 
   #+begin_src emacs-lisp :tangle ./init.el
@@ -154,7 +160,7 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 - Make Emacs fullscreen by default
 
   #+begin_src emacs-lisp :tangle ./init.el
-;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(fullscreen . maximized))
   #+end_src
 
 - Scroll bar configuration
@@ -477,8 +483,7 @@ Since I spend a lot of time inside Emacs, I want to have a good-looking, easy-on
   :config
   ;; Load the theme of your choice:
   (modus-themes-load-operandi) ;; OR (modus-themes-load-vivendi)
-  :bind ("<f5>" . modus-themes-toggle)
-    )
+  :bind ("<f5>" . modus-themes-toggle))
 #+end_src
 
 ** Programming
@@ -1473,6 +1478,14 @@ When switching to a new window or buffer, the line that the cursor is located fl
 (beacon-mode)
 #+end_src
 
+*** Telephone Line
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package telephone-line
+  :straight t)
+(telephone-line-mode 1)
+#+end_src
+
 ** Media consumption
 
 *** RSS
@@ -1619,6 +1632,29 @@ Utilities to manage my PTA (Plain Text Accounting) files.
    ;; (define-key beancount-mode-map [(control c)(control u)] #'outline-up-heading)
 #+end_src
 
+** Mail
+
+Trying it out for now.
+
+*** Notmuch
+
+#+begin_src emacs-lisp :tangle ./init.el
+(autoload 'notmuch "notmuch" "notmuch mail" t)
+(setq notmuch-search-oldest-first nil)
+(setq message-kill-buffer-on-exit t)
+(setq notmuch-multipart/alternative-discouraged '("text/plain" "text/html"))
+#+end_src
+
+*** msmtp
+
+#+begin_src emacs-lisp :tangle ./init.el
+;; msmtp
+(setq user-mail-address "sdi2000215@di.uoa.gr"
+      send-mail-function 'sendmail-send-it
+      sendmail-program "/usr/bin/msmtp"
+      mail-specify-envelope-from t)
+#+end_src
+
 ** Markdown
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1746,6 +1782,7 @@ Settings for exporting to html.
 (setq org-html-head-include-default-style t)
 (setq org-html-head-include-scripts t)
 (setq org-html-metadata-timestamp-format "%A, %d %b %Y")
+(setq org-html-head "<link rel=\"stylesheet\" href=\"/home/kchou/.config/emacs/HTML/worg.css\">")
 #+end_src
 
 ***** Htmlize
