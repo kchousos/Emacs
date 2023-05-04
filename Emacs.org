@@ -1643,6 +1643,7 @@ Trying it out for now.
 (setq notmuch-search-oldest-first nil)
 (setq message-kill-buffer-on-exit t)
 (setq notmuch-multipart/alternative-discouraged '("text/plain" "text/html"))
+(setq notmuch-fcc-dirs "UoA/Sent")
 #+end_src
 
 *** msmtp
