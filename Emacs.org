@@ -409,12 +409,12 @@ Since I spend a lot of time inside Emacs, I want to have a good-looking, easy-on
 [[https://protesilaos.com/emacs/modus-themes][Modus themes]], developed by [[https://protesilaos.com/][Protesilaos Stavrou]], are one of the best color schemes for Emacs right now. They became bundled with Emacs, so it isn't even needed to install anything. They are modular, well documented, easily hackable and robust.
 
 #+begin_src emacs-lisp :tangle ./init.el
-;; (setq modus-themes-headings
-;;       '((1 . (1.1))
-;;         (2 . (1.075))
-;;         (3 . (1.05))
-;;         (4 . (1.025))
-;;         (t . (1.0))))
+(setq modus-themes-headings
+      '((1 . (1.1))
+        (2 . (1.075))
+        (3 . (1.05))
+        (4 . (1.025))
+        (t . (1.0))))
 
 (load-theme 'modus-operandi)
 
@@ -1642,7 +1642,7 @@ Trying it out for now.
 (autoload 'notmuch "notmuch" "notmuch mail" t)
 (setq notmuch-search-oldest-first nil)
 (setq message-kill-buffer-on-exit t)
-(setq notmuch-multipart/alternative-discouraged '("text/plain" "text/html"))
+;; (setq notmuch-multipart/alternative-discouraged '("text/plain" "text/html"))
 (setq notmuch-fcc-dirs "UoA/Sent")
 #+end_src
 
@@ -1809,6 +1809,8 @@ Exporter for [[https://revealjs.com/][Reveal.js]].
 Settings for when exporting to latex.
 
 #+begin_src emacs-lisp :tangle ./init.el
+;; (setq org-latex-precompile nil)
+
 (setq org-src-preserve-indentation t)
 (setq indent-tabs-mode nil)
 (setq org-latex-caption-above '(table))
@@ -2496,18 +2498,30 @@ This section contains all settings relevant to the overhauled =org-latex-preview
       org-startup-with-latex-preview t
       org-latex-preview-auto-generate t)
 
+(setq org-latex-default-packages-alist
+  '(("AUTO" "inputenc"  t ("pdflatex"))
+    ("T1"   "fontenc"   t ("pdflatex"))
+    (""     "graphicx"  t)
+    (""     "longtable" nil)
+    (""     "wrapfig"   nil)
+    (""     "rotating"  nil)
+    ("normalem" "ulem"  t)
+    (""     "amsmath"   t)
+    (""     "amssymb"   t)
+    (""     "amsfonts"  t)
+    (""     "capt-of"   nil)
+    (""     "hyperref"  t)))
+
 (setq org-latex-preview-preamble
       "\\documentclass{article}
-\\usepackage{amsmath}
-\\usepackage{amssymb}
-\\usepackage{amsfonts}
+\\usepackage{amsmath, amsfonts, amssymb}  
+\\usepackage{newcomputermodern}  
+\\usepackage{polyglossia}  
+\\setmainlanguage{greek}   
+\\setotherlanguage{english}
 [DEFAULT-PACKAGES]
 [PACKAGES]
 \\usepackage{xcolor}")
-
-;; \\usepackage{polyglossia}  
-;; \\setmainlanguage{greek}   
-;; \\setotherlanguage{english}
 
 (plist-put org-format-latex-options :zoom 1.2) ; Calibrated based on the TeX font and org-buffer font.
 
