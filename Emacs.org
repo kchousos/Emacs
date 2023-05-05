@@ -2,8 +2,8 @@
 #+subtitle: A literate =init.el=
 #+author: Konstantinos Chousos
 #+language: en
-#+options: num:2 toc:nil date:nil timestamp:nil
-#+STARTUP: overview
+#+options: num:2 toc:nil date:nil timestamp:nil <:t p:t
+#+STARTUP: showall
 
 This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configuration, in the style of [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]], by leveraging [[https://orgmode.org/][Org-Mode]].
 
@@ -11,13 +11,20 @@ This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configurat
 
 * TODOs
 
-** TODO Organize packages in better categories
+** TODO [#A] Organize packages in better categories
 
-** TODO Replace lsp with eglot
+** TODO [#A] Documentation and commentary need (a lot of) improvement
 
-** TODO Replace straight.el with package.el (?)
+** TODO [#B] Replace straight.el with package.el (?)
 
-** TODO Add tree-sitter support
+** TODO [#B] Mirror in personal site
+
+** TODO [#C] Add tree-sitter support
+
+** TODO [#C] Create dashboard buttons
+
+** DONE Replace lsp with eglot
+CLOSED: [2023-05-04 Thu 21:53]
 
 * Miscellaneous configurations
 
@@ -249,7 +256,7 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 
 - Hides minor modes in modeline.
 
-  #+begin_src emacs-lisp :tangle ./init.el
+  #+begin_src emacs-lisp :tangle no
 (setq-default mode-line-format '("%e" mode-line-front-space
                          (:propertize
                           ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
@@ -1636,14 +1643,73 @@ Utilities to manage my PTA (Plain Text Accounting) files.
 
 Trying it out for now.
 
+#+begin_src emacs-lisp :tangle ./init.el
+(setq message-signature
+              (with-temp-buffer
+                (shell-command "fortune" t)
+                ;; (let ((comment-start ";;"))
+                ;;   (comment-region (point-min) (point-max)))
+                (concat "\n" (buffer-string))))
+#+end_src
+
+*** org-msg
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-msg
+  :straight t)
+
+(add-hook 'org-msg-edit-mode-hook (lambda () (corfu-mode -1)))
+
+(setq org-msg-options "html-postamble:nil H:3 num:nil ^:{} toc:nil author:nil email:nil \\n:t tex:dvipng"
+	  org-msg-startup "inlineimages overview"
+	  org-msg-greeting-fmt nil ; "\nΚαλησπέρα σας κ.%s,\n\n"
+	  ;; org-msg-recipient-names '(("jeremy.compostella@gmail.com" . "Jérémy"))
+	  org-msg-greeting-name-limit 3
+	  org-msg-default-alternatives '((new		. (text html))
+				                     (reply-to-html	. (text html))
+				                     (reply-to-text	. (text)))
+      org-msg-posting-style nil
+	  org-msg-convert-citation t)
+
+(setq org-msg-signature t)
+              ;; (with-temp-buffer
+              ;;   (shell-command "fortune" t)
+              ;;   ;; (let ((comment-start ";;"))
+              ;;   ;;   (comment-region (point-min) (point-max)))
+              ;;   (concat "\n\n\n--\n" (buffer-string))))
+
+(org-msg-mode)
+#+end_src
+
 *** Notmuch
 
 #+begin_src emacs-lisp :tangle ./init.el
-(autoload 'notmuch "notmuch" "notmuch mail" t)
+;; (autoload 'notmuch "notmuch" "notmuch mail" t)
+(require 'notmuch)
 (setq notmuch-search-oldest-first nil)
 (setq message-kill-buffer-on-exit t)
-;; (setq notmuch-multipart/alternative-discouraged '("text/plain" "text/html"))
-(setq notmuch-fcc-dirs "UoA/Sent")
+(setq notmuch-multipart/alternative-discouraged '("text/plain" "text/html"))
+(setq notmuch-fcc-dirs "UoA/INBOX.Sent +sent -unread")
+(setq notmuch-hello-thousands-separator ".")
+
+(setq message-sendmail-envelope-from 'header)
+
+;;; General UI
+(setq notmuch-show-logo t)
+(setq notmuch-hello-sections '(notmuch-hello-insert-header
+                               notmuch-hello-insert-saved-searches
+                               notmuch-hello-insert-search
+                               ;; notmuch-hello-insert-recent-searches
+                               notmuch-hello-insert-alltags
+                               notmuch-hello-insert-footer
+                               ))
+(setq notmuch-show-all-tags-list t)
+
+(global-set-key (kbd "C-x m") #'notmuch-mua-new-mail)
+(add-hook 'notmuch-message-mode-hook #'org-msg-edit-mode)
+
+(load-file "~/.config/emacs/lisp/org-notmuch.el")
+(require 'org-notmuch)
 #+end_src
 
 *** msmtp
@@ -1654,6 +1720,13 @@ Trying it out for now.
       send-mail-function 'sendmail-send-it
       sendmail-program "/usr/bin/msmtp"
       mail-specify-envelope-from t)
+#+end_src
+
+*** fortune
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq fortune-dir "/usr/share/games/fortune")
+(setq fortune-file "/usr/share/games/fortune/sports")
 #+end_src
 
 ** Markdown
@@ -1732,15 +1805,32 @@ Settings for org-agenda.
         "Inbox.org"
         "Phone inbox.org"
         )
-      ;; org-tag-alist (quote (("@errand" . ?e)
-      ;;                       ("@office" . ?o)
-      ;;                       ("@home" . ?h)
-      ;;                       ("@uni" . ?s)
-                            ;; (:newline)
-                            ;; ("WAITING" . ?w)
-                            ;; ("HOLD" . ?H)
-                            ;; ("CANCELLED" . ?c)
-                            ;; ))
+      org-tag-alist (quote (
+                            ("@home" . ?1)
+                            ("@uni" . ?2)
+                            ("@school" . ?3)
+                            (:newline)
+                            (:newline)
+                            ("errand" . ?e)
+                            ("work" . ?w)
+                            ("health" . ?h)
+                            ("social" . ?s)
+                            ("music" . ?m)
+                            (:newline)
+                            ("productivity" . ?p)
+                            ("uni" . ?u)
+                            ("courses" . ?c)
+                            ("homework" . ?a)
+                            (:newline)
+                            ("hobbies" . ?x)
+                            ("tech" . ?t)
+                            (:newline)
+                            (:newline)
+                            ("WAITING" . ?W)
+                            ("HOLD" . ?H)
+                            ("CANCELLED" . ?C)
+                            ("RUNNING" . ?R)
+                            ))
       )
 
 (global-set-key (kbd "C-c a") 'org-agenda)
@@ -1863,7 +1953,7 @@ Export to markdown files to create a website using [[https://gohugo.io/][Hugo]].
   :straight t
   :after ox)
 
-(setq org-hugo-base-dir (expand-file-name "~/Repos/Site"))
+(setq org-hugo-base-dir (expand-file-name "~/Repos/My repos/Site"))
 (setq org-hugo-default-section-directory "posts")
 (setq org-hugo-front-matter-format "yaml")
 (setq org-hugo-use-code-for-kbd t)
@@ -2291,7 +2381,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
       :empty-lines 1
       :unnarrowed nil)
      ("P" "post" plain "%?"
-      :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %U\n#+hugo_base_dir: ~/Repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n\n")
+      :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %U\n#+hugo_base_dir: ~/Repos/My repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n#+options: tex:verbatim\n\n")
       ;; :immediate-finish t
       :unnarrowed t)
      ))
@@ -2380,9 +2470,9 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 (add-hook 'org-capture-mode-hook 'delete-other-windows)
 #+end_src
 
-***** Automatically open the *org-roam* buffer when visiting an org-roam file
+***** COMMENT Automatically open the *org-roam* buffer when visiting an org-roam file
 
-#+begin_src emacs-lisp :tangle no
+#+begin_src emacs-lisp :tangle ./init.el
 (defun tim/org-roam-buffer-show (_)
   (if (and
        ;; Don't do anything if we're in the minibuffer or in the calendar
@@ -2404,13 +2494,21 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (find-lisp-find-files directory "\.org$"))
 
 (defun who-org/agenda-files-update (&rest _)
-  (let ((todo-zettels (->> "rg --files-with-matches '(TODO)|(NEXT)|(HOLD)|(WAITING)' ~/Textfiles/Braindump"
+  (let ((todo-zettels (->> "rg --files-with-matches '(TODO)|(NEXT)|(HOLD)|(WAITING)' ~/Textfiles/Braindump ~/Textfiles/Braindump/journals"
                            (shell-command-to-string)
                            (s-lines)
                            (-filter (lambda (line) (not (s-blank? line)))))))
     (setq org-agenda-files (append (who/find-org-files who/org-agenda-directory) todo-zettels))))
 
 (advice-add 'org-agenda :before #'who-org/agenda-files-update)
+#+end_src
+
+***** Start every with a =draft= tag
+
+#+begin_src emacs-lisp :tangle ./init.el
+(defun jethro/tag-new-node-as-draft ()
+  (org-roam-tag-add '("draft")))
+(add-hook 'org-roam-capture-new-node-hook #'jethro/tag-new-node-as-draft)
 #+end_src
 
 ***** Bindings
@@ -2510,7 +2608,7 @@ This section contains all settings relevant to the overhauled =org-latex-preview
     (""     "amssymb"   t)
     (""     "amsfonts"  t)
     (""     "capt-of"   nil)
-    (""     "hyperref"  t)))
+    (""     "hyperref"  nil)))
 
 (setq org-latex-preview-preamble
       "\\documentclass{article}
