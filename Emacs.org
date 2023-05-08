@@ -2,12 +2,12 @@
 #+subtitle: A literate =init.el=
 #+author: Konstantinos Chousos
 #+language: en
-#+options: num:2 toc:nil date:nil timestamp:nil <:t p:t
+#+options: num:2 H:5 toc:nil date:nil timestamp:nil <:t p:t
 #+STARTUP: showall
 
 This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configuration, in the style of [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]], by leveraging [[https://orgmode.org/][Org-Mode]].
 
-#+toc: headlines 2
+#+toc: headlines 3
 
 * TODOs
 
@@ -81,8 +81,8 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 
   #+begin_src emacs-lisp :tangle ./init.el
 (tool-bar-mode -1)
-(tooltip-mode -1)
-(menu-bar-mode -1)
+;; (tooltip-mode -1)
+;; (menu-bar-mode -1)
   #+end_src
 
 - Encoding settings
@@ -653,6 +653,12 @@ In addition to files/folders like =.git=, now =project.el= will recognize projec
 (setq project-vc-extra-root-markers '(".project"))
 #+end_src
 
+Adds the =m= key for the =magit= option.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(define-key project-prefix-map "m" #'magit-project-status)
+#+end_src
+
 ** Typography
 
 Packages to control fonts, icons and other typographic features of Emacs.
@@ -762,6 +768,12 @@ Resize windows with keybinds.
 (global-set-key (kbd "C-c C-;") 'resize-window)
 (use-package resize-window
   :straight t)
+#+end_src
+
+*** Tab-bar
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq tab-bar-show 1)
 #+end_src
 
 ** File history
@@ -1280,6 +1292,7 @@ Reads Bibliography from the =.bib= file that Zotero exports and allows inserting
 #+begin_src emacs-lisp :tangle ./init.el
         (use-package citar
           :straight t
+          :after org
           :bind (("C-c b" . citar-insert-citation)
                  ;; :map minibuffer-local-map
                  ;; ("M-b" . citar-insert-preset)
@@ -1490,6 +1503,17 @@ When switching to a new window or buffer, the line that the cursor is located fl
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package telephone-line
   :straight t)
+
+(require 'telephone-line-utils)
+
+(setq telephone-line-lhs '((modal telephone-line-project-segment)
+ (accent telephone-line-vc-segment telephone-line-erc-modified-channels-segment telephone-line-process-segment)
+ (nil telephone-line-buffer-segment)))
+
+(setq telephone-line-rhs '((nil telephone-line-flymake-segment telephone-line-misc-info-segment)
+ (accent telephone-line-major-mode-segment)
+ (evil telephone-line-airline-position-segment)))
+
 (telephone-line-mode 1)
 #+end_src
 
@@ -1574,6 +1598,7 @@ Allows to create anki cards from org-mode nodes and sync them with anki.
 
 (use-package anki-editor
   :straight t
+  :after org
   :bind (:map org-mode-map
               ("<f12>" . anki-editor-cloze-region-auto-incr)
               ("<f11>" . anki-editor-cloze-region-dont-incr)
@@ -1652,35 +1677,6 @@ Trying it out for now.
                 (concat "\n" (buffer-string))))
 #+end_src
 
-*** org-msg
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package org-msg
-  :straight t)
-
-(add-hook 'org-msg-edit-mode-hook (lambda () (corfu-mode -1)))
-
-(setq org-msg-options "html-postamble:nil H:3 num:nil ^:{} toc:nil author:nil email:nil \\n:t tex:dvipng"
-	  org-msg-startup "inlineimages overview"
-	  org-msg-greeting-fmt nil ; "\nΚαλησπέρα σας κ.%s,\n\n"
-	  ;; org-msg-recipient-names '(("jeremy.compostella@gmail.com" . "Jérémy"))
-	  org-msg-greeting-name-limit 3
-	  org-msg-default-alternatives '((new		. (text html))
-				                     (reply-to-html	. (text html))
-				                     (reply-to-text	. (text)))
-      org-msg-posting-style nil
-	  org-msg-convert-citation t)
-
-(setq org-msg-signature t)
-              ;; (with-temp-buffer
-              ;;   (shell-command "fortune" t)
-              ;;   ;; (let ((comment-start ";;"))
-              ;;   ;;   (comment-region (point-min) (point-max)))
-              ;;   (concat "\n\n\n--\n" (buffer-string))))
-
-(org-msg-mode)
-#+end_src
-
 *** Notmuch
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1691,11 +1687,14 @@ Trying it out for now.
 (setq notmuch-multipart/alternative-discouraged '("text/plain" "text/html"))
 (setq notmuch-fcc-dirs "UoA/INBOX.Sent +sent -unread")
 (setq notmuch-hello-thousands-separator ".")
+(setq notmuch-search-oldest-first t)
 
 (setq message-sendmail-envelope-from 'header)
 
+(setq mail-user-agent 'notmuch-user-agent)
+
 ;;; General UI
-(setq notmuch-show-logo t)
+(setq notmuch-show-logo nil)
 (setq notmuch-hello-sections '(notmuch-hello-insert-header
                                notmuch-hello-insert-saved-searches
                                notmuch-hello-insert-search
@@ -1706,10 +1705,47 @@ Trying it out for now.
 (setq notmuch-show-all-tags-list t)
 
 (global-set-key (kbd "C-x m") #'notmuch-mua-new-mail)
-(add-hook 'notmuch-message-mode-hook #'org-msg-edit-mode)
 
 (load-file "~/.config/emacs/lisp/org-notmuch.el")
 (require 'org-notmuch)
+
+(global-set-key (kbd "C-c m") 'notmuch)
+#+end_src
+
+*** org-msg
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-msg
+  :straight t
+  :after org
+  :config
+
+  (add-hook 'org-msg-edit-mode-hook (lambda () (corfu-mode -1)))
+
+  (setq org-msg-options "html-postamble:nil H:3 num:nil ^:{} toc:nil author:nil email:nil \\n:t tex:dvisvgm"
+	    org-msg-startup "inlineimages overview"
+	    org-msg-greeting-fmt nil
+	    org-msg-greeting-name-limit 3
+	    org-msg-default-alternatives '((new	. (text html))
+				                       (reply-to-html . (text html))
+				                       (reply-to-text . (text)))
+        org-msg-posting-style nil
+    	org-msg-convert-citation t
+        org-msg-signature t)
+
+  (org-msg-mode))
+
+;; (add-hook 'message-mode-hook #'org-msg-edit-mode)
+
+;; (defun +org-msg-separate-mml-and-org/remove-empty-mml (orig &rest args)
+;;   (cl-multiple-value-bind (mml org)
+;;       (apply orig args)
+;;     (cl-values
+;;      (if (string-empty-p mml)
+;;          nil
+;;        mml)
+;;      org)))
+;; (advice-add 'org-msg-separate-mml-and-org :around '+org-msg-separate-mml-and-org/remove-empty-mml)
 #+end_src
 
 *** msmtp
@@ -1744,13 +1780,13 @@ This behemoth of a node contains all my configuration regarding org-mode.
 
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package org
-    :straight (org :type git :repo "https://git.tecosaur.net/tec/org-mode.git"); (org :type built-in)
+    :straight (org :type git :repo "https://git.tecosaur.net/tec/org-mode.git") ; (org :type built-in)
     :commands (org-capture org-agenda)
     :config
     (setq org-hide-emphasis-markers t
           org-ellipsis "…"
           org-startup-indented t
-          org-pretty-entities t
+          org-pretty-entities nil
           org-support-shift-select t
           org-fontify-whole-heading-line t
           org-fontify-done-headline t
@@ -1781,8 +1817,6 @@ This behemoth of a node contains all my configuration regarding org-mode.
   (setq org-image-actual-width (list 700))
 
   (setq org-link-file-path-type 'relative)
-
-  (setq org-format-latex-options (plist-put org-format-latex-options :scale 1.5))
 #+end_src
 
 *** Org-Agenda
@@ -1873,7 +1907,7 @@ Settings for exporting to html.
 (setq org-html-head-include-default-style t)
 (setq org-html-head-include-scripts t)
 (setq org-html-metadata-timestamp-format "%A, %d %b %Y")
-(setq org-html-head "<link rel=\"stylesheet\" href=\"/home/kchou/.config/emacs/HTML/worg.css\">")
+(setq org-html-head "<link rel=\"stylesheet\" href=\"/home/kchou/.config/emacs/HTML/worg.css\"/>")
 #+end_src
 
 ***** Htmlize
@@ -1915,7 +1949,7 @@ Settings for when exporting to latex.
 (setq
  org-latex-listings 'minted
  org-latex-pdf-process
- '("latexmk -output-directory=%o %f"))
+ '("latexmk -f -output-directory=%o %f"))
 
 (setq org-export-with-smart-quotes t)
 
@@ -2079,9 +2113,10 @@ Autocomplete for figures in file.
 Render citations in Chicago-style.
 
 #+begin_src emacs-lisp :tangle ./init.el
+;; (use-package citeproc :straight t)
 (use-package org-cite-csl-activate
   :straight (org-cite-csl-activate :type git :host github :repo "andras-simonyi/org-cite-csl-activate")
-  :after citar org)
+  :after org)
 
 (add-hook 'org-mode-hook (lambda () (cursor-sensor-mode 1)))
 
@@ -2585,16 +2620,18 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 This section contains all settings relevant to the overhauled =org-latex-preview=, written by [[https://github.com/tecosaur][TEC]]. It is supposed to become integrated to Org in version =9.7=, but until then I use his [[https://git.tecosaur.net/tec/org-mode][Org-Mode fork]].
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq org-latex-compiler "lualatex"
+(setq org-latex-compiler "pdflatex"
       org-latex-preview-auto-generate 'live
+      org-latex-preview-debounce 0.3
+      org-latex-preview-throttle 0.3
       org-latex-preview-persist nil
       org-latex-preview-processing-indicator 'fringe
       org-latex-preview-numbered t
       org-latex-preview-width 0.75
-      org-latex-preview-use-precompilation nil
-      ;; org-latex-preview-live-display-type 'eldoc
-      org-startup-with-latex-preview t
-      org-latex-preview-auto-generate t)
+      org-latex-preview-use-precompilation t
+      org-latex-preview-live-display-type 'buffer
+      org-latex-preview-default-process 'dvisvgm
+      org-startup-with-latex-preview t)
 
 (setq org-latex-default-packages-alist
   '(("AUTO" "inputenc"  t ("pdflatex"))
@@ -2612,11 +2649,12 @@ This section contains all settings relevant to the overhauled =org-latex-preview
 
 (setq org-latex-preview-preamble
       "\\documentclass{article}
-\\usepackage{amsmath, amsfonts, amssymb}  
-\\usepackage{newcomputermodern}  
-\\usepackage{polyglossia}  
-\\setmainlanguage{greek}   
-\\setotherlanguage{english}
+% \\usepackage{amsmath, amsfonts, amssymb}  
+% \\usepackage{newcomputermodern}  
+% \\usepackage{polyglossia}  
+% \\setmainlanguage{greek}   
+% \\setotherlanguage{english}
+% \\setmainfont{Iosevka Aile}
 [DEFAULT-PACKAGES]
 [PACKAGES]
 \\usepackage{xcolor}")
@@ -2645,6 +2683,6 @@ With this setting, upon saving this file all the code snippets are tangled to =i
 (setq enable-local-eval t)
 #+end_src
 
-;; Local Variables:
-;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t)
-;; End:
+# ;; Local Variables:
+# ;; eval: (add-hook 'after-save-hook (lambda ()(if (y-or-n-p "Tangle?")(org-babel-tangle))) nil t)
+# ;; End:
