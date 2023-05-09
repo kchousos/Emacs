@@ -1933,7 +1933,7 @@ Exporter for [[https://revealjs.com/][Reveal.js]].
 Settings for when exporting to latex.
 
 #+begin_src emacs-lisp :tangle ./init.el
-;; (setq org-latex-precompile nil)
+(setq org-latex-precompile nil)
 
 (setq org-src-preserve-indentation t)
 (setq indent-tabs-mode nil)
@@ -2538,7 +2538,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 (advice-add 'org-agenda :before #'who-org/agenda-files-update)
 #+end_src
 
-***** Start every with a =draft= tag
+***** COMMENT Start every with a =draft= tag
 
 #+begin_src emacs-lisp :tangle ./init.el
 (defun jethro/tag-new-node-as-draft ()
