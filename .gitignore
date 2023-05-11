@@ -19,6 +19,9 @@
 !logos/
 !logos/*
 
+!lisp/
+!lisp/*
+
 !HTML/
 !HTML/*
 

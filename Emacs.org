@@ -19,9 +19,10 @@ This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configurat
 
 ** TODO [#B] Mirror in personal site
 
-** TODO [#C] Add tree-sitter support
-
 ** TODO [#C] Create dashboard buttons
+
+** DONE [#C] Add tree-sitter support
+CLOSED: [2023-05-10 Wed 13:02]
 
 ** DONE Replace lsp with eglot
 CLOSED: [2023-05-04 Thu 21:53]
@@ -299,7 +300,7 @@ I dislike Emacs' default fonts. Since I run Emacs in a daemon/client setup, the 
 ** Line spacing
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq line-spacing 0.2)
+(setq line-spacing 0)
 #+end_src
 
 * Key-binds
@@ -643,6 +644,23 @@ Shows indentation guides.
 (add-hook 'prog-mode-hook #'indent-guide-mode)
 #+end_src
 
+*** Tree-Sitter
+
+Used for syntax highlighting.
+
+**** Treesit-Auto
+
+Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-sitter version can’t be used, fall back to the original major mode.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package treesit-auto
+  :straight t
+  :config
+  (global-treesit-auto-mode))
+
+(setq treesit-auto-install 'prompt)
+#+end_src
+
 ** Project management
 
 *** Project.el
@@ -690,7 +708,8 @@ This package enables font ligatures (if the font supports them).
   :config
   ;; Enable all programming ligatures in programming modes
   (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
-                                       "<<" "??" ";;" "->" "<-" "-->" "<--"
+                                       "<<" "??" ";;" "->" "<-" "-->" "<--" "=>" "!!" "-->" "<--"
+                                       "=<<" "=~" "/="
                                        ))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
@@ -778,6 +797,8 @@ Resize windows with keybinds.
 
 ** File history
 
+*** Undo-tree
+
 Default undo/redo doesn't allow going back to previous "futures". This package treats file history as a tree and therefore offers much more flexibility.
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -794,6 +815,14 @@ Default undo/redo doesn't allow going back to previous "futures". This package t
 (setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
 
 (global-undo-tree-mode)
+#+end_src
+
+*** Vundo
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package vundo
+  :straight t)
+(setq vundo-glyph-alist vundo-unicode-symbols)
 #+end_src
 
 ** Snippets
@@ -1765,6 +1794,47 @@ Trying it out for now.
 (setq fortune-file "/usr/share/games/fortune/sports")
 #+end_src
 
+** IRC
+
+*** ERC settings
+
+#+begin_src emacs-lisp :tangle ./init.el
+(require 'erc)
+
+(setq erc-fill-column 120
+      erc-fill-function 'erc-fill-static
+      erc-fill-static-center 20)
+
+(setq erc-track-exclude-types '("JOIN" "NICK" "QUIT" "MODE" "AWAY" "333" "353")
+      erc-hide-list '("JOIN" "NICK" "QUIT" "MODE" "AWAY")
+      erc-track-exclude-server-buffer t)
+
+(add-to-list 'erc-modules 'notifications)
+
+(setq erc-track-enable-keybindings t)
+#+end_src
+
+**** Highlight nicks in ERC
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package erc-hl-nicks
+  :straight t
+  :after erc
+  :config
+  (add-to-list 'erc-modules 'hl-nicks))
+#+end_src
+
+**** Preview image links inline in ERC
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package erc-image
+  :straight t
+  :after erc
+  :config
+  (setq erc-image-inline-rescale 300)
+  (add-to-list 'erc-modules 'image))
+#+end_src
+
 ** Markdown
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1964,6 +2034,8 @@ colorlinks,
 linkcolor=blue,
 citecolor=red,
 urlcolor=blue}")
+
+(setq org-cite-biblatex-options "[backend=biber, style=ieee, dashed=false]")
 #+end_src
 
 **** org-contrib
@@ -2122,6 +2194,10 @@ Render citations in Chicago-style.
 
 (require 'oc-csl-activate)
 (setq org-cite-activate-processor 'csl-activate)
+
+(setq org-cite-csl-activate-use-document-style t)
+(setq org-cite-csl-activate-use-document-locale t)
+
 ;; (setq org-cite-csl-activate-use-citar-cache t)
 #+end_src
 
@@ -2187,7 +2263,7 @@ Enables you to execute source blocks in buffer.
    (octave . t)
    (R . t)
    (prolog . t)
-   ;; (ditaa . t)
+   (haskell . t)
    ))
 ;; Show syntax highlighting per language native mode in *.org
 (setq org-src-fontify-natively t)
@@ -2655,6 +2731,8 @@ This section contains all settings relevant to the overhauled =org-latex-preview
 % \\setmainlanguage{greek}   
 % \\setotherlanguage{english}
 % \\setmainfont{Iosevka Aile}
+% \\usepackage{unicode-math}
+% \\setmathfont{Fira Math}
 [DEFAULT-PACKAGES]
 [PACKAGES]
 \\usepackage{xcolor}")
