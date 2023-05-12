@@ -277,6 +277,29 @@ This are just little tweaks to make the Emacs experience more pleasurable.
                          mode-line-end-spaces))
   #+end_src
 
+- When killing a modified buffer, give the option to see the diff <<my kill>>
+
+  #+begin_src emacs-lisp :tangle ./init.el
+(defun my-kill-this-buffer ()
+  (interactive)
+  (catch 'quit
+    (save-window-excursion
+      (let (done)
+        (when (and buffer-file-name (buffer-modified-p))
+          (while (not done)
+            (let ((response (read-char-choice
+                             (format "Save file %s? (y, n, d, q) " (buffer-file-name))
+                             '(?y ?n ?d ?q))))
+              (setq done (cond
+                          ((eq response ?q) (throw 'quit nil))
+                          ((eq response ?y) (save-buffer) t)
+                          ((eq response ?n) (set-buffer-modified-p nil) t)
+                          ((eq response ?d) (diff-buffer-with-file) nil))))))
+        (kill-buffer (current-buffer))))))
+
+
+  #+end_src
+
 * Fonts
 
 I dislike Emacs' default fonts. Since I run Emacs in a daemon/client setup, the following function is needed to correctly apply the custom fonts to every new frame.
@@ -359,10 +382,10 @@ Since Greek is my mother tongue, I find myself frequently writing in Greek. So, 
 
 The default behavior of Emacs is to open the buffer list and "kill" the current one by selecting it. This means that to kill the current buffer you must to type ~C-x k RET~.
 
-This way, you can just simply type ~C-x C-k~.
+This way, you can just simply type ~C-x C-k~, that calls the function =my-kill-this-buffer= ([[my kill]]).
 
 #+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "C-x C-k") #'kill-this-buffer)
+(global-set-key (kbd "C-x C-k") #'my-kill-this-buffer)
 #+end_src
 
 ** WoMan
@@ -863,7 +886,7 @@ For this I use corfu. I used company before, but corfu seems faster, more minima
 
     :custom
     (corfu-cycle t)                       ;; Enable cycling for `corfu-next/previous'
-    (corfu-auto t)                        ;; Enable auto completion
+    (corfu-auto nil)                        ;; Enable auto completion
     (corfu-separator ?\s)                 ;; Orderless field separator
     (corfu-quit-at-boundary 'separator)   ;; Never quit at completion boundary
     ;; (corfu-quit-no-match nil)          ;; Never quit, even if there is no match
@@ -2487,7 +2510,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 
   (org-roam-capture-templates
    '(
-     ("p" "page" plain "- subject :: %?"
+     ("p" "page" plain "%?"
       :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: draft\n#+date: %U\n\n")
       :empty-lines 1
       :unnarrowed nil)
@@ -2658,37 +2681,16 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 (global-set-key (kbd "C-c u u") #'org-tidy-untidy-buffer)
 #+end_src
 
-**** Deft
+**** Xeft
 
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package deft
-  :after org
-  :straight t
-  :bind
-  ("C-c n s" . deft)
+(use-package xeft
+  :straight (xeft :type git :host sourcehut :repo "casouri/xeft")
   :custom
-  (deft-recursive t)
-  (deft-use-filter-string-for-filename t)
-  (deft-default-extension "org")
-  (deft-directory "/home/kchou/Textfiles/Braindump")
-  :config
-  (defun cf/deft-parse-title (file contents)
-    "Parse the given FILE and CONTENTS and determine the title.
-      If `deft-use-filename-as-title' is nil, the title is taken to
-      be the first non-empty line of the FILE.  Else the base name of the FILE is
-      used as title."
-    (let ((begin (string-match "^#\\+[tT][iI][tT][lL][eE]: .*$" contents)))
-      (if begin
-          (string-trim (substring contents begin (match-end 0)) "#\\+[tT][iI][tT][lL][eE]: *" "[\n\t ]+")
-        (deft-base-filename file))))
-  (advice-add 'deft-parse-title :override #'cf/deft-parse-title)
-  (setq deft-strip-summary-regexp
-        (concat "\\("
-                "[\n\t]" ;; blank
-                "\\|^#\\+[[:alpha:]_]+:.*$" ;; org-mode metadata
-                "\\|^:PROPERTIES:\n\\(.+\n\\)+:END:\n" ;; org-roam ID
-                "\\|\\[\\[\\(.*\\]\\)" ;; any link
-                "\\)")))
+  (xeft-default-extension "org")
+  (xeft-directory "/home/kchou/Textfiles/Braindump")
+  (xeft-database "/home/kchou/Textfiles/Xeft-database")
+  (xeft-recursive t))
 #+end_src
 
 *** Org-Latex-Preview
