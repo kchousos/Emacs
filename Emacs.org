@@ -300,7 +300,7 @@ I dislike Emacs' default fonts. Since I run Emacs in a daemon/client setup, the 
 ** Line spacing
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq line-spacing 0)
+(setq line-spacing 0.0)
 #+end_src
 
 * Key-binds
@@ -2473,7 +2473,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   :custom
   (org-roam-directory "~/Textfiles/Braindump")
   (org-roam-dailies-directory "journals/")
-  (org-roam-completion-everywhere t)
+  (org-roam-completion-everywhere nil)
 
   (org-roam-dailies-capture-templates
    '(("d" "default" entry "* %<%H:%M>: %?"
