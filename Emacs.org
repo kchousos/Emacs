@@ -536,6 +536,16 @@ This package displays ElDoc documentations in a childframe. The childfrme is sel
 (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode t)
 #+end_src
 
+*** Breadcrumbs
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package breadcrumb-mode
+  :straight (:host github :repo "joaotavora/breadcrumb"))
+;; (breadcrumb-mode)
+
+(add-hook 'eglot-managed-mode-hook #'breadcrumb-local-mode)
+#+end_src
+
 *** Languages
 
 Settings divided by language.
@@ -816,6 +826,7 @@ Resize windows with keybinds.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq tab-bar-show 1)
+(setq tab-bar-auto-width-max '(300 20))
 #+end_src
 
 ** File history
@@ -2499,7 +2510,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (org-roam-completion-everywhere nil)
 
   (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %<%H:%M>: %?"
+   '(("d" "default" entry "* %<%H:%M>\n\n %?"
       :empty-lines 1
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: :journal:\n\n"))))
 
@@ -2555,8 +2566,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (org-roam-setup)
   (require 'org-roam-dailies)
   (require 'org-roam-protocol)
-  (require 'org-roam-export)
-  )
+  (require 'org-roam-export))
 #+end_src
 
 ***** COMMENT Shows only the surrounding text instead of the whole file in the 'org-roam-buffer' backlinks
@@ -2686,11 +2696,16 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package xeft
   :straight (xeft :type git :host sourcehut :repo "casouri/xeft")
+  :bind
+  ("C-c n s" . xeft)
   :custom
   (xeft-default-extension "org")
+  (xeft-ignore-extension '("png" "svg" "tex"))
   (xeft-directory "/home/kchou/Textfiles/Braindump")
   (xeft-database "/home/kchou/Textfiles/Xeft-database")
   (xeft-recursive t))
+
+(add-hook 'xeft-mode-hook #'olivetti-mode)
 #+end_src
 
 *** Org-Latex-Preview
@@ -2705,7 +2720,7 @@ This section contains all settings relevant to the overhauled =org-latex-preview
       org-latex-preview-persist nil
       org-latex-preview-processing-indicator 'fringe
       org-latex-preview-numbered t
-      org-latex-preview-width 0.75
+      org-latex-preview-width 0.8
       org-latex-preview-use-precompilation t
       org-latex-preview-live-display-type 'buffer
       org-latex-preview-default-process 'dvisvgm
