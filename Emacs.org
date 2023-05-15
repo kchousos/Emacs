@@ -308,8 +308,8 @@ I dislike Emacs' default fonts. Since I run Emacs in a daemon/client setup, the 
   (defun set-font-faces ()
         (message "Setting faces!")
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
-        (set-face-attribute 'default nil :family "Iosevka" :height 120)
-        (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 1.0)
+        (set-face-attribute 'default nil :family "Iosevka Kchou" :height 120)
+        (set-face-attribute 'fixed-pitch nil :family "Iosevka Kchou" :height 1.0)
         (set-face-attribute 'variable-pitch nil :family "Iosevka Aile"))
 
 (if (daemonp)
@@ -742,7 +742,7 @@ This package enables font ligatures (if the font supports them).
   ;; Enable all programming ligatures in programming modes
   (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
                                        "<<" "??" ";;" "->" "<-" "-->" "<--" "=>" "!!" "-->" "<--"
-                                       "=<<" "=~" "/="
+                                       "=<<" "=~" "/=" "++" "--"
                                        ))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
