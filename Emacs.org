@@ -831,7 +831,7 @@ Resize windows with keybinds.
 
 ** File history
 
-*** Undo-tree
+*** COMMENT Undo-tree
 
 Default undo/redo doesn't allow going back to previous "futures". This package treats file history as a tree and therefore offers much more flexibility.
 
