@@ -855,8 +855,13 @@ Default undo/redo doesn't allow going back to previous "futures". This package t
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package vundo
-  :straight t)
-(setq vundo-glyph-alist vundo-unicode-symbols)
+  :straight t
+   :bind ("C-x u" . vundo)
+  :config
+  (setq vundo-glyph-alist vundo-unicode-symbols
+        vundo-window-max-height 5))
+
+(add-hook 'vundo-mode-hook #'(mixed-pitch-mode 'toggle))
 #+end_src
 
 ** Snippets
@@ -2541,6 +2546,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
          ("C-c n a" . org-roam-alias-add)
          ("C-c n r" . org-roam-ref-add)
          ("C-c n o" . org-id-get-create)
+         ("C-c n l" . org-roam-refile)
          :map org-mode-map
          ("C-M-i"    . completion-at-point))
 
