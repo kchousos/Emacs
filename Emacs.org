@@ -1211,7 +1211,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (org-roam-completion-everywhere nil)
 
   (org-roam-dailies-capture-templates
-   '(("d" "default" entry "* %<%H:%M>\n\n %?"
+   '(("d" "default" entry "* %<%H:%M>\n\n%?"
       :empty-lines 1
       :if-new (file+head "%<%Y-%m-%d>.org" "#+title: %<%Y-%m-%d>\n#+filetags: :journal:\n\n"))))
 
