@@ -304,6 +304,12 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 
   #+end_src
 
+- I-search
+
+  #+begin_src emacs-lisp :tangle ./init.el
+(setq isearch-lazy-count t)
+  #+end_src
+
 * Fonts
 
 I dislike Emacs' default fonts. Since I run Emacs in a daemon/client setup, the following function is needed to correctly apply the custom fonts to every new frame.
@@ -941,7 +947,13 @@ Utility to paste screenshots or drag-and-drop images in the org buffer.
 (use-package org-download
   :elpaca t)
 
-(setq org-download-image-org-width 500)
+(setq-default org-download-image-org-width 500
+              org-download-heading-lvl nil)
+
+(defun dummy-org-download-annotate-function (link)  "")
+
+(setq-default org-download-annotate-function
+              #'dummy-org-download-annotate-function)
 
 (global-set-key (kbd "s-y") #'org-download-clipboard)
 #+end_src
@@ -1097,15 +1109,15 @@ Allows you to encrypt specific org headings, when tagged with =crypt=.
   )
 #+end_src
 
-*** COMMENT Org-Analyzer
+*** Org-Analyzer
 
 Provides a web interface to analyze clocked time data from your agenda files.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-analyzer
-  :elpaca (:host github
-                 :repo "rksm/clj-org-analyzer"
-                 :files (:defaults "org-analyzer-el/*")))
+  :elpaca (:main "org-analyzer-el/org-analyzer.el")
+  :config
+  (setq org-analyzer-org-directory "/home/kchou/Textfiles/Braindump"))
 #+end_src
 
 *** Org-Yt
@@ -1223,7 +1235,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (org-roam-capture-templates
    '(
      ("p" "page" plain "%?"
-      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: draft\n#+date: %U\n\n")
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:\n#+date: %U\n\n")
       :empty-lines 1
       :unnarrowed nil)
      ("P" "post" plain "%?"
@@ -1260,8 +1272,23 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
            (file-relative-name (org-roam-node-file node) org-roam-directory))))
       (error "")))
 
-  ;; If you're using a vertical completion framework, you might want a more informative completion interface
-  (setq org-roam-node-display-template (concat "${type:15} ${title:*} " (propertize "${tags:25}" 'face 'org-tag)))
+  ;; (cl-defmethod org-roam-node-directories ((node org-roam-node))
+  ;;   (if-let ((dirs (file-name-directory (file-relative-name (org-roam-node-file node) org-roam-directory))))
+  ;;       (format "(%s)" (car (split-string dirs "/")))
+  ;;     ""))
+
+  (cl-defmethod org-roam-node-backlinkscount ((node org-roam-node))
+    (let* ((count (caar (org-roam-db-query
+                         [:select (funcall count source)
+                                  :from links
+                                  :where (= dest $s1)
+                                  :and (= type "id")]
+                         (org-roam-node-id node)))))
+      (format "[%d]" count)))
+
+  (setq org-roam-node-display-template "${type:10} ${title:*} ${tags:10} ${backlinkscount:6}")
+  ;; ;; If you're using a vertical completion framework, you might want a more informative completion interface
+  ;; (setq org-roam-node-display-template (concat "${type:15} ${title:*} " (propertize "${tags:25}" 'face 'org-tag)))
 
   (org-roam-db-autosync-mode)
   (org-roam-update-org-id-locations)
@@ -1548,7 +1575,7 @@ Settings divided by language.
 #+begin_src emacs-lisp :tangle ./init.el
 ;; (setq prolog-system 'eclipse)
 
-(autoload 'eclipse-mode "/home/kchou/.config/emacs/elpaca/build/eclipse/eclipse.el" "ECLIPSE editing mode" t)
+(autoload 'eclipse-mode "/home/kchou/.config/emacs/lisp/eclipse.el" "ECLIPSE editing mode" t)
 
 (setq auto-mode-alist (cons '("\\.pl" . eclipse-mode) auto-mode-alist))
 (setq auto-mode-alist (cons '("\\.ecl" . eclipse-mode) auto-mode-alist))
@@ -1792,18 +1819,18 @@ Default undo/redo doesn't allow going back to previous "futures". This package t
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package undo-tree
-  :elpaca t)
+  :elpaca t
+  :init
+  (setq undo-tree-auto-save-history t)
 
-(setq undo-tree-auto-save-history t)
+  (defadvice undo-tree-make-history-save-file-name
+      (after undo-tree activate)
+    (setq ad-return-value (concat ad-return-value ".gz")))
 
-(defadvice undo-tree-make-history-save-file-name
-    (after undo-tree activate)
-  (setq ad-return-value (concat ad-return-value ".gz")))
+  (setq undo-tree-visualizer-diff t)
+  (setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
 
-(setq undo-tree-visualizer-diff t)
-(setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
-
-(global-undo-tree-mode)
+  (global-undo-tree-mode))
 #+end_src
 
 *** Vundo
@@ -1811,7 +1838,7 @@ Default undo/redo doesn't allow going back to previous "futures". This package t
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package vundo
   :elpaca t
-   :bind ("C-x u" . vundo)
+   :bind ("C-x C-u" . vundo)
   :config
   (setq vundo-glyph-alist vundo-unicode-symbols
         vundo-window-max-height 5))
@@ -2495,7 +2522,9 @@ When switching to a new window or buffer, the line that the cursor is located fl
   (use-package beacon
       :elpaca t
       :init
-      (beacon-mode))
+      (beacon-mode)
+      :bind
+      ("C-<f12>" . beacon-blink))
 #+end_src
 
 *** Telephone Line
