@@ -947,7 +947,7 @@ Utility to paste screenshots or drag-and-drop images in the org buffer.
 (use-package org-download
   :elpaca t)
 
-(setq-default org-download-image-org-width 500
+(setq-default org-download-image-org-width 300
               org-download-heading-lvl nil)
 
 (defun dummy-org-download-annotate-function (link)  "")
@@ -1247,8 +1247,8 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   :bind (("C-c n b" . org-roam-buffer-toggle)
          ("C-c n f" . org-roam-node-find)
          ("C-c n g" . org-roam-graph)
-         ("C-c n i" . org-roam-node-insert)
-         ("C-c n I" . org-roam-node-insert-immediate)
+         ("C-c n I" . org-roam-node-insert)
+         ("C-c n i" . org-roam-node-insert-immediate)
          ("C-c n c" . org-roam-capture)
          ("C-c n t" . org-roam-tag-add)
          ("C-c n a" . org-roam-alias-add)
