@@ -595,6 +595,7 @@ This behemoth of a node contains all my configuration regarding org-mode.
           org-ellipsis "…"
           org-startup-indented t
           org-pretty-entities nil
+          org-footnote-auto-adjust t
           org-support-shift-select t
           org-fontify-whole-heading-line t
           org-fontify-done-headline t
@@ -865,10 +866,11 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 (setq org-capture-templates
       '(
         ("i" "inbox" entry (file "Inbox.org")
-         "* TODO %?")
-        ;; ;; todo's for my regular agenda files
-        ;; ("t" "Todo" entry (file+headline "~/Textfiles/Org files/Tasks.org" "Capture")
-        ;;  "* TODO %?")
+         "* %?")
+        ;; todo's for my regular agenda files
+        ("t" "Todo" entry (file "~/Textfiles/Org files/Tasks.org")
+         "* TODO %?"
+         :empty-lines 1)
         ;; ;; tasks related to uni
         ;; ("u" "Uni" entry (file "~/Textfiles/Org files/Courses.org")
         ;;  "* TODO %?")
@@ -1357,7 +1359,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 (add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
 #+end_src
 
-***** Include org-roam todos in org-agenda
+***** COMMENT Include org-roam todos in org-agenda
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq who/org-agenda-directory "~/Textfiles/Org files/")
