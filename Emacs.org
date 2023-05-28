@@ -637,7 +637,7 @@ Settings for org-agenda.
       org-agenda-start-with-log-mode t
       org-agenda-use-time-grid t
       org-agenda-include-deadlines t
-      org-agenda-current-time-string "⭠ now ─────────────────────────────────────────────────"
+      org-agenda-current-time-string "<--now─────────────────────────>"
       org-agenda-span 'week
       org-extend-today-until 4
       org-directory "~/Textfiles/Org files"
@@ -2843,6 +2843,15 @@ Trying it out for now.
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package markdown-mode
   :elpaca t)
+#+end_src
+
+** Chat-GPT
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package gptel
+  :elpaca t
+  :config
+  (setq gptel-default-mode 'org-mode))
 #+end_src
 
 * Local Variables
