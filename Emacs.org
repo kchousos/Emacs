@@ -4,6 +4,7 @@
 #+language: en
 #+options: num:2 H:5 toc:nil date:nil timestamp:nil <:t p:t
 #+STARTUP: showall
+#+PROPERTY: header-args :tangle yes :comments link
 
 This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configuration, in the style of [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]], by leveraging [[https://orgmode.org/][Org-Mode]].
 
@@ -588,7 +589,7 @@ This behemoth of a node contains all my configuration regarding org-mode.
 
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package org
-    :elpaca (:type git :repo "https://git.tecosaur.net/tec/org-mode.git")
+    :elpaca (:type git :repo "https://git.tecosaur.net/tec/org-mode.git" :ref "33892c91")
     :commands (org-capture org-agenda)
     :config
     (setq org-hide-emphasis-markers t
@@ -1028,7 +1029,8 @@ Provides transclusion of other org files.
 (use-package org-transclusion
   :elpaca t
   :config
-  (add-to-list 'org-transclusion-extensions 'org-transclusion-indent-mode))
+  (add-to-list 'org-transclusion-extensions 'org-transclusion-indent-mode)
+  (add-to-list 'org-transclusion-extensions 'org-transclusion-src-lines))
 
 (define-key global-map (kbd "C-c t a") #'org-transclusion-add)
 (define-key global-map (kbd "C-c t t") #'org-transclusion-mode)
@@ -1288,7 +1290,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
                          (org-roam-node-id node)))))
       (format "[%d]" count)))
 
-  (setq org-roam-node-display-template "${type:10} ${title:*} ${tags:10} ${backlinkscount:6}")
+  (setq org-roam-node-display-template "${type:20} ${title:*} ${tags:10} ${backlinkscount:6}")
   ;; ;; If you're using a vertical completion framework, you might want a more informative completion interface
   ;; (setq org-roam-node-display-template (concat "${type:15} ${title:*} " (propertize "${tags:25}" 'face 'org-tag)))
 
@@ -1621,6 +1623,37 @@ Makes Emacs recognize different python virtual environments.
 ***** Sage-shell-mode
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package sage-shell-mode
+  :elpaca t)
+#+end_src
+
+**** Scheme
+
+***** COMMENT For org-babel
+
+#+begin_src emacs-lisp :tangle ./init.el
+(add-hook 'scheme-mode-hook 'geiser-mode)
+(setq geiser-default-implementation 'racket)
+#+end_src
+
+***** Racket
+
+****** COMMENT Geiser
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package geiser
+  :elpaca t)
+
+(elpaca-wait)
+
+(use-package geiser-racket
+  :elpaca (:files    
+           (:defaults "*")))
+#+end_src
+
+****** Racket-mode
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package racket-mode
   :elpaca t)
 #+end_src
 
@@ -2075,7 +2108,7 @@ Turns =eshell='s prompt to a =λ=.
 
 ** File handling
 
-*** OpenWith
+*** COMMENT OpenWith
 
 Allows to match programs with filetypes and open files with those programs instead of Emacs.
 
@@ -2309,6 +2342,13 @@ Centers text in the buffer.
   (tex-mode . olivetti-mode)
   (LaTeX-mode . olivetti-mode)
   (latex-mode . olivetti-mode))
+#+end_src
+
+*** Unfill
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package unfill
+  :elpaca t)
 #+end_src
 
 ** Bibliography management
@@ -2842,6 +2882,13 @@ Trying it out for now.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package markdown-mode
+  :elpaca t)
+#+end_src
+
+** Typst
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package typst-mode
   :elpaca t)
 #+end_src
 
