@@ -999,6 +999,13 @@ Enables you to execute source blocks in buffer.
 ;; (setq org-babel-prolog-command "eclipse")
 #+end_src
 
+**** emacs-ob-racket
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package emacs-ob-racket
+  :elpaca (:type git :host github :repo "hasu/emacs-ob-racket"))
+#+end_src
+
 **** Global
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1012,6 +1019,7 @@ Enables you to execute source blocks in buffer.
    (R . t)
    (prolog . t)
    (haskell . t)
+   (racket . t)
    ))
 ;; Show syntax highlighting per language native mode in *.org
 (setq org-src-fontify-natively t)
@@ -2909,7 +2917,9 @@ Trying it out for now.
 (use-package pdf-tools
   :elpaca t
   :config
-  (setq pdf-view-use-scaling nil))
+  (setq pdf-view-use-scaling nil)
+  :init
+  (pdf-tools-install))
 #+end_src
 
 * Local Variables
