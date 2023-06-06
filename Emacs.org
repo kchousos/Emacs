@@ -2901,6 +2901,17 @@ Trying it out for now.
   (setq gptel-default-mode 'org-mode))
 #+end_src
 
+** Documents
+
+*** PDF-Tools
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package pdf-tools
+  :elpaca t
+  :config
+  (setq pdf-view-use-scaling nil))
+#+end_src
+
 * Local Variables
 
 With this setting, upon saving this file all the code snippets are tangled to =init.el= asynchronously and automatically.
