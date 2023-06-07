@@ -849,6 +849,18 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
         (message "Done!")))))
 #+end_src
 
+**** COMMENT Engrave-Faces
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package engrave-faces
+  :elpaca t
+  :config
+  (setq org-latex-src-block-backend 'engraved
+        org-latex-engraved-theme 'modus-operandi)
+  ;; (add-to-list 'org-latex-engraved-options '("frame" "false"))
+  (add-to-list 'org-latex-engraved-options '("linenos" "true")))
+#+end_src
+
 *** Org Bookmarks
 
 #+begin_src emacs-lisp :tangle ./init.el
