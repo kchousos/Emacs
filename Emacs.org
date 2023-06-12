@@ -311,6 +311,13 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 (setq isearch-lazy-count t)
   #+end_src
 
+- Auto-revert-mode
+
+  #+begin_src emacs-lisp :tangle ./init.el
+(setq auto-revert-avoid-polling t)
+(global-auto-revert-mode)
+  #+end_src
+
 * Fonts
 
 I dislike Emacs' default fonts. Since I run Emacs in a daemon/client setup, the following function is needed to correctly apply the custom fonts to every new frame.
@@ -1014,8 +1021,9 @@ Enables you to execute source blocks in buffer.
 **** emacs-ob-racket
 
 #+begin_src emacs-lisp :tangle ./init.el
-(use-package emacs-ob-racket
+(use-package ob-racket
   :elpaca (:type git :host github :repo "hasu/emacs-ob-racket"))
+(elpaca-wait)
 #+end_src
 
 **** Global
@@ -1760,7 +1768,8 @@ Allows you to have both variable and fixed pitch fonts depending on the context 
   :elpaca t
   :hook
   ;; If you want it in all text modes:
-  (text-mode . mixed-pitch-mode))
+  (text-mode . mixed-pitch-mode)
+  (elpher-mode . mixed-pitch-mode))
 
 (setq mixed-pitch-variable-pitch-cursor nil)
 (setq mixed-pitch-set-height nil)
@@ -1868,7 +1877,7 @@ Resize windows with keybinds.
 
 ** File history
 
-*** COMMENT Undo-tree
+*** Undo-tree
 
 Default undo/redo doesn't allow going back to previous "futures". This package treats file history as a tree and therefore offers much more flexibility.
 
@@ -1888,7 +1897,7 @@ Default undo/redo doesn't allow going back to previous "futures". This package t
   (global-undo-tree-mode))
 #+end_src
 
-*** Vundo
+*** COMMENT Vundo
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package vundo
@@ -2163,6 +2172,18 @@ A browser for the gemini and gopher protocols.
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package elpher
   :elpaca t)
+#+end_src
+
+*** Atomic-Chrome
+
+Used in conjunction with GhostText to edit text areas in my browser with Emacs.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package atomic-chrome
+  :elpaca t
+  :config
+  (atomic-chrome-start-server)
+  (setq atomic-chrome-default-major-mode 'org-mode))
 #+end_src
 
 ** Keybinds
@@ -2548,6 +2569,7 @@ Provides a start-up welcome screen for Emacs.
   (setq dashboard-week-agenda nil)
   (setq dashboard-page-separator "\n\n")
   (setq dashboard-items '(;;(bookmarks . 20)
+                          ;; (projects . 5)
                           ;; (recents . 5)
                           ;; (agenda . 10)
                           ))
@@ -2777,7 +2799,7 @@ Trying it out for now.
 (setq notmuch-search-oldest-first nil)
 (setq message-kill-buffer-on-exit t)
 (setq notmuch-multipart/alternative-discouraged '("text/plain" "text/html"))
-(setq notmuch-fcc-dirs "UoA/INBOX.Sent +sent -unread")
+(setq notmuch-fcc-dirs '(("sdi2000215@di.uoa.gr" . "UoA/INBOX.Sent +sent -unread -inbox")))
 (setq notmuch-hello-thousands-separator ".")
 (setq notmuch-search-oldest-first t)
 
@@ -2929,6 +2951,8 @@ Trying it out for now.
 (use-package pdf-tools
   :elpaca t
   :config
+  (setq pdf-misc-print-program-executable "/usr/bin/lpr")
+
   ;; (setq pdf-view-use-scaling nil)
   (defun my-pdf-tools-backdrop ()
     (face-remap-add-relative
