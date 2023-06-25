@@ -318,6 +318,12 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 (global-auto-revert-mode)
   #+end_src
 
+- Automatically save bookmarks upon change
+
+  #+begin_src emacs-lisp :tangle ./init.el
+(setq bookmark-save-flag 1)
+  #+end_src
+
 * Fonts
 
 I dislike Emacs' default fonts. Since I run Emacs in a daemon/client setup, the following function is needed to correctly apply the custom fonts to every new frame.
@@ -412,6 +418,12 @@ Open =woMan (without man)=, an emacs native program to read man pages.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (global-set-key (kbd "C-c w") #'woman)
+#+end_src
+
+** Quick Calc
+
+#+begin_src emacs-lisp :tangle ./init.el
+(global-set-key (kbd "C-x C-8") #'quick-calc)
 #+end_src
 
 * Packages
@@ -596,7 +608,7 @@ This behemoth of a node contains all my configuration regarding org-mode.
 
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package org
-    :elpaca (:type git :repo "https://git.tecosaur.net/tec/org-mode.git" :ref "33892c91")
+    :elpaca (:type git :repo "https://git.tecosaur.net/tec/org-mode.git" :branch "dev")
     :commands (org-capture org-agenda)
     :config
     (setq org-hide-emphasis-markers t
@@ -645,12 +657,13 @@ Settings for org-agenda.
       org-agenda-start-with-log-mode t
       org-agenda-use-time-grid t
       org-agenda-include-deadlines t
-      org-agenda-current-time-string "<--now─────────────────────────>"
+      org-agenda-current-time-string "<───now─────────────────────────>"
       org-agenda-span 'week
       org-extend-today-until 4
       org-directory "~/Textfiles/Org files"
       org-agenda-files
       '("Tasks.org"
+        "Events.org"
         "Courses.org"
         "Habits.org"
         "Inbox.org"
@@ -664,14 +677,14 @@ Settings for org-agenda.
                             (:newline)
                             ("errand" . ?e)
                             ("work" . ?w)
-                            ("health" . ?h)
-                            ("social" . ?s)
+                            ("health/fitness" . ?h)
+                            ("social" . ?k)
                             ("music" . ?m)
                             (:newline)
                             ("productivity" . ?p)
                             ("uni" . ?u)
                             ("courses" . ?c)
-                            ("homework" . ?a)
+                            ("study" . ?s)
                             (:newline)
                             ("hobbies" . ?x)
                             ("tech" . ?t)
@@ -685,6 +698,21 @@ Settings for org-agenda.
       )
 
 (global-set-key (kbd "C-c a") 'org-agenda)
+#+end_src
+
+*** Registers
+
+#+begin_src emacs-lisp :tangle ./init.el
+(set-register ?e (cons 'file "~/.config/emacs/Emacs.org"))
+(set-register ?f (cons 'file "~/.config/emacs/feeds.org"))
+(set-register ?i (cons 'file (concat org-directory "/Inbox.org")))
+(set-register ?I (cons 'file (concat org-directory "/Phone inbox.org")))
+(set-register ?b (cons 'file (concat org-directory "/Bookmarks.org")))
+(set-register ?c (cons 'file (concat org-directory "/Check Later.org")))
+(set-register ?C (cons 'file (concat org-directory "/Courses.org")))
+(set-register ?h (cons 'file (concat org-directory "/Habits.org")))
+(set-register ?t (cons 'file (concat org-directory "/Tasks.org")))
+(set-register ?E (cons 'file (concat org-directory "/Events.org")))
 #+end_src
 
 *** Org-Export
@@ -891,6 +919,9 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
         ("t" "Todo" entry (file "~/Textfiles/Org files/Tasks.org")
          "* TODO %?"
          :empty-lines 1)
+        ("e" "event" entry (file "Events.org")
+         "* %?"
+         :empty-lines 1)
         ;; ;; tasks related to uni
         ;; ("u" "Uni" entry (file "~/Textfiles/Org files/Courses.org")
         ;;  "* TODO %?")
@@ -1080,15 +1111,16 @@ Gives the ability to create a plot from data in a org table.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-pomodoro
-  :elpaca t)
-(setq org-pomodoro-length 30)
-(setq org-pomodoro-short-break-length 6)
-(setq org-pomodoro-long-break-length 20)
-(setq org-pomodoro-manual-break t)
-(setq org-pomodoro-start-sound "~/.config/emacs/clock.wav")
-(setq org-pomodoro-finished-sound "~/.config/emacs/clock.wav")
-(setq org-pomodoro-short-break-sound "~/.config/emacs/clock.wav")
-(setq org-pomodoro-long-break-sound "~/.config/emacs/clock.wav")
+  :elpaca t
+  :config
+  (setq org-pomodoro-length 50
+        org-pomodoro-short-break-length 10
+        org-pomodoro-long-break-length 25
+        org-pomodoro-manual-break t
+        org-pomodoro-start-sound "~/.config/emacs/clock.wav"
+        org-pomodoro-finished-sound "~/.config/emacs/clock.wav"
+        org-pomodoro-short-break-sound "~/.config/emacs/clock.wav"
+        org-pomodoro-long-break-sound "~/.config/emacs/clock.wav"))
 #+end_src
 
 *** Org-Pandoc-Import
@@ -1266,8 +1298,19 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 
   (org-roam-capture-templates
    '(
-     ("p" "page" plain "%?"
-      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:\n#+date: %U\n\n")
+     ("d" "default" plain "%?"
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
+      :empty-lines 1
+      :unnarrowed nil)
+     ("t" "time")
+     ("tt" "timestamp" entry "* %<%H:%M>\n\n%?"
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
+      :empty-lines 1)
+     ("td" "date" entry "* %<%Y-%m-%d>\n\n%?"
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
+      :empty-lines 1)
+     ("m" "Map of Content" plain "%?"
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :MOC:\n#+date: %U\n\n")
       :empty-lines 1
       :unnarrowed nil)
      ("P" "post" plain "%?"
@@ -1363,7 +1406,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
                ;; (dedicated . t)
                (side . right)
                (slot . 0)
-               (window-width . 0.33)
+               (window-width . 0.40)
                (preserve-size . (t nil))
                (window-parameters . ((no-other-window . t)
                                      (no-delete-other-windows . t)))))
@@ -1399,7 +1442,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (find-lisp-find-files directory "\.org$"))
 
 (defun who-org/agenda-files-update (&rest _)
-  (let ((todo-zettels (->> "rg --files-with-matches '(TODO)|(NEXT)|(HOLD)|(WAITING)' ~/Textfiles/Braindump ~/Textfiles/Braindump/journals"
+  (let ((todo-zettels (->> "rg --files-with-matches '(TODO)|(NEXT)|(HOLD)|(WAITING)|(CLOCK)' ~/Textfiles/Braindump ~/Textfiles/Braindump/journals"
                            (shell-command-to-string)
                            (s-lines)
                            (-filter (lambda (line) (not (s-blank? line)))))))
@@ -1529,6 +1572,26 @@ This minor mode provides an easy preview of your org-exported HTML files using e
   :elpaca t
   :config
   (setq org-preview-html-viewer #'xwidget))
+#+end_src
+
+*** Calfw
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package calfw
+  :elpaca t)
+(use-package calfw-org
+  :elpaca t)
+#+end_src
+
+*** Org Clock
+
+#+begin_src emacs-lisp :tangle ./init.el
+;; (setq org-clock-persist 'history)
+;; (org-clock-persistence-insinuate)
+(setq org-clock-mode-line-total 'current)
+(setq org-log-note-clock-out nil)
+
+;; (add-to-list 'org-clocktable-defaults :compact t)
 #+end_src
 
 ** Programming
@@ -1948,7 +2011,7 @@ For this I use corfu. I used company before, but corfu seems faster, more minima
 
     :custom
     (corfu-cycle t)                       ;; Enable cycling for `corfu-next/previous'
-    (corfu-auto nil)                        ;; Enable auto completion
+    (corfu-auto t)                        ;; Enable auto completion
     (corfu-separator ?\s)                 ;; Orderless field separator
     (corfu-quit-at-boundary 'separator)   ;; Never quit at completion boundary
     ;; (corfu-quit-no-match nil)          ;; Never quit, even if there is no match
@@ -2538,6 +2601,17 @@ Allows you to hide dotfiles in dired by default and toggle them.
 (define-key dired-mode-map "\C-c\C-v" 'dired-copy-paste-do-paste)
 #+end_src
 
+*** Dired-Delight
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package dired-delight
+  :elpaca (:host github :repo "karthink/dired-delight")
+  :hook (dired-mode . dired-delight-mode)
+  :bind (:map dired-mode-map
+         ("@" . dired-delight)
+         ("*c" . dired-delight-mark-color)))
+#+end_src
+
 ** Aesthetic enhancements
 
 This part consists of packages that make Emacs prettier.
@@ -2620,12 +2694,12 @@ When switching to a new window or buffer, the line that the cursor is located fl
   (require 'telephone-line-utils)
 
   (setq telephone-line-lhs '((modal telephone-line-project-segment)
-   (accent telephone-line-vc-segment telephone-line-erc-modified-channels-segment telephone-line-process-segment)
-   (nil telephone-line-buffer-segment)))
+                             (accent telephone-line-vc-segment telephone-line-erc-modified-channels-segment telephone-line-process-segment)
+                             (nil telephone-line-buffer-segment)))
 
   (setq telephone-line-rhs '((nil telephone-line-flymake-segment telephone-line-misc-info-segment)
-   (accent telephone-line-major-mode-segment)
-   (evil telephone-line-airline-position-segment)))
+                             (accent telephone-line-major-mode-segment)
+                             (evil telephone-line-airline-position-segment)))
 
   (telephone-line-mode 1))
 #+end_src
@@ -2971,6 +3045,35 @@ Trying it out for now.
 
   :init
   (pdf-tools-install))
+#+end_src
+
+*** saveplace-pdf-view
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package saveplace-pdf-view
+  :elpaca t
+  :config
+  (save-place-mode 1))
+#+end_src
+
+** Timers
+
+*** COMMENT Pomm
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package pomm
+  :elpaca t
+  :config
+  (setq alert-default-style 'libnotify
+        pomm-audio-enabled t
+        pomm-audio-tick-enabled nil
+        pomm-audio-files '((work . "~/.config/emacs/clock.wav")
+                           (tick . "~/.config/emacs/clock.wav")
+                           (short-break . "~/.config/emacs/clock.wav")
+                           (break . "~/.config/emacs/clock.wav")
+                           (long-break . "~/.config/emacs/clock.wav")
+                           (stop . "~/.config/emacs/clock.wav")))
+  (pomm-mode-line-mode))
 #+end_src
 
 * Local Variables
