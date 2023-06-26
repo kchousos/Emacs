@@ -2130,7 +2130,7 @@ Show candidates as you type.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package vertico
-  :elpaca t
+  :elpaca (:files (:defaults "extensions/*"))
   :custom
   (vertico-cycle t)
   :init
@@ -2685,7 +2685,7 @@ When switching to a new window or buffer, the line that the cursor is located fl
       ("C-<f12>" . beacon-blink))
 #+end_src
 
-*** Telephone Line
+*** COMMENT Telephone Line
 
 #+begin_src emacs-lisp :tangle ./init.el
   (use-package telephone-line
