@@ -1299,15 +1299,15 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (org-roam-capture-templates
    '(
      ("d" "default" plain "%?"
-      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :inbox:\n#+date: %U\n\n")
       :empty-lines 1
       :unnarrowed nil)
      ("t" "time")
      ("tt" "timestamp" entry "* %<%H:%M>\n\n%?"
-      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :inbox:\n#+date: %U\n\n")
       :empty-lines 1)
      ("td" "date" entry "* %<%Y-%m-%d>\n\n%?"
-      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :inbox:\n#+date: %U\n\n")
       :empty-lines 1)
      ("m" "Map of Content" plain "%?"
       :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :MOC:\n#+date: %U\n\n")
@@ -1361,7 +1361,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
                          (org-roam-node-id node)))))
       (format "[%d]" count)))
 
-  (setq org-roam-node-display-template "${type:20} ${title:*} ${tags:10} ${backlinkscount:6}")
+  (setq org-roam-node-display-template "${type:20} ${title:*} ${tags:25} ${backlinkscount:6}")
   ;; ;; If you're using a vertical completion framework, you might want a more informative completion interface
   ;; (setq org-roam-node-display-template (concat "${type:15} ${title:*} " (propertize "${tags:25}" 'face 'org-tag)))
 
