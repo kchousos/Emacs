@@ -468,7 +468,7 @@ This line is needed for =straight.el= to install in Emacs 29 (see [[https://gith
 *** elpaca
 
 #+begin_src emacs-lisp :tangle ./init.el
-(defvar elpaca-installer-version 0.4)
+(defvar elpaca-installer-version 0.5)
 (defvar elpaca-directory (expand-file-name "elpaca/" user-emacs-directory))
 (defvar elpaca-builds-directory (expand-file-name "builds/" elpaca-directory))
 (defvar elpaca-repos-directory (expand-file-name "repos/" elpaca-directory))
@@ -495,7 +495,7 @@ This line is needed for =straight.el= to install in Emacs 29 (see [[https://gith
                                        "--eval" "(byte-recompile-directory \".\" 0 'force)")))
                  ((require 'elpaca))
                  ((elpaca-generate-autoloads "elpaca" repo)))
-            (kill-buffer buffer)
+            (progn (message "%s" (buffer-string)) (kill-buffer buffer))
           (error "%s" (with-current-buffer buffer (buffer-string))))
       ((error) (warn "%s" err) (delete-directory repo 'recursive))))
   (unless (require 'elpaca-autoloads nil t)
@@ -548,7 +548,7 @@ Since I spend a lot of time inside Emacs, I want to have a good-looking, easy-on
         ;; that can combine any of `3d' OR `moody', `borderless',
         ;; `accented'.  The variable's doc string shows all possible
         ;; combinations.
-        modus-themes-mode-line '(accented)
+        modus-themes-mode-line '(accented borderless)
 
         ;; Options for `modus-themes-syntax': nil, 'faint,
         ;; 'yellow-comments, 'green-strings,
@@ -560,9 +560,9 @@ Since I spend a lot of time inside Emacs, I want to have a good-looking, easy-on
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line '(accented)
+        modus-themes-hl-line '(nil)
 
-        modus-themes-paren-match '(intense) ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-paren-match '(nil) ; {nil,'subtle-bold,'intense,'intense-bold}
 
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
@@ -630,6 +630,8 @@ This behemoth of a node contains all my configuration regarding org-mode.
           org-agenda-show-outline-path 'title
           org-refile-use-outline-path 'title))
 
+(elpaca-wait)
+
   (add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
 
   (setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
@@ -654,7 +656,7 @@ Settings for org-agenda.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-agenda-block-separator "\n"
-      org-agenda-start-with-log-mode t
+      org-agenda-start-with-log-mode nil
       org-agenda-use-time-grid t
       org-agenda-include-deadlines t
       org-agenda-current-time-string "<───now─────────────────────────>"
@@ -688,6 +690,7 @@ Settings for org-agenda.
                             (:newline)
                             ("hobbies" . ?x)
                             ("tech" . ?t)
+                            ("consumption" . ?o)
                             (:newline)
                             (:newline)
                             ("WAITING" . ?W)
@@ -1057,6 +1060,16 @@ Enables you to execute source blocks in buffer.
 (elpaca-wait)
 #+end_src
 
+**** ob-mermaid
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package ob-mermaid
+  :elpaca t
+  :config
+  (setq ob-mermaid-cli-path "/home/kchou/Repos/Programs/mermaid/node_modules/.bin/mmdc"
+        org-babel-default-header-args:mermaid '((:results . "file") (:exports . "results") (:pupeteer-config-file . "/home/kchou/Repos/Programs/mermaid/my-puppeteer-config.json"))))
+#+end_src
+
 **** Global
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -1071,6 +1084,7 @@ Enables you to execute source blocks in buffer.
    (prolog . t)
    (haskell . t)
    (racket . t)
+   (mermaid . t)
    ))
 ;; Show syntax highlighting per language native mode in *.org
 (setq org-src-fontify-natively t)
@@ -1299,20 +1313,27 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (org-roam-capture-templates
    '(
      ("d" "default" plain "%?"
-      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :inbox:\n#+date: %U\n\n")
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
       :empty-lines 1
       :unnarrowed nil)
      ("t" "time")
      ("tt" "timestamp" entry "* %<%H:%M>\n\n%?"
-      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :inbox:\n#+date: %U\n\n")
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
       :empty-lines 1)
      ("td" "date" entry "* %<%Y-%m-%d>\n\n%?"
-      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :inbox:\n#+date: %U\n\n")
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
       :empty-lines 1)
+     ("T" "TODO" plain "* TODO %?"
+      :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
+      :empty-lines 1
+      :unnarrowed nil)
      ("m" "Map of Content" plain "%?"
       :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :MOC:\n#+date: %U\n\n")
       :empty-lines 1
       :unnarrowed nil)
+     ("r" "reference" plain "%?"
+      :if-new (file+head "references/${slug}.org" "#+title: ${title}\n#+date: %U\n\n")
+      :unnarrowed t)
      ("P" "post" plain "%?"
       :if-new (file+head "articles/${title}.org" "#+title: ${title}\n#+date: %U\n#+hugo_base_dir: ~/Repos/My repos/Site\n#+hugo_section: ./posts\n#+hugo_auto_set_lastmod: t\n#+hugo_draft: true\n#+options: tex:verbatim\n\n")
       ;; :immediate-finish t
@@ -1432,7 +1453,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 (add-hook 'window-buffer-change-functions 'tim/org-roam-buffer-show)
 #+end_src
 
-***** COMMENT Include org-roam todos in org-agenda
+***** Include org-roam todos in org-agenda
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq who/org-agenda-directory "~/Textfiles/Org files/")
@@ -1480,19 +1501,18 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
     :elpaca t)
 #+end_src
 
-**** Org-Tidy
+**** COMMENT Org-Tidy
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-tidy
   :elpaca (:host github :repo "jxq0/org-tidy")
   :config
-  (add-hook 'org-mode-hook #'org-tidy-mode))
-
-(setq org-tidy-properties-style 'inline)
-(setq org-tidy-properties-inline-symbol "#")
-
-(global-set-key (kbd "C-c u t") #'org-tidy-buffer)
-(global-set-key (kbd "C-c u u") #'org-tidy-untidy-buffer)
+  (add-hook 'org-mode-hook #'org-tidy-mode)
+  (setq org-tidy-properties-style 'inline
+        org-tidy-top-property-style 'invisible
+        org-tidy-properties-inline-symbol "#")
+  (global-set-key (kbd "C-c u t") #'org-tidy-buffer)
+  (global-set-key (kbd "C-c u u") #'org-tidy-untidy-buffer))
 #+end_src
 
 **** Xeft
@@ -1524,7 +1544,7 @@ This section contains all settings relevant to the overhauled =org-latex-preview
       org-latex-preview-persist nil
       org-latex-preview-processing-indicator 'fringe
       org-latex-preview-numbered t
-      org-latex-preview-width 0.8
+      org-latex-preview-width 1.0
       org-latex-preview-use-precompilation t
       org-latex-preview-live-display-type 'buffer
       org-latex-preview-default-process 'dvisvgm
@@ -1558,7 +1578,7 @@ This section contains all settings relevant to the overhauled =org-latex-preview
 [PACKAGES]
 \\usepackage{xcolor}")
 
-(plist-put org-format-latex-options :zoom 1.2) ; Calibrated based on the TeX font and org-buffer font.
+(plist-put org-format-latex-options :zoom 1.0) ; Calibrated based on the TeX font and org-buffer font.
 
 (add-hook 'org-mode-hook #'org-latex-preview-auto-mode)
 #+end_src
@@ -1588,10 +1608,40 @@ This minor mode provides an easy preview of your org-exported HTML files using e
 #+begin_src emacs-lisp :tangle ./init.el
 ;; (setq org-clock-persist 'history)
 ;; (org-clock-persistence-insinuate)
-(setq org-clock-mode-line-total 'current)
+(setq org-clock-mode-line-total 'auto)
 (setq org-log-note-clock-out nil)
 
 ;; (add-to-list 'org-clocktable-defaults :compact t)
+#+end_src
+
+** Writing
+
+*** Olivetti
+
+Centers text in the buffer.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package olivetti
+  :elpaca t
+  :hook
+  (org-mode . olivetti-mode)
+  (markdown-mode . olivetti-mode)
+  (Info-mode . olivetti-mode)
+  (elpher-mode . olivetti-mode)
+  (eww-mode . olivetti-mode)
+  (TeX-mode . olivetti-mode)
+  (tex-mode . olivetti-mode)
+  (LaTeX-mode . olivetti-mode)
+  (latex-mode . olivetti-mode))
+
+(setq-default olivetti-body-width 130)
+#+end_src
+
+*** Unfill
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package unfill
+  :elpaca t)
 #+end_src
 
 ** Programming
@@ -1748,6 +1798,65 @@ Makes Emacs recognize different python virtual environments.
   :elpaca t)
 #+end_src
 
+**** Mermaid
+
+***** Mermaid-Mode
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package mermaid-mode
+  :elpaca t
+  :config
+  (setq mermaid-mmdc-location "/home/kchou/Repos/Programs/mermaid/node_modules/.bin/mmdc"))
+#+end_src
+
+**** JavaScript
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq js-indent-level 2
+      js2-strict-missing-semi-warning nil)
+#+end_src
+
+***** rjsx-mode
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package rjsx-mode
+  :elpaca t)
+(add-to-list 'auto-mode-alist '("\\/.*\\.js\\'" . rjsx-mode))
+(add-to-list 'auto-mode-alist '("\\/.*\\.jsx\\'" . rjsx-mode))
+#+end_src
+
+***** Eslint
+
+***** Flymake support 
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package flymake-eslint
+  :elpaca t
+  :custom
+  (flymake-eslint-executable-name "eslint")
+  (flymake-eslint-defer-binary-check t)
+  :config
+  (add-hook 'rjsx-mode-hook #'flymake-eslint-enable))
+#+end_src
+
+***** add node modules to path
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package add-node-modules-path
+  :elpaca t
+  :config
+  (setq add-node-modules-path-command '("echo \"$(npm root)/.bin\""))
+  (add-hook 'rjsx-mode-hook #'add-node-modules-path))
+#+end_src
+
+
+***** =*Compile*= support
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package compile-eslint
+  :elpaca (:type git :host github :repo "Fuco1/compile-eslint")
+  :config
+  (push 'eslint compilation-error-regexp-alist))
+#+end_src
+
 *** General
 
 Some general settings for all programming modes.
@@ -1830,7 +1939,7 @@ Allows you to have both variable and fixed pitch fonts depending on the context 
 (use-package mixed-pitch
   :elpaca t
   :hook
-  ;; If you want it in all text modes:
+  (Info-mode . mixed-pitch-mode)
   (text-mode . mixed-pitch-mode)
   (elpher-mode . mixed-pitch-mode))
 
@@ -1851,7 +1960,7 @@ This package enables font ligatures (if the font supports them).
   ;; Enable all programming ligatures in programming modes
   (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
                                        "<<" "??" ";;" "->" "<-" "-->" "<--" "=>" "!!" "-->" "<--"
-                                       "=<<" "=~" "/=" "++" "--"
+                                       "=<<" "=~" "/=" "++" "--" "===" "<>" "</>" "!==" "</"
                                        ))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
@@ -1934,8 +2043,8 @@ Resize windows with keybinds.
 *** Tab-bar
 
 #+begin_src emacs-lisp :tangle ./init.el
-(setq tab-bar-show 1)
-(setq tab-bar-auto-width-max '(300 20))
+(setq tab-bar-show 1
+      tab-bar-auto-width-max '(300 20))
 #+end_src
 
 ** File history
@@ -1980,14 +2089,13 @@ I use yasnippet to manage my snippets.
 *** Yasnippet
 
 #+begin_src emacs-lisp :tangle ./init.el
-  (use-package yasnippet
-      :elpaca t
-      :config
-      (setq yas-snippet-dirs '("~/.config/emacs/snippets")))
-
+(use-package yasnippet
+  :elpaca t
+  :config
+  (setq yas-snippet-dirs '("~/.config/emacs/snippets"))
   (add-hook 'org-mode-hook  'yas-minor-mode-on)
   (add-hook 'prog-mode-hook 'yas-minor-mode-on)
-  (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
+  (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on))
 #+end_src
 
 *** Yasnippet-Snippets
@@ -2249,6 +2357,14 @@ Used in conjunction with GhostText to edit text areas in my browser with Emacs.
   (setq atomic-chrome-default-major-mode 'org-mode))
 #+end_src
 
+*** Restclient
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package restclient
+  :elpaca t)
+(add-to-list 'auto-mode-alist '("\\/.*\\.rest\\'" . restclient-mode))
+#+end_src
+
 ** Keybinds
 
 *** Move-Text
@@ -2331,22 +2447,28 @@ Integration with the citar package.
 Even though I personally don't write much latex anymore ---since I write my documents in org-mode and if need be I export to latex---, the following configuration is used rarely. But nonetheless, it makes Emacs a powerful latex editor.
 
 #+begin_src emacs-lisp :tangle ./init.el
-  ;; (elpaca-use-package 'auctex)
+;; (elpaca-use-package 'auctex)
 
-  (load "auctex.el" nil t t)
+(load "auctex.el" nil t t)
 
-  (setq-default TeX-master nil)
-  (setq TeX-auto-save t)
-  (setq TeX-parse-self t)
-  ;; (setq TeX-command-extra-options "-shell-escape -interaction=nonstopmode")
-  (setq-default TeX-engine 'luatex)
-  ;; (setq-default TeX-PDF-mode t)
-  (setq TeX-source-correlate-mode t)
-  (setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
-  (setq TeX-view-program-selection '((output-pdf "Evince")))
-  (setq font-latex-fontify-script nil)
-  (add-hook 'LaTeX-mode-hook (lambda () (visual-line-mode t)))
-  (add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
+(setq-default TeX-master nil)
+(setq TeX-auto-save t)
+(setq TeX-parse-self t)
+;; (setq TeX-command-extra-options "-shell-escape -interaction=nonstopmode")
+(setq-default TeX-engine 'luatex)
+;; (setq-default TeX-PDF-mode t)
+(setq TeX-source-correlate-mode t)
+;; (setq TeX-view-program-list '(("Evince" "evince --page-index=%(outpage) %o")))
+;; (setq TeX-view-program-selection '((output-pdf "Evince")))
+;; Use pdf-tools to open PDF files
+(setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+      TeX-source-correlate-start-server t)
+;; Update PDF buffers after successful LaTeX runs
+(add-hook 'TeX-after-compilation-finished-functions
+          #'TeX-revert-document-buffer)
+(setq font-latex-fontify-script nil)
+(add-hook 'LaTeX-mode-hook (lambda () (visual-line-mode t)))
+(add-hook 'LaTeX-mode-hook 'prettify-symbols-mode)
 #+end_src
 
 *** AucTeX-LaTeXmk
@@ -2390,7 +2512,7 @@ Speeds up typing latex. Also works in org-mode.
 
 Since I write a lot of prose, spell checking is a must for any text editor.
 
-*** Flyspell
+*** COMMENT Flyspell
 
 Combines both Greek and English dictionaries.
 
@@ -2404,6 +2526,18 @@ Combines both Greek and English dictionaries.
 
 (add-hook 'org-mode-hook (lambda () (flyspell-mode 1)))
 ;; (add-hook 'prog-mode-hook (lambda () (flyspell-prog-mode 1)))
+#+end_src
+
+*** Jinx
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package jinx
+  :elpaca t
+  :hook (emacs-startup . global-jinx-mode)
+  :bind (("M-$" . jinx-correct)
+         ("C-M-$" . jinx-languages))
+  :config
+  (setq jinx-languages "en_US el_GR"))
 #+end_src
 
 ** Dictionary
@@ -2423,36 +2557,6 @@ Combines both Greek and English dictionaries.
    '("^\\*Dictionary\\*" display-buffer-in-side-window
      (side . right)
      (window-width . 0.45)))
-#+end_src
-
-** Writing
-
-*** Olivetti
-
-Centers text in the buffer.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(setq-default olivetti-body-width 130)
-(setq-default olivetti-margin-width 0)
-(use-package olivetti
-  :elpaca t
-  :hook
-  (org-mode . olivetti-mode)
-  (markdown-mode . olivetti-mode)
-  (Info-mode . olivetti-mode)
-  (elpher-mode . olivetti-mode)
-  (eww-mode . olivetti-mode)
-  (TeX-mode . olivetti-mode)
-  (tex-mode . olivetti-mode)
-  (LaTeX-mode . olivetti-mode)
-  (latex-mode . olivetti-mode))
-#+end_src
-
-*** Unfill
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package unfill
-  :elpaca t)
 #+end_src
 
 ** Bibliography management
@@ -2601,7 +2705,7 @@ Allows you to hide dotfiles in dired by default and toggle them.
 (define-key dired-mode-map "\C-c\C-v" 'dired-copy-paste-do-paste)
 #+end_src
 
-*** Dired-Delight
+*** COMMENT Dired-Delight
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package dired-delight
@@ -2672,7 +2776,17 @@ Colors the same color matching delimeters.
   :hook (prog-mode . rainbow-delimiters-mode))
 #+end_src
 
-*** Beacon-Mode
+*** COMMENT Minions
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package minions
+  :elpaca t
+  :config
+  (setq minions-mode-line-lighter ";")
+  (minions-mode))
+#+end_src
+
+*** COMMENT Beacon-Mode
 
 When switching to a new window or buffer, the line that the cursor is located flashes, making it easier to locate.
 
@@ -2685,21 +2799,33 @@ When switching to a new window or buffer, the line that the cursor is located fl
       ("C-<f12>" . beacon-blink))
 #+end_src
 
-*** COMMENT Telephone Line
+*** Telephone Line
 
 #+begin_src emacs-lisp :tangle ./init.el
-  (use-package telephone-line
-    :elpaca t
-    :config
+(use-package telephone-line
+  :elpaca t
+  :after (pdf-view)
+  :config
   (require 'telephone-line-utils)
 
+  (telephone-line-defsegment telephone-line-pdf-segment ()
+    (if (eq major-mode 'pdf-view-mode)
+        (propertize (pdf-view-page-number)
+                    'face '(:inherit)
+                    'display '(raise 0.0)
+                    'mouse-face '(:box 1)
+                    'local-map (make-mode-line-mouse-map
+                                'mouse-1 (lambda ()
+                                           (interactive)
+                                           (pdf-view-goto-page))))))
+
   (setq telephone-line-lhs '((modal telephone-line-project-segment)
-                             (accent telephone-line-vc-segment telephone-line-erc-modified-channels-segment telephone-line-process-segment)
-                             (nil telephone-line-buffer-segment)))
+                             (accent telephone-line-vc-segment telephone-line-erc-modified-channels-segment)
+                             (nil telephone-line-buffer-segment telephone-line-process-segment)))
 
   (setq telephone-line-rhs '((nil telephone-line-flymake-segment telephone-line-misc-info-segment)
                              (accent telephone-line-major-mode-segment)
-                             (evil telephone-line-airline-position-segment)))
+                             (nil telephone-line-pdf-segment telephone-line-airline-position-segment)))
 
   (telephone-line-mode 1))
 #+end_src
@@ -2735,12 +2861,12 @@ An RSS reader.
 
     (global-set-key (kbd "C-x w") 'elfeed)
 
-    (defun browse-url-mpv (url &optional new-window)
-      (start-process "mpv" "*mpv*" "mpv" url))
+    ;; (defun browse-url-mpv (url &optional new-window)
+    ;;   (start-process "mpv" "*mpv*" "mpv" url))
 
-  (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
+    ;; (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
+  
   (define-key elfeed-search-mode-map (kbd "w") 'elfeed-eww-open))
-
 #+end_src
 
 ***** eww integration
@@ -2758,6 +2884,53 @@ A function to open the link at point in EWW.
              do (eww-browse-url it))
     (mapc #'elfeed-search-update-entry entries)
     (unless (use-region-p) (forward-line))))
+#+end_src
+
+***** Elfeed-Tube
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package mpv :elpaca t)
+#+end_src
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package elfeed-tube
+  :elpaca t ;; or :straight t
+  :after elfeed
+  :config
+  ;; (setq elfeed-tube-auto-save-p nil) ; default value
+  ;; (setq elfeed-tube-auto-fetch-p t)  ; default value
+  (elfeed-tube-setup)
+
+  :bind (:map elfeed-show-mode-map
+         ("F" . elfeed-tube-fetch)
+         ([remap save-buffer] . elfeed-tube-save)
+         :map elfeed-search-mode-map
+         ("F" . elfeed-tube-fetch)
+         ([remap save-buffer] . elfeed-tube-save)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package elfeed-tube-mpv
+  :elpaca t ;; or :straight t
+  :bind (:map elfeed-show-mode-map
+              ("C-c C-f" . elfeed-tube-mpv-follow-mode)
+              ("C-c C-w" . elfeed-tube-mpv-where)))
+#+end_src
+
+#+begin_src emacs-lisp :tangle ./init.el
+;; (add-hook 'elfeed-show-mode-hook 'olivetti-mode)
+#+end_src
+
+***** Elfeed-Webkit
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package elfeed-webkit
+  :elpaca (:host github :repo "fritzgrabo/elfeed-webkit")
+  :after elfeed
+  :init
+  ;; (setq elfeed-webkit-auto-disable-tags '(youtube))
+  :bind (:map elfeed-show-mode-map
+              ("%" . elfeed-webkit-toggle)))
 #+end_src
 
 *** Epub
@@ -2837,6 +3010,8 @@ Utilities to manage my PTA (Plain Text Accounting) files.
    (use-package beancount-mode
      :elpaca (:host github :repo "beancount/beancount-mode"))
 
+   (add-hook 'beancount-mode-hook #'(lambda () jinx-mode -1))
+
    ;; ;; Automatically open .beancount files in beancount-mode.
    ;; (add-to-list 'auto-mode-alist '("\\.beancount$" . beancount-mode))
 
@@ -2886,7 +3061,7 @@ Trying it out for now.
 (setq notmuch-hello-sections '(notmuch-hello-insert-header
                                notmuch-hello-insert-saved-searches
                                notmuch-hello-insert-search
-                               ;; notmuch-hello-insert-recent-searches
+                               notmuch-hello-insert-recent-searches
                                notmuch-hello-insert-alltags
                                notmuch-hello-insert-footer
                                ))
@@ -2962,7 +3137,8 @@ Trying it out for now.
 
 (setq erc-fill-column 120
       erc-fill-function 'erc-fill-static
-      erc-fill-static-center 20)
+      erc-fill-static-center 20
+      erc-track-position-in-mode-line t)
 
 (setq erc-track-exclude-types '("JOIN" "NICK" "QUIT" "MODE" "AWAY" "333" "353")
       erc-hide-list '("JOIN" "NICK" "QUIT" "MODE" "AWAY")
@@ -3043,6 +3219,21 @@ Trying it out for now.
   (add-hook 'pdf-tools-enabled-hook #'my-pdf-tools-midnight-mode-toggle)
   (add-hook 'modus-themes-after-load-theme-hook #'my-pdf-tools-midnight-mode-toggle)
 
+  (define-pdf-cache-function pagelabels)
+  (defun pdf-view-page-number ()
+    ;; (interactive)
+    ;; (if (called-interactively-p)
+    ;; (message "P%s/%s"
+    ;;          ;; (nth (1- (pdf-view-current-page))
+    ;;          ;;      (pdf-cache-pagelabels))
+    ;;          (number-to-string (pdf-view-current-page))
+    ;;          (number-to-string (pdf-cache-number-of-pages)))
+      (format  "%s of %s"
+             ;; (nth (1- (pdf-view-current-page))
+             ;;      (pdf-cache-pagelabels))
+             (number-to-string (pdf-view-current-page))
+             (number-to-string (pdf-cache-number-of-pages))))
+
   :init
   (pdf-tools-install))
 #+end_src
@@ -3056,9 +3247,17 @@ Trying it out for now.
   (save-place-mode 1))
 #+end_src
 
+*** Org-PDFTools
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-pdftools
+  :elpaca t
+  :hook (org-mode . org-pdftools-setup-link))
+#+end_src
+
 ** Timers
 
-*** COMMENT Pomm
+*** Pomm
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package pomm
@@ -3067,12 +3266,12 @@ Trying it out for now.
   (setq alert-default-style 'libnotify
         pomm-audio-enabled t
         pomm-audio-tick-enabled nil
-        pomm-audio-files '((work . "~/.config/emacs/clock.wav")
-                           (tick . "~/.config/emacs/clock.wav")
-                           (short-break . "~/.config/emacs/clock.wav")
-                           (break . "~/.config/emacs/clock.wav")
-                           (long-break . "~/.config/emacs/clock.wav")
-                           (stop . "~/.config/emacs/clock.wav")))
+        pomm-audio-files '((work . "/home/kchou/.config/emacs/clock.wav")
+                           (tick . "/home/kchou/.config/emacs/clock.wav")
+                           (short-break . "/home/kchou/.config/emacs/clock.wav")
+                           (break . "/home/kchou/.config/emacs/clock.wav")
+                           (long-break . "/home/kchou/.config/emacs/clock.wav")
+                           (stop . "/home/kchou/.config/emacs/clock.wav")))
   (pomm-mode-line-mode))
 #+end_src
 
