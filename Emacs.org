@@ -324,6 +324,12 @@ This are just little tweaks to make the Emacs experience more pleasurable.
 (setq bookmark-save-flag 1)
   #+end_src
 
+- Automatically replace selected text upon typing
+
+  #+begin_src emacs-lisp :tangle ./init.el
+(delete-selection-mode 1)
+  #+end_src
+
 * Fonts
 
 I dislike Emacs' default fonts. Since I run Emacs in a daemon/client setup, the following function is needed to correctly apply the custom fonts to every new frame.
@@ -409,7 +415,7 @@ The default behavior of Emacs is to open the buffer list and "kill" the current 
 This way, you can just simply type ~C-x C-k~, that calls the function =my-kill-this-buffer= ([[my kill]]).
 
 #+begin_src emacs-lisp :tangle ./init.el
-(global-set-key (kbd "C-x C-k") #'my-kill-this-buffer)
+(global-set-key (kbd "C-x C-k") #'kill-this-buffer)
 #+end_src
 
 ** WoMan
@@ -431,39 +437,6 @@ Open =woMan (without man)=, an emacs native program to read man pages.
 This section consists of various packages, built-in or external, that add many extra features.
 
 ** Package management
-
-*** COMMENT straight.el
-
-I use =straight.el= over the default package manager =package.el= simply because the former allows me to install packages from git repos that are not available on the MELPA repos the same way with the ones that are.
-
-We only need to bootstrap =straight.el= and then we can use the =use-package= macro the same way as before.
-
-This line is needed for =straight.el= to install in Emacs 29 (see [[https://github.com/radian-software/straight.el/issues/1076][here]]).
-
-#+begin_src emacs-lisp :tangle ./init.el
-(setq native-comp-deferred-compilation-deny-list nil)
-#+end_src
-
-#+begin_src emacs-lisp :tangle ./init.el
-(defvar bootstrap-version)
-(let ((bootstrap-file
-       (expand-file-name "straight/repos/straight.el/bootstrap.el" user-emacs-directory))
-      (bootstrap-version 5))
-  (unless (file-exists-p bootstrap-file)
-    (with-current-buffer
-        (url-retrieve-synchronously
-         "https://raw.githubusercontent.com/raxod502/straight.el/develop/install.el"
-         'silent 'inhibit-cookies)
-      (goto-char (point-max))
-      (eval-print-last-sexp)))
-  (load bootstrap-file nil 'nomessage))
-
-;; Use straight.el for use-package expressions
-(straight-use-package 'use-package)
-
-;; Disable package.el in favor of straight.el
-(setq package-enable-at-startup nil)
-#+end_src
 
 *** elpaca
 
@@ -536,8 +509,8 @@ Since I spend a lot of time inside Emacs, I want to have a good-looking, easy-on
   :elpaca nil
   :init
   ;; Add all your customizations prior to loading the themes
-  (setq modus-themes-italic-constructs nil
-        modus-themes-bold-constructs nil
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers t
         modus-themes-deuteranopia nil
@@ -554,43 +527,43 @@ Since I spend a lot of time inside Emacs, I want to have a good-looking, easy-on
         ;; 'yellow-comments, 'green-strings,
         ;; 'yellow-comments-green-strings, 'alt-syntax,
         ;; 'alt-syntax-yellow-comments, 'faint-yellow-comments
-        modus-themes-syntax '(faint)
+        modus-themes-syntax '(nil)
 
         ;; Options for `modus-themes-hl-line': nil, 'intense-background,
         ;; 'accented-background, 'underline-neutral,
         ;; 'underline-accented, 'underline-only-neutral,
         ;; 'underline-only-accented
-        modus-themes-hl-line '(nil)
+        modus-themes-hl-line '(accented intense)
 
-        modus-themes-paren-match '(nil) ; {nil,'subtle-bold,'intense,'intense-bold}
+        modus-themes-paren-match '(intense) ; {nil,'subtle-bold,'intense,'intense-bold}
 
         ;; Options for `modus-themes-links': nil, 'faint,
         ;; 'neutral-underline, 'faint-neutral-underline, 'no-underline,
         ;; 'underline-only, 'neutral-underline-only
-        modus-themes-links '(faint neutral-underline)
+        modus-themes-links '(nil)
 
         ;; Options for `modus-themes-prompts' are either nil (the
         ;; default), or a list of properties that may include any of those
         ;; symbols: `background', `bold', `gray', `intense'
-        modus-themes-prompts nil
+        modus-themes-prompts '(intense)
 
-        modus-themes-completions '(opinionated) ; {nil,'moderate,'opinionated}
+        modus-themes-completions '(intense) ; {nil,'moderate,'opinionated}
 
         ;; Options for `modus-themes-region': nil, 'no-extend, 'bg-only,
-        ;; 'bg-only-no-extend, 'accent, 'accent-no-extend
-        modus-themes-region nil
+        ;; 'bg-only-no-extend, 'accented, 'accent-no-extend
+        modus-themes-region '(accented)
 
         ;; Options for `modus-themes-diffs': nil, 'desaturated,
         ;; 'bg-only, 'deuteranopia, 'fg-only-deuteranopia
-        modus-themes-diffs '(desaturated)
+        modus-themes-diffs '(nil)
 
         org-highlight-latex-and-related '(nil)
 
-        modus-themes-lang-checkers '(text-also)
+        modus-themes-lang-checkers '(intense)
 
         modus-themes-org-blocks nil; {nil,'gray-background,'tinted-background}
 
-        modus-themes-markup '(background)
+        modus-themes-markup '(intense)
         )
   ;; Load the theme files before enabling a theme
   (modus-themes-load-themes)
@@ -607,47 +580,47 @@ This behemoth of a node contains all my configuration regarding org-mode.
 *** Org
 
 #+begin_src emacs-lisp :tangle ./init.el
-  (use-package org
-    :elpaca (:type git :repo "https://git.tecosaur.net/tec/org-mode.git" :branch "dev")
-    :commands (org-capture org-agenda)
-    :config
-    (setq org-hide-emphasis-markers t
-          org-ellipsis "…"
-          org-startup-indented t
-          org-pretty-entities nil
-          org-footnote-auto-adjust t
-          org-support-shift-select t
-          org-fontify-whole-heading-line t
-          org-fontify-done-headline t
-          org-startup-with-inline-images t
-          org-fontify-quote-and-verse-blocks t
-          org-deadline-warning-days 30
-          org-log-done 'time
-          org-log-into-drawer t
-          org-auto-align-tags nil
-          org-tags-column 0
-          org-return-follows-link t
-          org-agenda-show-outline-path 'title
-          org-refile-use-outline-path 'title))
+(use-package org
+  :elpaca (:repo "/home/kchou/.config/emacs/elpaca/repos/org/" :pin t)
+  :commands (org-capture org-agenda)
+  :config
+  (setq org-hide-emphasis-markers t
+        org-ellipsis "…"
+        org-startup-indented t
+        org-pretty-entities nil
+        org-footnote-auto-adjust t
+        org-support-shift-select t
+        org-fontify-whole-heading-line t
+        org-fontify-done-headline t
+        org-startup-with-inline-images t
+        org-fontify-quote-and-verse-blocks t
+        org-deadline-warning-days 30
+        org-log-done 'time
+        org-log-into-drawer t
+        org-auto-align-tags nil
+        org-tags-column 0
+        org-return-follows-link t
+        org-agenda-show-outline-path 'title
+        org-refile-use-outline-path 'title))
 
 (elpaca-wait)
 
-  (add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
+(add-hook 'org-mode-hook (lambda () (visual-line-mode t)))
 
-  (setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
-                               (vm-imap . vm-visit-imap-folder-other-frame)
-                               (gnus . org-gnus-no-new-news)
-                               (file . find-file)
-                               (wl . wl-other-frame)))
+(setq org-link-frame-setup '((vm . vm-visit-folder-other-frame)
+                             (vm-imap . vm-visit-imap-folder-other-frame)
+                             (gnus . org-gnus-no-new-news)
+                             (file . find-file)
+                             (wl . wl-other-frame)))
 
-  (with-eval-after-load 'org
-    (add-to-list 'org-modules 'org-habit t))
+(with-eval-after-load 'org
+  (add-to-list 'org-modules 'org-habit t))
 
-  (setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
+(setq org-cite-global-bibliography '("/home/kchou/Textfiles/biblio.bib"))
 
-  (setq org-image-actual-width (list 700))
+(setq org-image-actual-width (list 700))
 
-  (setq org-link-file-path-type 'relative)
+(setq org-link-file-path-type 'relative)
 #+end_src
 
 *** Org-Agenda
@@ -716,6 +689,12 @@ Settings for org-agenda.
 (set-register ?h (cons 'file (concat org-directory "/Habits.org")))
 (set-register ?t (cons 'file (concat org-directory "/Tasks.org")))
 (set-register ?E (cons 'file (concat org-directory "/Events.org")))
+#+end_src
+
+*** Speed commands
+
+#+begin_src emacs-lisp :tangle ./init.el
+(setq org-use-speed-commands t)
 #+end_src
 
 *** Org-Export
@@ -885,18 +864,6 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
             (org-hugo-export-wim-to-md :all-subtrees)
             (setq cnt (1+ cnt))))
         (message "Done!")))))
-#+end_src
-
-**** COMMENT Engrave-Faces
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package engrave-faces
-  :elpaca t
-  :config
-  (setq org-latex-src-block-backend 'engraved
-        org-latex-engraved-theme 'modus-operandi)
-  ;; (add-to-list 'org-latex-engraved-options '("frame" "false"))
-  (add-to-list 'org-latex-engraved-options '("linenos" "true")))
 #+end_src
 
 *** Org Bookmarks
@@ -1253,6 +1220,7 @@ Prettifies org tables.
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-pretty-table
+  :after org-modern
   :elpaca (:host github :repo "Fuco1/org-pretty-table")
   :hook (org-mode . org-pretty-table-mode))
 #+end_src
@@ -1315,6 +1283,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
      ("d" "default" plain "%?"
       :if-new (file+head "pages/${slug}.org" "#+title: ${title}\n#+filetags: :draft:inbox:\n#+date: %U\n\n")
       :empty-lines 1
+      :prepend nil
       :unnarrowed nil)
      ("t" "time")
      ("tt" "timestamp" entry "* %<%H:%M>\n\n%?"
@@ -1418,7 +1387,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
                           (main)))))
 #+end_src
 
-***** Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
+***** COMMENT Splits the frame vertically and gives specific amount of space to the 'org-roam-buffer'
 
 #+begin_src emacs-lisp :tangle ./init.el
 (add-to-list 'display-buffer-alist
@@ -1501,13 +1470,13 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
     :elpaca t)
 #+end_src
 
-**** COMMENT Org-Tidy
+**** Org-Tidy
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-tidy
   :elpaca (:host github :repo "jxq0/org-tidy")
   :config
-  (add-hook 'org-mode-hook #'org-tidy-mode)
+  ;; (add-hook 'org-mode-hook #'org-tidy-mode)
   (setq org-tidy-properties-style 'inline
         org-tidy-top-property-style 'invisible
         org-tidy-properties-inline-symbol "#")
@@ -1528,8 +1497,6 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (xeft-directory "/home/kchou/Textfiles/Braindump")
   (xeft-database "/home/kchou/Textfiles/Xeft-database")
   (xeft-recursive t))
-
-(add-hook 'xeft-mode-hook #'olivetti-mode)
 #+end_src
 
 *** Org-Latex-Preview
@@ -1537,6 +1504,34 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
 This section contains all settings relevant to the overhauled =org-latex-preview=, written by [[https://github.com/tecosaur][TEC]]. It is supposed to become integrated to Org in version =9.7=, but until then I use his [[https://git.tecosaur.net/tec/org-mode][Org-Mode fork]].
 
 #+begin_src emacs-lisp :tangle ./init.el
+(setq-default org-latex-preview-process-alist
+      '((dvipng :programs
+                ("latex" "dvipng")
+                :description "dvi > png" :message "you need to install the programs: latex and dvipng." :image-input-type "dvi" :image-output-type "png" :latex-compiler
+                ("%l -interaction nonstopmode -output-directory %o %f")
+                :latex-precompiler
+                ("%l -output-directory %o -ini -jobname=%b \"&%L\" mylatexformat.ltx %f")
+                :image-converter
+                ("dvipng --follow -D %D -T tight --depth --height -o %B-%%09d.png %f")
+                :transparent-image-converter
+                ("dvipng --follow -D %D -T tight -bg Transparent --depth --height -o %B-%%09d.png %f"))
+        (dvisvgm :programs
+                 ("latex" "dvisvgm")
+                 :description "dvi > svg" :message "you need to install the programs: latex and dvisvgm." :image-input-type "dvi" :image-output-type "svg" :latex-compiler
+                 ("%l -interaction nonstopmode -output-directory %o %f")
+                 :latex-precompiler
+                 ("%l -output-directory %o -ini -jobname=%b \"&%L\" mylatexformat.ltx %f")
+                 :image-converter
+                 ("dvisvgm --page=1- --optimize --clipjoin --relative --no-fonts --bbox=preview -o %B-%%9p.svg %f"))
+        (imagemagick :programs
+                     ("pdflatex" "convert")
+                     :description "pdf > png" :message "you need to install the programs: latex and imagemagick." :image-input-type "pdf" :image-output-type "png" :latex-compiler
+                     ("pdflatex -interaction nonstopmode -output-directory %o %f")
+                     :latex-precompiler
+                     ("pdftex -output-directory %o -ini -jobname=%b \"&pdflatex\" mylatexformat.ltx %f")
+                     :image-converter
+                     ("convert -density %D -trim -antialias %f -quality 100 %B-%%09d.png"))))
+
 (setq org-latex-compiler "pdflatex"
       org-latex-preview-auto-generate 'live
       org-latex-preview-debounce 0.3
@@ -1545,40 +1540,31 @@ This section contains all settings relevant to the overhauled =org-latex-preview
       org-latex-preview-processing-indicator 'fringe
       org-latex-preview-numbered t
       org-latex-preview-width 1.0
-      org-latex-preview-use-precompilation t
       org-latex-preview-live-display-type 'buffer
       org-latex-preview-default-process 'dvisvgm
       org-startup-with-latex-preview t)
 
 (setq org-latex-default-packages-alist
-  '(("AUTO" "inputenc"  t ("pdflatex"))
-    ("T1"   "fontenc"   t ("pdflatex"))
-    (""     "graphicx"  t)
-    (""     "longtable" nil)
-    (""     "wrapfig"   nil)
-    (""     "rotating"  nil)
-    ("normalem" "ulem"  t)
-    (""     "amsmath"   t)
-    (""     "amssymb"   t)
-    (""     "amsfonts"  t)
-    (""     "capt-of"   nil)
-    (""     "hyperref"  nil)))
+      '(("AUTO" "inputenc"  t ("pdflatex"))
+        ("T1"   "fontenc"   t ("pdflatex"))
+        (""     "graphicx"  t)
+        (""     "longtable" nil)
+        (""     "wrapfig"   nil)
+        (""     "rotating"  nil)
+        ("normalem" "ulem"  t)
+        (""     "amsmath"   t)
+        (""     "amssymb"   t)
+        (""     "amsfonts"  t)
+        (""     "capt-of"   nil)
+        (""     "hyperref"  nil)))
 
 (setq org-latex-preview-preamble
       "\\documentclass{article}
-% \\usepackage{amsmath, amsfonts, amssymb}  
-% \\usepackage{newcomputermodern}  
-% \\usepackage{polyglossia}  
-% \\setmainlanguage{greek}   
-% \\setotherlanguage{english}
-% \\setmainfont{Iosevka Aile}
-% \\usepackage{unicode-math}
-% \\setmathfont{Fira Math}
 [DEFAULT-PACKAGES]
 [PACKAGES]
 \\usepackage{xcolor}")
 
-(plist-put org-format-latex-options :zoom 1.0) ; Calibrated based on the TeX font and org-buffer font.
+(plist-put org-format-latex-options :zoom 1.2) ; Calibrated based on the TeX font and org-buffer font.
 
 (add-hook 'org-mode-hook #'org-latex-preview-auto-mode)
 #+end_src
@@ -1614,6 +1600,13 @@ This minor mode provides an easy preview of your org-exported HTML files using e
 ;; (add-to-list 'org-clocktable-defaults :compact t)
 #+end_src
 
+*** Org-Ql
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-ql
+  :elpaca t)
+#+end_src
+
 ** Writing
 
 *** Olivetti
@@ -1623,7 +1616,10 @@ Centers text in the buffer.
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package olivetti
   :elpaca t
+  :config
+  (setq-default olivetti-body-width 130)
   :hook
+  (xeft-mode . olivetti-mode)
   (org-mode . olivetti-mode)
   (markdown-mode . olivetti-mode)
   (Info-mode . olivetti-mode)
@@ -1633,8 +1629,6 @@ Centers text in the buffer.
   (tex-mode . olivetti-mode)
   (LaTeX-mode . olivetti-mode)
   (latex-mode . olivetti-mode))
-
-(setq-default olivetti-body-width 130)
 #+end_src
 
 *** Unfill
@@ -1642,6 +1636,25 @@ Centers text in the buffer.
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package unfill
   :elpaca t)
+#+end_src
+
+*** Lorem
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package lorem-ipsum
+  :elpaca t)
+#+end_src
+
+*** outli
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package outli
+  :elpaca (:host github :repo "jdtsmith/outli")
+  :bind (:map outli-mode-map ; convenience key to get back to containing heading
+	      ("C-c C-p" . (lambda () (interactive) (outline-back-to-heading))))
+  :config
+  (setq outli-default-nobar t)
+  :hook ((prog-mode text-mode) . outli-mode)) ; or whichever modes you prefer
 #+end_src
 
 ** Programming
@@ -1894,6 +1907,15 @@ Shows indentation guides.
 (add-hook 'prog-mode-hook #'indent-guide-mode)
 #+end_src
 
+*** COMMENT Indent-Bars
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package indent-bars
+  :elpaca (:host github :repo "jdtsmith/indent-bars")
+  :hook
+  (server-after-make-frame-hook . (lambda () (add-hook 'prog-mode-hook  'indent-bars-mode))))
+#+end_src
+
 *** Tree-Sitter
 
 Used for syntax highlighting.
@@ -2045,6 +2067,18 @@ Resize windows with keybinds.
 #+begin_src emacs-lisp :tangle ./init.el
 (setq tab-bar-show 1
       tab-bar-auto-width-max '(300 20))
+#+end_src
+
+*** Golden Ratio
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package golden-ratio
+  :elpaca (:host github :repo "roman/golden-ratio.el")
+  :config
+  (define-advice select-window (:after (window &optional no-record) golden-ratio-resize-window)
+    (golden-ratio)
+    nil)
+  (golden-ratio-mode 1))
 #+end_src
 
 ** File history
@@ -2366,6 +2400,44 @@ Used in conjunction with GhostText to edit text areas in my browser with Emacs.
 #+end_src
 
 ** Keybinds
+
+*** COMMENT Devil
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package devil
+  :elpaca t
+  :config
+  (devil-set-key (kbd ";"))
+  (global-devil-mode))
+#+end_src
+
+*** COMMENT God-Mode
+
+#+begin_src emacs-lisp :tangle ./init.el
+  (use-package god-mode
+    :elpaca t
+    :config
+    (global-set-key (kbd "<escape>") #'god-local-mode)
+    (setq god-mode-enable-function-key-translation nil)
+    (define-key god-local-mode-map (kbd "i") 'god-local-mode)
+    ;; (setq god-exempt-major-modes nil)
+    ;; (setq god-exempt-predicates nil)
+    (defun my-god-mode-update-cursor-type ()
+      (setq cursor-type (if (or god-local-mode buffer-read-only) 'box 'bar)))
+    (add-hook 'post-command-hook #'my-god-mode-update-cursor-type)
+    (require 'god-mode-isearch)
+    (define-key isearch-mode-map (kbd "<escape>") #'god-mode-isearch-activate)
+    (define-key god-mode-isearch-map (kbd "<escape>") #'god-mode-isearch-disable)
+    (define-key god-local-mode-map (kbd ".") #'repeat)
+    (global-set-key (kbd "C-x C-1") #'delete-other-windows)
+    (global-set-key (kbd "C-x C-2") #'split-window-below)
+    (global-set-key (kbd "C-x C-3") #'split-window-right)
+    (global-set-key (kbd "C-x C-0") #'delete-window)
+
+    (define-key god-local-mode-map (kbd "[") #'backward-paragraph)
+    (define-key god-local-mode-map (kbd "]") #'forward-paragraph)
+    (god-mode))
+#+end_src
 
 *** Move-Text
 
@@ -2716,6 +2788,15 @@ Allows you to hide dotfiles in dired by default and toggle them.
          ("*c" . dired-delight-mark-color)))
 #+end_src
 
+*** All the Icons
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package all-the-icons-dired
+  :elpaca t
+  :config
+  (add-hook 'dired-mode-hook 'all-the-icons-dired-mode))
+#+end_src
+
 ** Aesthetic enhancements
 
 This part consists of packages that make Emacs prettier.
@@ -2729,7 +2810,7 @@ Provides a start-up welcome screen for Emacs.
   :elpaca t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner "/home/kchou/.config/emacs/logos/gnu-emacs.svg")
+  (setq dashboard-startup-banner 'official)
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
@@ -2819,13 +2900,20 @@ When switching to a new window or buffer, the line that the cursor is located fl
                                            (interactive)
                                            (pdf-view-goto-page))))))
 
-  (setq telephone-line-lhs '((modal telephone-line-project-segment)
+  (setq telephone-line-evil-use-short-tag t)
+  (telephone-line-defsegment* telephone-line-god-mode-tag-segment ()
+    (if god-local-mode
+        "N"
+      "I"))
+  (setq telephone-line-lhs '((nil telephone-line-project-segment)
                              (accent telephone-line-vc-segment telephone-line-erc-modified-channels-segment)
                              (nil telephone-line-buffer-segment telephone-line-process-segment)))
 
   (setq telephone-line-rhs '((nil telephone-line-flymake-segment telephone-line-misc-info-segment)
                              (accent telephone-line-major-mode-segment)
-                             (nil telephone-line-pdf-segment telephone-line-airline-position-segment)))
+                             (nil telephone-line-pdf-segment telephone-line-airline-position-segment)
+                             ;; (accent telephone-line-god-mode-tag-segment)
+                             ))
 
   (telephone-line-mode 1))
 #+end_src
@@ -2852,21 +2940,27 @@ Allows to specify your RSS feeds with an org-file, instead of appending links to
 An RSS reader.
 
 #+begin_src emacs-lisp :tangle ./init.el
-    (use-package elfeed
-      :elpaca t
-      :config
-      
-    (setq-default elfeed-search-filter '"+unread")
-    (setq-default elfeed-db-directory '"~/.config/elfeed")
-
-    (global-set-key (kbd "C-x w") 'elfeed)
-
-    ;; (defun browse-url-mpv (url &optional new-window)
-    ;;   (start-process "mpv" "*mpv*" "mpv" url))
-
-    ;; (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
+(use-package elfeed
+  :elpaca t
+  :config
   
-  (define-key elfeed-search-mode-map (kbd "w") 'elfeed-eww-open))
+  (setq-default elfeed-search-filter '"+unread")
+  (setq-default elfeed-db-directory '"~/.config/elfeed")
+
+  (global-set-key (kbd "C-x w") 'elfeed)
+
+  ;; (defun browse-url-mpv (url &optional new-window)
+  ;;   (start-process "mpv" "*mpv*" "mpv" url))
+
+  ;; (setq browse-url-handlers '(("https:\\/\\/www\\.youtube." . browse-url-mpv) ("." . browse-url-firefox)))
+  
+  (define-key elfeed-search-mode-map (kbd "w") 'elfeed-eww-open)
+  (defun elfeed-olivetti (buff)
+    (switch-to-buffer buff)
+    (olivetti-mode)
+    (elfeed-show-refresh))
+  
+  (setq elfeed-show-entry-switch 'elfeed-olivetti))
 #+end_src
 
 ***** eww integration
@@ -2913,6 +3007,7 @@ A function to open the link at point in EWW.
 (use-package elfeed-tube-mpv
   :elpaca t ;; or :straight t
   :bind (:map elfeed-show-mode-map
+              ("B" . elfeed-tube-mpv)
               ("C-c C-f" . elfeed-tube-mpv-follow-mode)
               ("C-c C-w" . elfeed-tube-mpv-where)))
 #+end_src
@@ -2945,7 +3040,7 @@ A package to read =.epub= documents inside Emacs.
 
 (add-to-list 'auto-mode-alist '("\\.epub\\'" . nov-mode))
 (setq nov-text-width t)
-(add-hook 'nov-mode-hook 'olivetti-mode)
+;; (add-hook 'nov-mode-hook 'olivetti-mode)
 #+end_src
 
 ** Spaced Repetition Systems
@@ -3184,13 +3279,30 @@ Trying it out for now.
   :elpaca t)
 #+end_src
 
-** Chat-GPT
+** AI
+
+*** ChatGPT
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package gptel
   :elpaca t
   :config
-  (setq gptel-default-mode 'org-mode))
+  (setq gptel-default-mode 'org-mode)
+  (add-hook 'gptel-mode-hook #'olivetti-mode))
+#+end_src
+
+*** Whisper
+
+For =whisper.cpp= to compile successfully, add =-mavx= to the =CFLAGS= variable in the Makefile.
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package whisper
+  :elpaca (:host github :repo "natrys/whisper.el")
+  :bind ("M-s r" . whisper-run)
+  :config
+  (setq whisper-install-directory "~/.config/emacs/whisper"
+        whisper-model "base"
+        whisper-language "el"
+        whisper-translate nil))
 #+end_src
 
 ** Documents
