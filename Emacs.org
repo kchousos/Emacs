@@ -1,4 +1,4 @@
-#+title: My Emacs configuration
+¬#+title: My Emacs configuration
 #+subtitle: A literate =init.el=
 #+author: Konstantinos Chousos
 #+language: en
@@ -623,7 +623,7 @@ This behemoth of a node contains all my configuration regarding org-mode.
 (setq org-link-file-path-type 'relative)
 #+end_src
 
-*** Org-Agenda
+*** COMMENT Org-Agenda
 
 Settings for org-agenda.
 
@@ -676,7 +676,7 @@ Settings for org-agenda.
 (global-set-key (kbd "C-c a") 'org-agenda)
 #+end_src
 
-*** Registers
+*** COMMENT Registers
 
 #+begin_src emacs-lisp :tangle ./init.el
 (set-register ?e (cons 'file "~/.config/emacs/Emacs.org"))
@@ -842,7 +842,7 @@ exported.  If this function is called interactively with
 
 Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
   (interactive)
-  (setq org-hugo-base-dir "./site")
+  (setq org-hugo-base-dir "~/obsid")
   (let* ((org-files-root-dir (or org-files-root-dir default-directory))
          (dont-recurse (or dont-recurse (and current-prefix-arg t)))
          (search-path (file-name-as-directory (expand-file-name org-files-root-dir)))
@@ -872,7 +872,7 @@ Example usage in Emacs Lisp: (ox-hugo/export-all \"~/org\")."
 (setq org-bookmark-names-plist '(:last-capture nil :last-refile nil :last-capture-marker nil))
 #+end_src
 
-*** Org-Capture
+*** COMMENT Org-Capture
 
 #+begin_src emacs-lisp :tangle ./init.el
 (setq org-default-notes-file "Inbox.org")
@@ -1088,7 +1088,7 @@ Gives the ability to create a plot from data in a org table.
   :elpaca t)
 #+end_src
 
-*** Org-Pomodoro
+*** COMMENT Org-Pomodoro
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-pomodoro
@@ -1154,7 +1154,7 @@ Allows you to encrypt specific org headings, when tagged with =crypt=.
   )
 #+end_src
 
-*** Org-Analyzer
+*** COMMENT Org-Analyzer
 
 Provides a web interface to analyze clocked time data from your agenda files.
 
@@ -1165,7 +1165,7 @@ Provides a web interface to analyze clocked time data from your agenda files.
   (setq org-analyzer-org-directory "/home/kchou/Textfiles/Braindump"))
 #+end_src
 
-*** Org-Yt
+*** COMMENT Org-Yt
 
 Adds thumbnail of youtube video when there is a yt video link.
 
@@ -1183,6 +1183,17 @@ Various functions for operations between html and org.
   :elpaca (:host github :repo "alphapapa/org-web-tools"))
 
 (global-set-key (kbd "C-x p i") 'org-web-tools-insert-link-for-url)
+#+end_src
+
+*** Org-Pretty-Table-Mode
+
+Prettifies org tables.
+
+#+begin_src emacs-lisp :tangle ./init.el
+(use-package org-pretty-table
+  :after org-modern
+  :elpaca (:host github :repo "Fuco1/org-pretty-table")
+  :hook (org-mode . org-pretty-table-mode))
 #+end_src
 
 *** Org-Modern
@@ -1214,17 +1225,6 @@ Makes code blocks pretty.
     (org-mode . org-modern-indent-mode))
 #+end_src
 
-*** Org-Pretty-Table-Mode
-
-Prettifies org tables.
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package org-pretty-table
-  :after org-modern
-  :elpaca (:host github :repo "Fuco1/org-pretty-table")
-  :hook (org-mode . org-pretty-table-mode))
-#+end_src
-
 *** Org-appear
 
 Org mode provides a way to toggle visibility of hidden elements such as emphasis markers, links, etc. by customising specific variables, e.g., org-hide-emphasis-markers. However, it is currently not possible to do this interactively and on an element-by-element basis. This package, inspired by org-fragtog, enables automatic visibility toggling depending on cursor position. Hidden element parts appear when the cursor enters an element and disappear when it leaves.
@@ -1250,7 +1250,7 @@ This package displays remote images inline in org-mode with automatic caching. T
 (setq org-display-remote-inline-images 'cache) ;; enable caching
 #+end_src
 
-*** Org-Roam
+*** COMMENT Org-Roam
 
 **** Org-Roam
 
@@ -1264,7 +1264,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (setq org-roam-v2-ack t)
 
   :custom
-  (org-roam-directory "~/Textfiles/Braindump")
+  (org-roam-directory "~/Textfiles/Braindump.old")
   (org-roam-dailies-directory "journals/")
   (org-roam-completion-everywhere nil)
 
@@ -1463,14 +1463,14 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
     (apply #'org-roam-node-insert args)))
 #+end_src
 
-**** Org-Roam-Ui
+**** COMMENT Org-Roam-Ui
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-roam-ui
     :elpaca t)
 #+end_src
 
-**** Org-Tidy
+**** COMMENT Org-Tidy
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-tidy
@@ -1484,7 +1484,7 @@ Note taking, zettelkasten inspired system using org files and leveraging backlin
   (global-set-key (kbd "C-c u u") #'org-tidy-untidy-buffer))
 #+end_src
 
-**** Xeft
+**** COMMENT Xeft
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package xeft
@@ -1569,7 +1569,7 @@ This section contains all settings relevant to the overhauled =org-latex-preview
 (add-hook 'org-mode-hook #'org-latex-preview-auto-mode)
 #+end_src
 
-*** Org-preview-html
+*** COMMENT Org-preview-html
 
 This minor mode provides an easy preview of your org-exported HTML files using either the eww or xwidget WebKit browser. By default, when org-preview-html-mode is enabled a save will trigger a refresh of the preview. Refresh frequency can be configured using org-preview-html-refresh-configuration.
 
@@ -1580,7 +1580,7 @@ This minor mode provides an easy preview of your org-exported HTML files using e
   (setq org-preview-html-viewer #'xwidget))
 #+end_src
 
-*** Calfw
+*** COMMENT Calfw
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package calfw
@@ -1589,7 +1589,7 @@ This minor mode provides an easy preview of your org-exported HTML files using e
   :elpaca t)
 #+end_src
 
-*** Org Clock
+*** COMMENT Org Clock
 
 #+begin_src emacs-lisp :tangle ./init.el
 ;; (setq org-clock-persist 'history)
@@ -1600,7 +1600,7 @@ This minor mode provides an easy preview of your org-exported HTML files using e
 ;; (add-to-list 'org-clocktable-defaults :compact t)
 #+end_src
 
-*** Org-Ql
+*** COMMENT Org-Ql
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package org-ql
@@ -1645,7 +1645,7 @@ Centers text in the buffer.
   :elpaca t)
 #+end_src
 
-*** outli
+*** COMMENT outli
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package outli
@@ -1657,7 +1657,7 @@ Centers text in the buffer.
   :hook ((prog-mode text-mode) . outli-mode)) ; or whichever modes you prefer
 #+end_src
 
-** Programming
+** COMMENT Programming
 
 Configurations and packages related to programming in Emacs.
 
@@ -1884,7 +1884,7 @@ Some general settings for all programming modes.
   (setq read-process-output-max (* 1024 1024)) ;; 1mb
 #+end_src
 
-*** Comment-Tags
+*** COMMENT Comment-Tags
 
 Makes keywords like TODO, BUG, FIXED etc. in comments standout.
 
@@ -1894,7 +1894,7 @@ Makes keywords like TODO, BUG, FIXED etc. in comments standout.
   :hook ((prog-mode . comment-tags-mode)))
 #+end_src
 
-*** Indent-Guide
+*** COMMENT Indent-Guide
 
 Shows indentation guides.
 
@@ -1933,7 +1933,7 @@ Automatically install and use tree-sitter major modes in Emacs 29+. If the tree-
 (setq treesit-auto-install 'prompt)
 #+end_src
 
-** Project management
+** COMMENT Project management
 
 *** Project.el
 
@@ -2318,7 +2318,7 @@ Enables fuzzy searching.
 
 ** Shells and terminal emulation
 
-*** Vterm
+*** COMMENT Vterm
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package vterm
@@ -2391,7 +2391,7 @@ Used in conjunction with GhostText to edit text areas in my browser with Emacs.
   (setq atomic-chrome-default-major-mode 'org-mode))
 #+end_src
 
-*** Restclient
+*** COMMENT Restclient
 
 #+begin_src emacs-lisp :tangle ./init.el
 (use-package restclient
@@ -2712,7 +2712,7 @@ Adds autocompletion for bibliography entries.
           'append)
 #+end_src
 
-**** Citar-Org-Roam
+**** COMMENT Citar-Org-Roam
 
 Compatibility layer that allows the citar notes to be part of org-roam.
 
@@ -2777,17 +2777,6 @@ Allows you to hide dotfiles in dired by default and toggle them.
 (define-key dired-mode-map "\C-c\C-v" 'dired-copy-paste-do-paste)
 #+end_src
 
-*** COMMENT Dired-Delight
-
-#+begin_src emacs-lisp :tangle ./init.el
-(use-package dired-delight
-  :elpaca (:host github :repo "karthink/dired-delight")
-  :hook (dired-mode . dired-delight-mode)
-  :bind (:map dired-mode-map
-         ("@" . dired-delight)
-         ("*c" . dired-delight-mark-color)))
-#+end_src
-
 *** All the Icons
 
 #+begin_src emacs-lisp :tangle ./init.el
@@ -2810,7 +2799,7 @@ Provides a start-up welcome screen for Emacs.
   :elpaca t
   :config
   ;; Set the banner
-  (setq dashboard-startup-banner 'official)
+  (setq dashboard-startup-banner 'logo)
   ;; Value can be
   ;; 'official which displays the official emacs logo
   ;; 'logo which displays an alternative emacs logo
@@ -2819,11 +2808,11 @@ Provides a start-up welcome screen for Emacs.
   ;; Content is not centered by default. To center, set
   (setq dashboard-set-navigator t)
   (setq dashboard-center-content t)
-  (setq dashboard-banner-logo-title nil)
+  (setq dashboard-banner-logo-title "Welcome to Emacs!")
   (setq dashboard-show-shortcuts nil)
   (setq dashboard-set-heading-icons t)
   (setq dashboard-set-file-icons t)
-  (setq dashboard-set-init-info nil)
+  (setq dashboard-set-init-info t)
   (setq dashboard-set-footer nil)
   (setq dashboard-week-agenda nil)
   (setq dashboard-page-separator "\n\n")
@@ -2838,7 +2827,7 @@ Provides a start-up welcome screen for Emacs.
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 #+end_src
 
-*** Rainbow-Mode
+*** COMMENT Rainbow-Mode
 
 Colors hex values accordingly.
 
@@ -2920,7 +2909,7 @@ When switching to a new window or buffer, the line that the cursor is located fl
 
 ** Media consumption
 
-*** RSS
+*** COMMENT RSS
 
 **** Elfeed-Org
 
@@ -3028,7 +3017,7 @@ A function to open the link at point in EWW.
               ("%" . elfeed-webkit-toggle)))
 #+end_src
 
-*** Epub
+*** COMMENT Epub
 
 **** Nov.el
 
@@ -3043,7 +3032,7 @@ A package to read =.epub= documents inside Emacs.
 ;; (add-hook 'nov-mode-hook 'olivetti-mode)
 #+end_src
 
-** Spaced Repetition Systems
+** COMMENT Spaced Repetition Systems
 
 *** Anki-Editor
 
@@ -3095,7 +3084,7 @@ Allows to create anki cards from org-mode nodes and sync them with anki.
 )
 #+end_src
 
-** Finance
+** COMMENT Finance
 
 Utilities to manage my PTA (Plain Text Accounting) files.
 
@@ -3122,7 +3111,7 @@ Utilities to manage my PTA (Plain Text Accounting) files.
    ;; (define-key beancount-mode-map [(control c)(control u)] #'outline-up-heading)
 #+end_src
 
-** Mail
+** COMMENT Mail
 
 Trying it out for now.
 
@@ -3223,7 +3212,7 @@ Trying it out for now.
 (setq fortune-file "/usr/share/games/fortune/sports")
 #+end_src
 
-** IRC
+** COMMENT IRC
 
 *** ERC settings
 
@@ -3367,7 +3356,7 @@ For =whisper.cpp= to compile successfully, add =-mavx= to the =CFLAGS= variable 
   :hook (org-mode . org-pdftools-setup-link))
 #+end_src
 
-** Timers
+** COMMENT Timers
 
 *** Pomm
 
