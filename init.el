@@ -74,7 +74,7 @@
 ;; Remove the line-wrap fringe indicators
 (setq-default fringe-indicator-alist nil)
 
-(fringe-mode 10)
+(fringe-mode 0)
 
 ;; Replace with proper word wrap configuration
 (use-package visual-fill-column
@@ -273,16 +273,26 @@ will be selected, otherwise a dark theme will be selected."
   ;; "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever image/text you would prefer
   ;; Content is not centered by default. To center, set
   (setq dashboard-center-content t)
-  (setq dashboard-set-navigator nil)
-  (setq dashboard-banner-logo-title nil)
-  (setq dashboard-show-shortcuts nil)
-  (setq dashboard-set-heading-icons nil)
-  (setq dashboard-set-file-icons nil)
-  (setq dashboard-set-init-info t)
-  (setq dashboard-set-footer nil)
-  (setq dashboard-week-agenda nil)
-  (setq dashboard-page-separator "\n\n")
-  (setq dashboard-items nil)
+  (setq dashboard-vertically-center-content t)
+  ;; (setq dashboard-set-navigator nil)
+  ;; (setq dashboard-banner-logo-title nil)
+  ;; (setq dashboard-show-shortcuts nil)
+  ;; (setq dashboard-set-heading-icons nil)
+  ;; (setq dashboard-set-file-icons nil)
+  ;; (setq dashboard-set-init-info nil)
+  ;; (setq dashboard-set-footer nil)
+  ;; (setq dashboard-week-agenda nil)
+  ;; (setq dashboard-page-separator "\n\n")
+  ;; (setq dashboard-items nil)
+  (setq dashboard-startupify-list '(dashboard-insert-banner
+                                    ;; dashboard-insert-newline
+                                    ;; dashboard-insert-banner-title
+                                    ;; dashboard-insert-newline
+                                    ;; dashboard-insert-init-info
+                                    ;; dashboard-insert-items
+                                    ;; dashboard-insert-newline
+                                  ;; dashboard-insert-footer
+                                  ))
   ;; (setq dashboard-items '(;;(bookmarks . 20)
   ;;                         ;; (projects . 5)
   ;;                         ;; (recents . 5)
@@ -298,3 +308,15 @@ will be selected, otherwise a dark theme will be selected."
 (unless package-archive-contents
   (package-refresh-contents))
 (put 'dired-find-alternate-file 'disabled nil)
+(custom-set-variables
+ ;; custom-set-variables was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ '(package-selected-packages nil))
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
