@@ -1,28 +1,11 @@
 *
 
-!Org-Export/
-!Org-Export/*
-!Org-Export/*/**
-!Org-Export/*/**/**
-
 !snippets/
 !snippets/*
 !snippets/*/*
 
 !.gitignore
-!Emacs.org
-!README.org
-!feeds.org.gpg
-
-!clock.wav
-
-!logos/
-!logos/*
-
-!lisp/
-!lisp/*
-
-!HTML/
-!HTML/*
+!README.md
+!init.el
 
 *.gz
