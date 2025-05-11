@@ -1,3 +1,0 @@
-* My Emacs configuration
-
-An Emacs configuration created by an org file, written in the style of literate programming.

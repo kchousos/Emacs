@@ -1,8 +1,0 @@
-# -*- mode: snippet -*-
-# name: Elisp source block
-# key: <el
-# --
-
-#+begin_src emacs-lisp :tangle ./init.el
-$0
-#+end_src

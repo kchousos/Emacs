@@ -5,7 +5,7 @@
 #+options: num:2 H:5 toc:nil date:nil timestamp:nil <:t p:t
 #+STARTUP: showall
 #+PROPERTY: header-args :tangle yes :comments link
-
+2
 This document hosts my [[https://www.gnu.org/software/emacs/][Emacs]] configuration, in the style of [[https://en.wikipedia.org/wiki/Literate_programming][literate programming]], by leveraging [[https://orgmode.org/][Org-Mode]].
 
 #+toc: headlines 3

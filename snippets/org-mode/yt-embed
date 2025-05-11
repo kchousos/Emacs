@@ -1,7 +1,0 @@
-# -*- mode: snippet -*-
-# name: yt-embed
-# key: <yt
-# --
-
-#+html: <div class="videowrapper">$1</div>
-$0    
