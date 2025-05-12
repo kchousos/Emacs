@@ -57,9 +57,6 @@
 (prefer-coding-system 'utf-8)
 (set-default-coding-systems 'utf-8)
 
-;; Wrap lines instead of showing only the first 80-something characters and then having to horizontally scroll to view the rest.
-(set-default 'truncate-lines nil)
-
 (setq x-select-enable-clipboard t)
 
 ;; use `view-mode` for read-only files
@@ -79,7 +76,16 @@
 ;; Replace with proper word wrap configuration
 (use-package visual-fill-column
   :config
-  (setq-default visual-fill-column-center-text nil))
+  (setq-default visual-fill-column-center-text t
+                 visual-fill-column-width 120))
+
+(defun my-prose-setup ()
+  "Enable visual line wrapping and visual fill column for prose."
+  (visual-line-mode 1)                         ;; Soft wraps at word boundaries
+  (visual-fill-column-mode 1)                 ;; Visually wrap at fill-column
+  (setq truncate-lines nil))                  ;; Ensure lines are not truncated
+
+(add-hook 'text-mode-hook #'my-prose-setup)
 
 (blink-cursor-mode 1)
 
@@ -177,11 +183,23 @@
 
 (add-hook 'after-init-hook (lambda () (setq default-input-method "greek")))
 
-(global-set-key (kbd "C-x C-k") #'kill-this-buffer)
-
-(global-set-key (kbd "C-c w") #'woman)
-
-(global-set-key (kbd "C-x C-8") #'quick-calc)
+(defun my-kill-this-buffer ()
+  (interactive)
+  (catch 'quit
+    (save-window-excursion
+      (let (done)
+        (when (and buffer-file-name (buffer-modified-p))
+          (while (not done)
+            (let ((response (read-char-choice
+                             (format "Save file %s? (y, n, d, q) " (buffer-file-name))
+                             '(?y ?n ?d ?q))))
+              (setq done (cond
+                          ((eq response ?q) (throw 'quit nil))
+                          ((eq response ?y) (save-buffer) t)
+                          ((eq response ?n) (set-buffer-modified-p nil) t)
+                          ((eq response ?d) (diff-buffer-with-file) nil))))))
+        (kill-buffer (current-buffer))))))
+(global-set-key (kbd "C-x C-k") #'my-kill-this-buffer)
 
 ;; Show syntax highlighting
 (global-font-lock-mode t)
@@ -313,10 +331,16 @@ will be selected, otherwise a dark theme will be selected."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(package-selected-packages nil))
+ '(package-selected-packages
+   '(dashboard markdown-mode quarto-mode tree-sitter-langs undo-tree visual-fill-column)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+
+;; Prog mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+(setq-default fill-column 80)
