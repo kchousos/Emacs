@@ -7,20 +7,10 @@
 (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/") t)
 (package-initialize)
 
-;; Install use-package if not already installed
-(unless (package-installed-p 'use-package)
-  (package-refresh-contents)
-  (package-install 'use-package))
+(unless package-archive-contents
+  (package-refresh-contents))
 
-(require 'use-package)
-;; Always ensure packages are installed
-(setq use-package-always-ensure t)
-
-;; ;; Custom file setup - create if doesn't exist
-;; (setq custom-file "~/.emacs.d/custom-file.el")
-;; (unless (file-exists-p custom-file)
-;;   (write-region "" nil custom-file))
-;; (load custom-file)
+(add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
 ;; Miscellaneous settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -41,13 +31,11 @@
 ;; Set the right directory to store the native comp cache
 (add-to-list 'native-comp-eln-load-path (expand-file-name "eln-cache/" user-emacs-directory))
 
-(setq user-full-name "Konstantinos Chousos")
-
 (setq inhibit-startup-message t)
 
-;; (add-to-list 'default-frame-alist '(height . 60))
-;; (add-to-list 'default-frame-alist '(width . 220))
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
+
+(setq delete-by-moving-to-trash t)
 
 (tool-bar-mode -1)
 (tooltip-mode -1)
@@ -72,20 +60,6 @@
 (setq-default fringe-indicator-alist nil)
 
 (fringe-mode 0)
-
-;; Replace with proper word wrap configuration
-(use-package visual-fill-column
-  :config
-  (setq-default visual-fill-column-center-text t
-                 visual-fill-column-width 120))
-
-(defun my-prose-setup ()
-  "Enable visual line wrapping and visual fill column for prose."
-  (visual-line-mode 1)                         ;; Soft wraps at word boundaries
-  (visual-fill-column-mode 1)                 ;; Visually wrap at fill-column
-  (setq truncate-lines nil))                  ;; Ensure lines are not truncated
-
-(add-hook 'text-mode-hook #'my-prose-setup)
 
 (blink-cursor-mode 1)
 
@@ -143,7 +117,8 @@
 
 (delete-selection-mode 1)
 
-;; FONTS
+;; Fonts
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (defun set-font-faces ()
         (message "Setting faces!")
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
@@ -204,19 +179,15 @@
 ;; Show syntax highlighting
 (global-font-lock-mode t)
 
-;; Install and enable tree-sitter
-(use-package tree-sitter
-  :config
-  (use-package tree-sitter-langs)
-  (global-tree-sitter-mode))
+(require 'tree-sitter)
+(require 'tree-sitter-langs)
+(global-tree-sitter-mode)
 
 ;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package which-key
-  :init (which-key-mode))
-
-(recentf-mode t)
+(require 'which-key)
+(which-key-mode)
 
 (defvar mine:dark-theme 'modus-vivendi
   "Default dark theme.")
@@ -242,7 +213,7 @@ will be selected, otherwise a dark theme will be selected."
         (4 . (1.025))
         (t . (1.0))))
 
-(use-package dbus)
+(require 'dbus)
 ;; Set the current theme based on what the system theme is right now:
 (dbus-call-method-asynchronously
    :session "org.freedesktop.portal.Desktop"
@@ -263,84 +234,105 @@ will be selected, otherwise a dark theme will be selected."
                 (string-equal var "color-scheme"))
        (mine:theme-from-dbus value))))
 
-(use-package undo-tree
-  :init
-  (setq undo-tree-auto-save-history t)
+(require 'undo-tree)
+(setq undo-tree-auto-save-history t)
 
-  (defadvice undo-tree-make-history-save-file-name
-      (after undo-tree activate)
-    (setq ad-return-value (concat ad-return-value ".gz")))
+(defadvice undo-tree-make-history-save-file-name
+    (after undo-tree activate)
+  (setq ad-return-value (concat ad-return-value ".gz")))
 
-  (setq undo-tree-visualizer-diff t)
-  (setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
-  
-  ;; Create the directory if it doesn't exist
-  (unless (file-exists-p "~/.config/emacs/undo")
-    (make-directory "~/.config/emacs/undo" t))
+(setq undo-tree-visualizer-diff t)
+(setq undo-tree-history-directory-alist '(("." . "~/.config/emacs/undo")))
 
-  (global-undo-tree-mode))
+;; Create the directory if it doesn't exist
+(unless (file-exists-p "~/.config/emacs/undo")
+  (make-directory "~/.config/emacs/undo" t))
 
-(use-package dashboard
-  :config
-  ;; Set the banner
-  (setq dashboard-startup-banner 'logo)
-  ;; Value can be
-  ;; 'official which displays the official emacs logo
-  ;; 'logo which displays an alternative emacs logo
-  ;; 1, 2 or 3 which displays one of the text banners
-  ;; "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever image/text you would prefer
-  ;; Content is not centered by default. To center, set
-  (setq dashboard-center-content t)
-  (setq dashboard-vertically-center-content t)
-  ;; (setq dashboard-set-navigator nil)
-  ;; (setq dashboard-banner-logo-title nil)
-  ;; (setq dashboard-show-shortcuts nil)
-  ;; (setq dashboard-set-heading-icons nil)
-  ;; (setq dashboard-set-file-icons nil)
-  ;; (setq dashboard-set-init-info nil)
-  ;; (setq dashboard-set-footer nil)
-  ;; (setq dashboard-week-agenda nil)
-  ;; (setq dashboard-page-separator "\n\n")
-  ;; (setq dashboard-items nil)
-  (setq dashboard-startupify-list '(dashboard-insert-banner
-                                    ;; dashboard-insert-newline
-                                    ;; dashboard-insert-banner-title
-                                    ;; dashboard-insert-newline
-                                    ;; dashboard-insert-init-info
-                                    ;; dashboard-insert-items
-                                    ;; dashboard-insert-newline
+(global-undo-tree-mode)
+
+(require 'dashboard)
+;; Set the banner
+(setq dashboard-startup-banner 'logo)
+;; Value can be
+;; 'official which displays the official emacs logo
+;; 'logo which displays an alternative emacs logo
+;; 1, 2 or 3 which displays one of the text banners
+;; "path/to/your/image.png" or "path/to/your/text.txt" which displays whatever image/text you would prefer
+;; Content is not centered by default. To center, set
+(setq dashboard-center-content t)
+(setq dashboard-vertically-center-content t)
+;; (setq dashboard-set-navigator nil)
+;; (setq dashboard-banner-logo-title nil)
+;; (setq dashboard-show-shortcuts nil)
+;; (setq dashboard-set-heading-icons nil)
+;; (setq dashboard-set-file-icons nil)
+;; (setq dashboard-set-init-info nil)
+;; (setq dashboard-set-footer nil)
+;; (setq dashboard-week-agenda nil)
+;; (setq dashboard-page-separator "\n\n")
+;; (setq dashboard-items nil)
+(setq dashboard-startupify-list '(dashboard-insert-banner
+                                  ;; dashboard-insert-newline
+                                  ;; dashboard-insert-banner-title
+                                  ;; dashboard-insert-newline
+                                  ;; dashboard-insert-init-info
+                                  ;; dashboard-insert-items
+                                  ;; dashboard-insert-newline
                                   ;; dashboard-insert-footer
                                   ))
-  ;; (setq dashboard-items '(;;(bookmarks . 20)
-  ;;                         ;; (projects . 5)
-  ;;                         ;; (recents . 5)
-  ;;                         ;; (agenda . 10)
-  ;;                         ))
 
-  (dashboard-setup-startup-hook))
+(dashboard-setup-startup-hook)
 (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*")))
 
-(use-package markdown-mode)
+;; Projects
+(setq project-vc-extra-root-markers '(".project"))
 
-;; Make sure all packages are installed at startup
-(unless package-archive-contents
-  (package-refresh-contents))
-(put 'dired-find-alternate-file 'disabled nil)
+;; Mini-buffer
+(require 'vertico)
+(vertico-mode)
+
+(require 'orderless)
+(setq completion-styles '(orderless))
+
+;; Vim bindings
+(require 'evil)
+(evil-mode 1)
+
+;; Markdown
+(require 'markdown-mode)
+(setq-default markdown-enable-math t
+              markdown-fontify-code-blocks-natively t
+              markdown-enable-highlighting-syntax t
+              markdown-enable-wiki-links t
+              markdown-wiki-link-alias-first nil)
+
+(require 'visual-fill-column)
+(setq-default visual-fill-column-center-text t
+              visual-fill-column-width 120)
+
+(defun my-prose-setup ()
+  "Enable visual line wrapping and visual fill column for prose."
+  (visual-line-mode 1)                         ;; Soft wraps at word boundaries
+  (visual-fill-column-mode 1)                 ;; Visually wrap at fill-column
+  (setq truncate-lines nil))                  ;; Ensure lines are not truncated
+
+(add-hook 'text-mode-hook #'my-prose-setup)
+
+;; Prog mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+(setq-default fill-column 80)
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(dashboard markdown-mode quarto-mode tree-sitter-langs undo-tree visual-fill-column)))
+   '(cdlatex dashboard evil mixed-pitch orderless quarto-mode tree-sitter-langs
+             undo-tree vertico visual-fill-column xenops yaml yaml-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-;; Prog mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-(add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
-(setq-default fill-column 80)
