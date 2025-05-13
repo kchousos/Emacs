@@ -207,10 +207,10 @@ will be selected, otherwise a dark theme will be selected."
               t))
 
 (setq modus-themes-headings
-      '((1 . (1.1))
-        (2 . (1.075))
-        (3 . (1.05))
-        (4 . (1.025))
+      '((1 . (1.8))
+        (2 . (1.6))
+        (3 . (1.4))
+        (4 . (1.2))
         (t . (1.0))))
 
 (require 'dbus)
@@ -322,14 +322,18 @@ will be selected, otherwise a dark theme will be selected."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 (setq-default fill-column 80)
+
+;;----------------------------------------------------------------------------
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(cdlatex dashboard evil mixed-pitch orderless quarto-mode tree-sitter-langs
-             undo-tree vertico visual-fill-column xenops yaml yaml-mode)))
+   '(cdlatex dashboard edit-indirect evil mixed-pitch orderless quarto-mode
+             tree-sitter-langs undo-tree vertico visual-fill-column xenops yaml
+             yaml-mode))
+ '(package-vc-selected-packages '((org-mode :url "https://code.tecosaur.net/tec/org-mode"))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
