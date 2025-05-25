@@ -124,7 +124,7 @@
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
         (set-face-attribute 'default nil :family "Iosevka" :height 120)
         (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 1.0)
-        (set-face-attribute 'variable-pitch nil :family "Inter"))
+        (set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 120))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -328,11 +328,13 @@ will be selected, otherwise a dark theme will be selected."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(cdlatex dashboard evil mixed-pitch orderless quarto-mode tree-sitter-langs
-             undo-tree vertico visual-fill-column xenops yaml yaml-mode)))
+   '(auctex cdlatex citeproc dashboard evil mixed-pitch orderless org-xlatex
+            quarto-mode tree-sitter-langs undo-tree vertico visual-fill-column
+            xenops yaml yaml-mode)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'dired-find-alternate-file 'disabled nil)
