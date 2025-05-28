@@ -55,6 +55,7 @@
 (setq-default fringe-indicator-alist nil)
 (fringe-mode 0)
 (blink-cursor-mode 1)
+(setq cursor-type 'box)
 (global-hl-line-mode 0)
 
 (global-set-key (kbd "M-<f3>") 'scroll-bar-mode)
@@ -105,8 +106,8 @@
         (message "Setting faces!")
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
         (set-face-attribute 'default nil :family "Iosevka" :height 120)
-        (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 1.0)
-        (set-face-attribute 'variable-pitch nil :family "Iosevka Etoile" :height 120))
+        (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 120)
+        (set-face-attribute 'variable-pitch nil :family "Lato" :height 140))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -164,7 +165,24 @@
 (use-package which-key
   :config (which-key-mode))
 
-(use-package modus-themes)
+(setq modus-themes-headings
+              '((1 . (1.4))
+                (2 . (1.3))
+                (3 . (1.2))
+                (4 . (1.1))
+                (t . (1.0))))
+
+(use-package emacs
+  :esnure nil
+  :config
+  (require-theme 'modus-themes)
+  (setq modus-themes-italic-constructs t
+        modus-themes-bold-constructs t
+        modus-themes-mixed-fonts t
+        modus-themes-subtle-line-numbers t
+        modus-themes-deuteranopia nil
+        modus-themes-variable-pitch-ui nil)
+  (load-theme 'modus-operandi))
 
 (defvar mine:dark-theme 'modus-vivendi)
 (defvar mine:light-theme 'modus-operandi)
@@ -220,13 +238,21 @@
   :config
   (setq completion-styles '(orderless)))
 
-(use-package evil
-  :config (evil-mode 1))
+;; (use-package evil
+;;   :config (evil-mode 1))
+
+(defun my/mixed-pitch-cursor-fix ()
+  (setq-local cursor-type 'box))
 
 (use-package markdown-mode
   :mode "\\.md\\'"
+
+  :hook ((markdown-mode . mixed-pitch-mode)
+         ;; (markdown-mode . variable-pitch-mode)
+         (mixed-pitch-mode . my/mixed-pitch-cursor-fix))
   :init
   (setq-default markdown-enable-math t
+                markdown-asymmetric-header t
                 markdown-fontify-code-blocks-natively t
                 markdown-enable-highlighting-syntax t
                 markdown-enable-wiki-links t
@@ -235,7 +261,7 @@
 (use-package visual-fill-column
   :init
   (setq-default visual-fill-column-center-text t
-                visual-fill-column-width 120))
+                visual-fill-column-width 100))
 
 (defun my-prose-setup ()
   (visual-line-mode 1)
@@ -267,9 +293,9 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(cdlatex dashboard edit-indirect evil markdown-mode mixed-pitch modus-themes
-             orderless tree-sitter-langs undo-tree vertico visual-fill-column
-             vundo zk)))
+   '(cdlatex citeproc dashboard evil mixed-pitch modus-themes orderless org-xlatex
+             pandoc-mode quarto-mode tree-sitter-langs undo-tree vertico
+             visual-fill-column vundo xenops yaml yaml-mode zk-index)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
