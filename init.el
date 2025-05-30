@@ -7,6 +7,7 @@
 (require 'package)
 (setq package-archives
       '(("melpa" . "https://melpa.org/packages/")
+        ("nongnu" . "https://elpa.nongnu.org/nongnu/")
         ("gnu"   . "https://elpa.gnu.org/packages/")))
 (package-initialize)
 (unless package-archive-contents
@@ -98,6 +99,11 @@
 (setq bookmark-save-flag 1)
 (delete-selection-mode 1)
 
+(save-place-mode 1)
+
+(setq tab-always-indent 'complete)
+(setq read-extended-command-predicate #'command-completion-default-include-p)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Fonts
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -177,8 +183,8 @@
   :config (which-key-mode))
 
 (setq modus-themes-headings
-              '((1 . (1.4))
-                (2 . (1.3))
+              '((1 . (1.6))
+                (2 . (1.4))
                 (3 . (1.2))
                 (4 . (1.1))
                 (t . (1.0))))
@@ -246,8 +252,10 @@
   :config (vertico-mode))
 
 (use-package orderless
-  :config
-  (setq completion-styles '(orderless)))
+  :custom
+  (completion-styles '(orderless basic))
+  (completion-category-defaults nil)
+  (completion-category-overrides '((file (styles partial-completion)))))
 
 ;; (use-package evil
 ;;   :config (evil-mode 1))
@@ -255,9 +263,11 @@
 (defun my/mixed-pitch-cursor-fix ()
   (setq-local cursor-type 'box))
 
+(use-package olivetti)
+
 (use-package markdown-mode
   :mode "\\.md\\'"
-
+  :hook ((markdown-mode . olivetti-mode))
   :init
   (setq-default markdown-enable-math t
                 markdown-asymmetric-header t
@@ -287,13 +297,65 @@
 (use-package tree-sitter-langs)
 
 (use-package zk
+  :init
+  (add-hook 'completion-at-point-functions #'zk-completion-at-point 'append)
   :custom
-  (zk-directory "~/Documents/Notes/Slipbox")
+  (defun zk-new-note-header (title new-id &optional orig-id)
+    "Insert header in new notes with args TITLE and NEW-ID.
+Optionally use ORIG-ID for backlink."
+    (insert (format "# %s %s\n\n#inbox\n\n" new-id title)))
+      (zk-directory "~/Documents/02 Areas/Slipbox")
   (zk-file-extension "md")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
   :config
   (zk-setup-auto-link-buttons))
+
+(use-package vterm
+  :custom
+  (vterm-shell "fish"))
+
+(use-package corfu
+  :custom
+  (corfu-cycle t) ;; Enable cycling for `corfu-next/previous'
+  :bind
+  ;; Configure SPC for separator insertion
+  (:map corfu-map ("SPC" . corfu-insert-separator))
+  :init
+  (global-corfu-mode)
+  (corfu-history-mode)
+  (corfu-popupinfo-mode))
+
+(use-package cape
+  :ensure t
+  :init
+  (add-to-list 'completion-at-point-functions #'cape-dabbrev))
+
+(global-set-key (kbd "M-/") #'completion-at-point)
+
+(use-package marginalia
+  ;; Bind `marginalia-cycle' locally in the minibuffer.  To make the binding
+  ;; available in the *Completions* buffer, add it to the
+  ;; `completion-list-mode-map'.
+  :bind (:map minibuffer-local-map
+         ("M-A" . marginalia-cycle))
+  :init
+  (marginalia-mode))
+
+(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
+
+(use-package citar
+  :custom
+  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
+  (citar-format-reference-function 'citar-citeproc-format-reference)
+  (citar-markdown-prompt-for-extra-arguments nil)
+  (citar-indicators
+  (list citar-indicator-files ; plain text
+        citar-indicator-notes-icons)) ; icon
+  (citar-file-open-functions '(("html" . citar-file-open-external) ("pdf" . citar-file-open-external) (t . find-file)))
+  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
+  :hook
+  (markdown-mode . citar-capf-setup))
 
 (global-font-lock-mode t)
 (custom-set-variables
@@ -302,10 +364,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(cdlatex citeproc darkroom dashboard evil mixed-pitch modus-themes olivetti
-             orderless org-xlatex pandoc-mode quarto-mode rust-mode
-             tree-sitter-langs undo-tree vertico vterm vundo xenops yaml
-             yaml-mode zk-index)))
+   '(cape cdlatex citar citeproc corfu darkroom dashboard evil marginalia
+          mixed-pitch modus-themes olivetti orderless org-xlatex pandoc-mode
+          quarto-mode rust-mode tree-sitter-langs undo-tree vertico vterm vundo
+          xenops yaml yaml-mode zk-index)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
