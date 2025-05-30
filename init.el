@@ -263,7 +263,9 @@
 (defun my/mixed-pitch-cursor-fix ()
   (setq-local cursor-type 'box))
 
-(use-package olivetti)
+(use-package olivetti
+  :custom
+  (olivetti-body-width 120))
 
 (use-package markdown-mode
   :mode "\\.md\\'"
@@ -356,6 +358,15 @@ Optionally use ORIG-ID for backlink."
   (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
+
+(with-eval-after-load 'citar
+  (with-eval-after-load 'zk
+    (require 'zk-citar)))
+
+(setq citar-notes-source 'zk)
+
+(setq zk-citar-citekey-regexp "^[0-9]+[[:space:]]+L1[[:space:]]+\\(\\S-+\\)[[:space:]]+-.*")
+(setq zk-citar-title-template "L1 ${=key=} - ${title}")
 
 (global-font-lock-mode t)
 (custom-set-variables
