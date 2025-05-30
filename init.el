@@ -107,7 +107,7 @@
         (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24))
         (set-face-attribute 'default nil :family "Iosevka" :height 120)
         (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 120)
-        (set-face-attribute 'variable-pitch nil :family "Lato" :height 140))
+        (set-face-attribute 'variable-pitch nil :family "Lato" :height 130))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -121,6 +121,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Keybinds
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(global-set-key (kbd "M-o") 'other-window)
 
 (global-set-key (kbd "M-<f2>") #'(lambda () (interactive) (display-line-numbers-mode #'toggle)))
 
@@ -161,6 +163,15 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Packages
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(with-eval-after-load "ispell"
+  (setq ispell-program-name "hunspell")
+  (setq ispell-dictionary "el_GR,en_US")
+  (ispell-set-spellchecker-params)
+  (ispell-hunspell-add-multi-dic "el_GR,en_US")
+  (setq ispell-personal-dictionary "~/.hunspell_personal"))
+
+(setq dictionary-server "dict.org")
 
 (use-package which-key
   :config (which-key-mode))
@@ -247,9 +258,6 @@
 (use-package markdown-mode
   :mode "\\.md\\'"
 
-  :hook ((markdown-mode . mixed-pitch-mode)
-         ;; (markdown-mode . variable-pitch-mode)
-         (mixed-pitch-mode . my/mixed-pitch-cursor-fix))
   :init
   (setq-default markdown-enable-math t
                 markdown-asymmetric-header t
@@ -258,14 +266,15 @@
                 markdown-enable-wiki-links t
                 markdown-wiki-link-alias-first nil))
 
-(use-package visual-fill-column
+(use-package darkroom
+  :hook (;;(darkroom-mode . variable-pitch-mode)
+         (darkroom-mode . mixed-pitch-mode)
+         (mixed-pitch-mode . my/mixed-pitch-cursor-fix))
   :init
-  (setq-default visual-fill-column-center-text t
-                visual-fill-column-width 100))
+  (setq darkroom-text-scale-increase 1))
 
 (defun my-prose-setup ()
   (visual-line-mode 1)
-  (visual-fill-column-mode 1)
   (setq truncate-lines nil))
 (add-hook 'text-mode-hook #'my-prose-setup)
 
@@ -293,9 +302,10 @@
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
-   '(cdlatex citeproc dashboard evil mixed-pitch modus-themes orderless org-xlatex
-             pandoc-mode quarto-mode tree-sitter-langs undo-tree vertico
-             visual-fill-column vundo xenops yaml yaml-mode zk-index)))
+   '(cdlatex citeproc darkroom dashboard evil mixed-pitch modus-themes olivetti
+             orderless org-xlatex pandoc-mode quarto-mode rust-mode
+             tree-sitter-langs undo-tree vertico vterm vundo xenops yaml
+             yaml-mode zk-index)))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
