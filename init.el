@@ -81,7 +81,8 @@
               column-number-mode t
               fringe-indicator-alist nil)
 
-(fringe-mode 0)
+
+(fringe-mode '(1 . 1))  ;; minimal fringes on both sides
 (window-divider-mode 0)
 (defalias 'yes-or-no-p 'y-or-n-p)
 
