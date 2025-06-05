@@ -158,6 +158,8 @@
 ;; Bookmarks
 (setq bookmark-save-flag 1)
 
+(savehist-mode 1)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Editing Behavior
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -303,17 +305,27 @@
   :ensure t
   :init
   (setq modus-themes-headings
-        '((1 . (1.6))
-          (2 . (1.4))
-          (3 . (1.2))
-          (4 . (1.1))
+        '((1 . (1.3))
+          (2 . (1.2))
+          (3 . (1.1))
+          (4 . (1.05))
           (t . (1.0)))
+
         modus-themes-italic-constructs t
         modus-themes-bold-constructs t
         modus-themes-mixed-fonts t
         modus-themes-subtle-line-numbers t
-        modus-themes-deuteranopia nil
-        modus-themes-variable-pitch-ui nil)
+        modus-themes-fringes nil ; {nil,'subtle,'intense}
+
+        ;; mode-line settings
+        modus-themes-common-palette-overrides
+        '(;; make border same color (e.g. borderless)
+          (border-mode-line-active bg-mode-line-active)
+          (border-mode-line-inactive bg-mode-line-inactive)
+          ;; make active window's mode-line purple
+          (bg-mode-line-active bg-lavender)
+          (fg-mode-line-active fg-main)
+          (border-mode-line-active bg-magenta-intense)))
   :config
   (load-theme 'modus-operandi t)
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
@@ -424,6 +436,8 @@
 
 ;; Eglot (lsp-server)
 (use-package eglot
+  :custom
+  (eglot-ignored-server-capabilities '(:inlayHintProvider))
   :config
   (add-to-list 'eglot-server-programs '((python-base-mode)
                                         "basedpyright-langserver" "--stdio")))
@@ -435,6 +449,7 @@
 
 ;; Programming mode hooks
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
+(add-hook 'prog-mode-hook #'hl-line-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminal
@@ -528,7 +543,7 @@ if one already exists."
     "Highlight tags in markdown mode."
     (font-lock-add-keywords
      nil
-     '(("\\(#+[A-Za-z][A-Za-z0-9_/\\-]*\\)" 1 'my/tag-face))))
+     '(("\\(#+[A-Za-zΑ-Ωα-ωΆ-Ώά-ώ][A-Za-zΑ-Ωα-ωΆ-Ώά-ώ0-9_/\\-]*\\)" 1 'my/tag-face))))
 
   ;; Markup hiding functionality
   (defvar nb/current-line '(0 . 0)
@@ -599,22 +614,32 @@ if one already exists."
 (use-package zk
   :init
   (add-hook 'completion-at-point-functions #'zk-completion-at-point 'append)
-  (defun zk-new-note-header (title new-id &optional orig-id)
-    "Insert header in new notes with TITLE and NEW-ID. Optionally use ORIG-ID for backlink."
+  (defun my/zk-new-note-header (title new-id &optional orig-id)
+    "Insert header in new notes with TITLE and NEW-ID."
     (insert (format "# %s %s\n\n" new-id title)))
   :custom
+  (zk-new-note-header-function 'my/zk-new-note-header)
   (zk-directory "~/Documents/02-Areas/Slipbox")
   (zk-file-extension "md")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
-  (zk-tag-regexp "\\s#\\+[A-Za-z_/\\-][A-Za-z0-9_/\\-]*")
+  (zk-tag-regexp "\\s#\\+[A-Za-zΑ-Ωα-ωΆ-Ώά-ώ_/\\-][A-Za-zΑ-Ωα-ωΆ-Ώά-ώ0-9_/\\-]*")
   (zk-new-note-link-insert 'zk)
   (zk-link-and-title nil)
   :config
   (zk-setup-auto-link-buttons))
 
-(use-package zk-index 
-  :after zk)
+(use-package zk-index
+  :after zk
+  :custom
+  (zk-index-view-hide-cursor nil)
+  (zk-index-invisible-ids t))
+
+(use-package zk-desktop
+  :after zk-index
+  :custom
+  (zk-desktop-directory "~/Documents/02-Areas/Slipbox")
+  (zk-desktop-major-mode 'outline-mode))
 
 ;; ZK-Citar integration
 (with-eval-after-load 'citar
@@ -633,6 +658,14 @@ if one already exists."
          (LaTeX-mode . cdlatex-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Dired
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-hook 'dired-mode-hook
+      (lambda ()
+        (dired-hide-details-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom Settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -641,13 +674,17 @@ if one already exists."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
+     "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(ignored-local-variable-values
    '((eval add-hook 'after-save-hook
            (lambda nil (if (y-or-n-p "Tangle?") (org-babel-tangle))) nil t)))
  '(package-selected-packages
    '(cape cdlatex citar corfu darkroom dashboard direnv marginalia markdown-mode
-          modus-themes olivetti orderless pet reformatter ruff-format
-          tree-sitter-langs treesit-auto vertico vterm vundo zk-index)))
+          markdown-ts-mode modus-themes olivetti orderless pet reformatter
+          ruff-format tree-sitter-langs treesit-auto vertico vterm vundo
+          zk-desktop zk-index)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
