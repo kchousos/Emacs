@@ -532,7 +532,7 @@ if one already exists."
 (with-eval-after-load 'markdown-mode
   ;; Highlight pandoc-style citations
   (font-lock-add-keywords 'markdown-mode
-                          '(("\\(@[^]]+\\)" 1 font-lock-keyword-face)))
+   '(("\\(@[^][:space:]]+\\)" 1 font-lock-keyword-face)))
 
   ;; Tag highlighting
   (defface my/tag-face
