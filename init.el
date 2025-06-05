@@ -352,12 +352,16 @@
 
 (use-package dashboard
   :custom
-  (dashboard-startup-banner 'logo)
+  (dashboard-startup-banner 'official)
   (dashboard-center-content t)
   (dashboard-vertically-center-content t)
-  (dashboard-startupify-list '(dashboard-insert-banner))
-  (dashboard-items '((recents . 10)
-                     (projects . 5)))
+  (dashboard-startupify-list '(dashboard-insert-banner
+                               ;; dashboard-insert-newline
+                               ;; dashboard-insert-items
+                               ))
+  (dashboard-items '((projects . 5)
+                     (bookmarks . 3)
+                     (recents . 3)))
   :config
   (dashboard-setup-startup-hook)
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
@@ -447,6 +451,13 @@
 (add-hook 'python-base-mode-hook 'ruff-format-on-save-mode)
 (add-hook 'python-base-mode-hook 'direnv-mode)
 
+;; Rust
+(use-package rust-mode)
+;; (add-hook 'rust-mode-hook 'eglot-ensure)
+(add-to-list 'eglot-server-programs
+             '((rust-ts-mode rust-mode) .
+               ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
+
 ;; Programming mode hooks
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
@@ -526,6 +537,7 @@ if one already exists."
   (markdown-fontify-code-blocks-natively t)
   (markdown-enable-highlighting-syntax t)
   (markdown-enable-wiki-links t)
+  (markdown-unordered-list-item-prefix "- ")
   (markdown-wiki-link-alias-first nil))
 
 ;; Markdown customizations
@@ -681,10 +693,10 @@ if one already exists."
    '((eval add-hook 'after-save-hook
            (lambda nil (if (y-or-n-p "Tangle?") (org-babel-tangle))) nil t)))
  '(package-selected-packages
-   '(cape cdlatex citar corfu darkroom dashboard direnv marginalia markdown-mode
-          markdown-ts-mode modus-themes olivetti orderless pet reformatter
-          ruff-format tree-sitter-langs treesit-auto vertico vterm vundo
-          zk-desktop zk-index)))
+   '(cape cdlatex citar corfu darkroom dashboard direnv link-hint marginalia
+          markdown-mode markdown-ts-mode modus-themes olivetti orderless pet
+          reformatter ruff-format rust-mode tree-sitter-langs treesit-auto
+          vertico vterm vundo zk-desktop zk-index)))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
