@@ -4,6 +4,10 @@
 !snippets/*
 !snippets/*/*
 
+!lisp/
+!lisp/*
+!lisp/*/*
+
 !.gitignore
 !README.md
 !init.el
