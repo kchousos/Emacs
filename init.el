@@ -320,8 +320,8 @@
         ;; mode-line settings
         modus-themes-common-palette-overrides
         '(;; make border same color (e.g. borderless)
-          (border-mode-line-active bg-mode-line-active)
-          (border-mode-line-inactive bg-mode-line-inactive)
+          ;; (border-mode-line-active bg-mode-line-active)
+          ;; (border-mode-line-inactive bg-mode-line-inactive)
           ;; make active window's mode-line purple
           (bg-mode-line-active bg-lavender)
           (fg-mode-line-active fg-main)
@@ -667,7 +667,38 @@ if one already exists."
 
 (use-package cdlatex
   :hook ((latex-mode . cdlatex-mode)
-         (LaTeX-mode . cdlatex-mode)))
+         (LaTeX-mode . cdlatex-mode)
+         (markdown-mode . cdlatex-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Math rendering
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))
+(use-package org :load-path "~/.config/emacs/elpa/org-mode/lisp/")
+
+ (setq org-latex-preview-numbered t
+       org-latex-preview-live t
+       org-latex-preview-live-debounce 0.25
+       org-latex-preview-process-precompiled t
+       org-startup-with-latex-preview t)
+
+(plist-put org-format-latex-options :zoom 1.5)
+
+(defun my/org-tab-width-patch (orig-fun &rest args)
+  (let ((tab-width 8))
+    (apply orig-fun args)))
+
+(advice-add 'org-check-tab-width :around #'my/org-tab-width-patch)
+
+;; (add-hook 'markdown-mode-hook 'org-latex-preview)
+;; (add-hook 'markdown-mode-hook 'org-latex-preview-auto-mode)
+
+(add-hook 'markdown-mode-hook
+          (lambda ()
+            (setq-default tab-width 8)
+            (setq-local tab-width 8)
+            (setq tab-width 8)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
@@ -694,9 +725,11 @@ if one already exists."
            (lambda nil (if (y-or-n-p "Tangle?") (org-babel-tangle))) nil t)))
  '(package-selected-packages
    '(cape cdlatex citar corfu darkroom dashboard direnv link-hint marginalia
-          markdown-mode markdown-ts-mode modus-themes olivetti orderless pet
-          reformatter ruff-format rust-mode tree-sitter-langs treesit-auto
-          vertico vterm vundo zk-desktop zk-index)))
+          markdown-mode markdown-ts-mode math-preview modus-themes olivetti
+          orderless org-mode pet reformatter ruff-format rust-mode
+          tree-sitter-langs treesit-auto vertico vterm vundo zk-desktop zk-index))
+ '(package-vc-selected-packages
+   '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
