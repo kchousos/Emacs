@@ -651,6 +651,7 @@ if one already exists."
   :after zk-index
   :custom
   (zk-desktop-directory "~/Documents/02-Areas/Slipbox")
+  (zk-desktop-basename "Desktop - ")
   (zk-desktop-major-mode 'outline-mode))
 
 ;; ZK-Citar integration
@@ -723,11 +724,7 @@ if one already exists."
  '(ignored-local-variable-values
    '((eval add-hook 'after-save-hook
            (lambda nil (if (y-or-n-p "Tangle?") (org-babel-tangle))) nil t)))
- '(package-selected-packages
-   '(cape cdlatex citar corfu darkroom dashboard direnv link-hint marginalia
-          markdown-mode markdown-ts-mode math-preview modus-themes olivetti
-          orderless org-mode pet reformatter ruff-format rust-mode
-          tree-sitter-langs treesit-auto vertico vterm vundo zk-desktop zk-index))
+ '(package-selected-packages '(org-mode))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))))
 
