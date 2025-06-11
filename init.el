@@ -611,6 +611,12 @@ if one already exists."
   (add-hook 'markdown-mode-hook #'nb/markdown-unhighlight))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Quarto
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package quarto-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -732,7 +738,7 @@ if one already exists."
         org-use-speed-commands t
         org-return-follows-link t))
 
-(setq org-cite-global-bibliography '("home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib"))
+;; (setq org-cite-global-bibliography '("/home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib"))
 
 (defun my/find-first-headline ()
   "Move point to just after the first headline in the file."
@@ -865,8 +871,8 @@ if one already exists."
    '((eval add-hook 'after-save-hook
            (lambda nil (if (y-or-n-p "Tangle?") (org-babel-tangle))) nil t)))
  '(package-selected-packages
-   '(gptel ligature openwith org-appear org-mode org-modern telephone-line
-           yasnippet))
+   '(gptel ligature openwith org-appear org-mode org-modern quarto-mode
+           telephone-line yasnippet))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))))
 
