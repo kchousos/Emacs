@@ -730,6 +730,7 @@ if one already exists."
         org-ellipsis "…"
         org-startup-indented nil
         org-pretty-entities nil
+        org-export-with-broken-links t
         org-footnote-auto-adjust t
         org-support-shift-select t
         org-startup-with-inline-images t
