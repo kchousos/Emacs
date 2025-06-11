@@ -551,6 +551,7 @@ if one already exists."
          (markdown-mode . my/markdown-highlight-tags))
   :custom
   (markdown-enable-math t)
+  (markdown-command "pandoc --katex -s")
   (markdown-max-image-size '(800 . 600))
   (markdown-asymmetric-header t)
   (markdown-fontify-code-blocks-natively t)
@@ -647,11 +648,11 @@ if one already exists."
   (add-hook 'completion-at-point-functions #'zk-completion-at-point 'append)
   (defun my/zk-new-note-header (title new-id &optional orig-id)
     "Insert header in new notes with TITLE and NEW-ID."
-    (insert (format "# %s %s\n\n" new-id title)))
+    (insert (format "* %s %s\n\n" new-id title)))
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
   (zk-directory "~/Documents/02-Areas/Slipbox")
-  (zk-file-extension "md")
+  (zk-file-extension "org")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
   (zk-tag-regexp "\\s#\\+[A-Za-zΑ-Ωα-ωΆ-Ώά-ώ_/\\-][A-Za-zΑ-Ωα-ωΆ-Ώά-ώ0-9_/\\-]*")
@@ -673,6 +674,11 @@ if one already exists."
   (zk-desktop-basename "Desktop - ")
   (zk-desktop-major-mode 'outline-mode))
 
+(global-set-key (kbd "C-c c")
+                (lambda ()
+                  (interactive)
+                  (bookmark-jump "Inbox")))
+
 ;; ZK-Citar integration
 (with-eval-after-load 'citar
   (with-eval-after-load 'zk
@@ -687,46 +693,161 @@ if one already exists."
 
 (use-package cdlatex
   :hook ((latex-mode . cdlatex-mode)
-         (LaTeX-mode . cdlatex-mode)
-         (markdown-mode . cdlatex-mode)))
+         (LaTeX-mode . cdlatex-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Math rendering
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package math-preview
+  :hook ((markdown-mode . math-preview-all))
+  :custom
+  (math-preview-mathjax-tags "ams"))
+
+(advice-add #'math-preview-all :before (lambda () (math-preview-reset-numbering 1)))
+
+(with-eval-after-load 'markdown-mode
+  (define-key markdown-mode-map (kbd "C-c C-m") #'math-preview-all))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Org-Mode
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
 ;; (package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))
-(use-package org :load-path "~/.config/emacs/elpa/org-mode/lisp/")
+(use-package org :load-path "~/.config/emacs/elpa/org-mode/lisp/"
+  :hook ((org-mode . olivetti-mode)
+         (org-mode . my/markdown-highlight-tags)
+         (org-mode . org-cdlatex-mode))
+  :config
+  (setq org-image-actual-width (list 0.4)
+        org-image-align 'center
+        org-ellipsis "…"
+        org-startup-indented nil
+        org-pretty-entities nil
+        org-footnote-auto-adjust t
+        org-support-shift-select t
+        org-startup-with-inline-images t
+        org-fontify-quote-and-verse-blocks t
+        org-link-file-path-type 'relative
+        org-use-speed-commands t
+        org-return-follows-link t))
 
- (setq org-latex-preview-numbered t
-       org-latex-preview-live t
-       org-latex-preview-live-debounce 0.25
-       org-latex-preview-process-precompiled t
-       org-startup-with-latex-preview t)
+(setq org-cite-global-bibliography '("home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib"))
 
-(plist-put org-format-latex-options :zoom 1.5)
+(defun my/find-first-headline ()
+  "Move point to just after the first headline in the file."
+  (goto-char (point-min))
+  (re-search-forward "^\\* " nil t)
+  (forward-line 1))
 
-(defun my/org-tab-width-patch (orig-fun &rest args)
-  (let ((tab-width 8))
-    (apply orig-fun args)))
+(setq org-capture-templates
+      '(("i" "Inbox" plain
+         (file+function "~/Documents/02-Areas/Slipbox/00000000000000 Inbox.org" my/find-first-headline)
+         "\n%?\n\n--------------------------------------------------------------------------------\n\n"
+         :empty-lines 1)))
 
-(advice-add 'org-check-tab-width :around #'my/org-tab-width-patch)
+(use-package org-latex-preview
+  :ensure nil
+  :config
+  (plist-put org-format-latex-options :zoom 1.2)
+  (plist-put org-format-latex-options :page-width 0.8)
 
-;; (add-hook 'markdown-mode-hook 'org-latex-preview)
-;; (add-hook 'markdown-mode-hook 'org-latex-preview-auto-mode)
+  (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
 
-(add-hook 'markdown-mode-hook
-          (lambda ()
-            (setq-default tab-width 8)
-            (setq-local tab-width 8)
-            (setq tab-width 8)))
+  ;; Enable consistent equation numbering
+  (setq org-latex-preview-numbered t)
+
+  ;; Bonus: Turn on live previews.  This shows you a live preview of a LaTeX
+  ;; fragment and updates the preview in real-time as you edit it.
+  ;; To preview only environments, set it to '(block edit-special) instead
+  (setq org-latex-preview-live t)
+
+  (setq org-startup-with-latex-preview t)
+
+  ;; More immediate live-previews -- the default delay is 1 second
+  (setq org-latex-preview-live-debounce 0.25))
+
+
+;; Open =zotero://= links from org buffers.
+(defun org-zotero-open (path)
+  (browse-url-xdg-open (format "zotero:%s" path)))
+
+(with-eval-after-load 'org
+  (org-link-set-parameters "zotero" :follow #'org-zotero-open))
+
+(use-package org-modern
+  :custom
+  (org-modern-star 'replace)
+  :hook
+  ((org-mode . org-modern-mode)))
+
+(use-package org-appear
+  :custom
+  (org-hide-emphasis-markers t)
+  (org-appear-trigger 'always)
+  (org-appear-autoemphasis t)
+  (org-appear-autolinks t)
+  (org-appear-autoentities t)
+  (org-appear-autokeywords t))
+
+(add-hook 'org-mode-hook 'org-appear-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Typesetting
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package ligature
+  :config
+  ;; Enable all programming ligatures in programming modes
+  (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
+                                       "<<" "??" ";;" "->" "<-" "-->" "<--" "=>" "!!" "-->" "<--"
+                                       "=<<" "=~" "/=" "++" "--" "===" "<>" "</>" "!==" "</"
+                                       ))
+  ;; Enables ligature checks globally in all buffers. You can also do it
+  ;; per mode with `ligature-mode'.
+  (global-ligature-mode t))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Snippets
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (use-package yasnippet
+;;   :custom
+;;   (yas-snippet-dirs '("~/.config/emacs/snippets")))
+
+;; (add-hook 'org-mode-hook  'yas-minor-mode-on)
+;; (add-hook 'prog-mode-hook 'yas-minor-mode-on)
+;; (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(setq dired-listing-switches "-al --group-directories-first")
 (add-hook 'dired-mode-hook
       (lambda ()
         (dired-hide-details-mode)))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; LLMs
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package gptel
+  :custom
+  (gptel-default-mode #'org-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; File handling
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package openwith
+  :config
+  (setq openwith-associations '(("\\.pdf\\'" "setsid -w xdg-open" (file))
+                                ;; ("\\.html\\'" "firefox" (file))
+                                ("\\.mp4\\'" "setsid -w xdg-open" (file))
+                                ("\\.mkv\\'" "setsid -w xdg-open" (file))
+                                ))
+  (openwith-mode t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom Settings
@@ -743,7 +864,9 @@ if one already exists."
  '(ignored-local-variable-values
    '((eval add-hook 'after-save-hook
            (lambda nil (if (y-or-n-p "Tangle?") (org-babel-tangle))) nil t)))
- '(package-selected-packages '(org-mode))
+ '(package-selected-packages
+   '(gptel ligature openwith org-appear org-mode org-modern telephone-line
+           yasnippet))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))))
 
