@@ -324,10 +324,10 @@
   :ensure t
   :init
   (setq modus-themes-headings
-        '((1 . (1.3))
-          (2 . (1.2))
-          (3 . (1.1))
-          (4 . (1.05))
+        '((1 . (1.0))
+          (2 . (1.0))
+          (3 . (1.0))
+          (4 . (1.0))
           (t . (1.0)))
 
         modus-themes-italic-constructs t
@@ -366,8 +366,9 @@
   :custom
   (vundo-glyph-alist vundo-unicode-symbols)
   (vundo-window-max-height 10)
-  :config
-  (vundo-popup-mode))
+  ;; :config
+  ;; (vundo-popup-mode)
+  )
 
 (use-package dashboard
   :custom
@@ -433,7 +434,7 @@
 (use-package project
   :ensure nil
   :custom
-  (project-vc-extra-root-markers '(".project" ".git")))
+  (project-vc-extra-root-markers '(".envrc" ".project" ".git")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Direnv
@@ -524,7 +525,7 @@ if one already exists."
 (use-package darkroom
   :hook ((darkroom-mode . mixed-pitch-mode))
   :custom
-  (darkroom-text-scale-increase 1))
+  (darkroom-text-scale-increase 0))
 
 (defun my/mixed-pitch-cursor-fix ()
   "Fix cursor type in mixed-pitch mode."
@@ -635,6 +636,11 @@ if one already exists."
   :hook
   (markdown-mode . citar-capf-setup))
 
+(use-package citar-embark
+  :after citar embark
+  :no-require
+  :config (citar-embark-mode))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; PDF handling
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -665,7 +671,8 @@ if one already exists."
   (zk-new-note-link-insert 'zk)
   (zk-link-and-title nil)
   :config
-  (zk-setup-auto-link-buttons))
+  (zk-setup-auto-link-buttons)
+  (zk-setup-embark))
 
 (use-package zk-index
   :after zk
@@ -678,12 +685,7 @@ if one already exists."
   :custom
   (zk-desktop-directory "~/Documents/02-Areas/Slipbox")
   (zk-desktop-basename "Desktop - ")
-  (zk-desktop-major-mode 'outline-mode))
-
-(global-set-key (kbd "C-c c")
-                (lambda ()
-                  (interactive)
-                  (bookmark-jump "Inbox")))
+  (zk-desktop-major-mode 'org-mode))
 
 ;; ZK-Citar integration
 (with-eval-after-load 'citar
@@ -700,6 +702,8 @@ if one already exists."
 (use-package cdlatex
   :hook ((latex-mode . cdlatex-mode)
          (LaTeX-mode . cdlatex-mode)))
+
+(setq cdlatex-math-symbol-alist '((93 ("\\Rightarrow" "\\implies"))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Math rendering
@@ -723,6 +727,8 @@ if one already exists."
 (use-package org :load-path "~/.config/emacs/elpa/org-mode/lisp/"
   :hook ((org-mode . olivetti-mode)
          (org-mode . my/markdown-highlight-tags)
+         (org-mode . save-place-local-mode)
+         (org-mode . flyspell-mode)
          (org-mode . org-cdlatex-mode))
   :config
   (setq org-image-actual-width (list 0.4)
@@ -739,6 +745,12 @@ if one already exists."
         org-use-speed-commands t
         org-return-follows-link t))
 
+(add-hook 'org-mode-hook
+  (lambda ()
+    (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?_ . ?_) (?= . ?=) (?~ . ?~)))
+    (setq-local electric-pair-text-pairs electric-pair-pairs)))
+
+
 ;; (setq org-cite-global-bibliography '("/home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib"))
 
 (defun my/find-first-headline ()
@@ -747,10 +759,12 @@ if one already exists."
   (re-search-forward "^\\* " nil t)
   (forward-line 1))
 
+(global-set-key (kbd "C-c c") #'org-capture)
+
 (setq org-capture-templates
       '(("i" "Inbox" plain
          (file+function "~/Documents/02-Areas/Slipbox/00000000000000 Inbox.org" my/find-first-headline)
-         "\n%?\n\n--------------------------------------------------------------------------------\n\n"
+         "\n%U\n%?\n\n--------------------------------------------------------------------------------\n\n"
          :empty-lines 1)))
 
 (use-package org-latex-preview
@@ -799,6 +813,11 @@ if one already exists."
 
 (add-hook 'org-mode-hook 'org-appear-mode)
 
+(use-package org-download
+  :custom
+  (org-download-method 'directory)
+  (org-download-image-dir "./Attachments"))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Typesetting
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -815,16 +834,36 @@ if one already exists."
   (global-ligature-mode t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Embark (keybinds)
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package embark
+  :bind
+  (("C-." . embark-act)         ;; pick some comfortable binding
+   ("C-;" . embark-dwim)        ;; good alternative: M-.
+   ("C-h B" . embark-bindings)) ;; alternative for `describe-bindings'
+
+  :config
+  (add-to-list 'display-buffer-alist
+               '("\\`\\*Embark Collect \\(Live\\|Completions\\)\\*"
+                 nil
+                 (window-parameters (mode-line-format . none)))))
+
+;; (push 'embark--allow-edit
+;;       (alist-get 'eglot-rename embark-target-injection-hooks))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Snippets
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (use-package yasnippet
-;;   :custom
-;;   (yas-snippet-dirs '("~/.config/emacs/snippets")))
+(use-package yasnippet
+  :custom
+  (yas-snippet-dirs '("~/.config/emacs/snippets")))
 
-;; (add-hook 'org-mode-hook  'yas-minor-mode-on)
-;; (add-hook 'prog-mode-hook 'yas-minor-mode-on)
-;; (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
+(add-hook 'org-mode-hook  'yas-minor-mode-on)
+(add-hook 'prog-mode-hook 'yas-minor-mode-on)
+(add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
+(add-hook 'prog-mode-hook 'yas-minor-mode-on)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
@@ -857,6 +896,30 @@ if one already exists."
   (openwith-mode t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Typst
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; (package-vc-install "https://codeberg.org/meow_king/typst-ts-mode.git")
+
+(use-package typst-ts-mode
+  :custom
+  (typst-ts-watch-options "--open"))
+
+(with-eval-after-load 'eglot
+  (with-eval-after-load 'typst-ts-mode
+    (add-to-list 'eglot-server-programs
+                 `((typst-ts-mode) .
+                   ,(eglot-alternatives `(,typst-ts-lsp-download-path
+                                          "tinymist"
+                                          "typst-lsp"))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Tramp
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq tramp-default-method "ssh")
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom Settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -865,17 +928,9 @@ if one already exists."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
-     "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(ignored-local-variable-values
-   '((eval add-hook 'after-save-hook
-           (lambda nil (if (y-or-n-p "Tangle?") (org-babel-tangle))) nil t)))
- '(package-selected-packages
-   '(gptel ligature openwith org-appear org-mode org-modern quarto-mode
-           telephone-line yasnippet))
  '(package-vc-selected-packages
-   '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))))
+   '((typst-ts-mode :vc-backend Git :url
+                    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
 
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
