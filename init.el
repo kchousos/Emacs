@@ -931,7 +931,7 @@ if one already exists."
   (modify-syntax-entry ?\n ">" url-list-mode-syntax-table)
   (font-lock-add-keywords nil
    '(("^#.*" . font-lock-comment-face)
-     ("\\b[a-f0-9]\\{40\\}\\b" . font-lock-constant-face))) ;; SHA-1 hash
+     ("\\b[a-f0-9]\\{7,40\\}\\b" . font-lock-constant-face))) ;; SHA-1 hash
   (goto-address-mode 0)) ;; Optional: make URLs clickable
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
