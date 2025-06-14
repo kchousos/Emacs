@@ -731,7 +731,7 @@ if one already exists."
          (org-mode . flyspell-mode)
          (org-mode . org-cdlatex-mode))
   :config
-  (setq org-image-actual-width (list 0.4)
+  (setq org-image-actual-width (list 0.5)
         org-image-align 'center
         org-ellipsis "…"
         org-startup-indented nil
