@@ -924,13 +924,15 @@ if one already exists."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (define-derived-mode url-list-mode text-mode "URL List"
-  "Major mode for editing lists of URLs, allowing # comments."
+  "Major mode for editing lists of URLs, allowing # comments and highlighting SHA1 hashes."
   (setq-local comment-start "#")
   (setq-local comment-start-skip "#+\\s-*")
   (modify-syntax-entry ?# "<" url-list-mode-syntax-table)
   (modify-syntax-entry ?\n ">" url-list-mode-syntax-table)
   (font-lock-add-keywords nil
-   '(("^#.*" . font-lock-comment-face))))
+   '(("^#.*" . font-lock-comment-face)
+     ("\\b[a-f0-9]\\{40\\}\\b" . font-lock-constant-face))) ;; SHA-1 hash
+  (goto-address-mode 0)) ;; Optional: make URLs clickable
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom Settings
