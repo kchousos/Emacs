@@ -460,8 +460,8 @@
 
 ;; Eglot (lsp-server)
 (use-package eglot
-  :custom
-  (eglot-ignored-server-capabilities '(:inlayHintProvider))
+  ;; :custom
+  ;; (eglot-ignored-server-capabilities '(:inlayHintProvider))
   :config
   (add-to-list 'eglot-server-programs '((python-base-mode)
                                         "basedpyright-langserver" "--stdio")))
@@ -710,7 +710,7 @@ if one already exists."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package math-preview
-  :hook ((markdown-mode . math-preview-all))
+  ;; :hook ((markdown-mode . math-preview-all))
   :custom
   (math-preview-mathjax-tags "ams"))
 
@@ -747,7 +747,7 @@ if one already exists."
 
 (add-hook 'org-mode-hook
   (lambda ()
-    (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?_ . ?_) (?= . ?=) (?~ . ?~)))
+    (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?= . ?=) (?~ . ?~)))
     (setq-local electric-pair-text-pairs electric-pair-pairs)))
 
 
@@ -928,6 +928,13 @@ if one already exists."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(package-selected-packages
+   '(auctex cape cdlatex citar-embark corfu csv-mode darkroom dashboard direnv
+            gptel ligature link-hint marginalia markdown-ts-mode math-preview
+            modus-themes olivetti openwith orderless org-appear org-download
+            org-mode org-modern pet quarto-mode ruff-format rust-mode
+            telephone-line tree-sitter-langs treesit-auto typst-ts-mode vertico
+            vterm vundo yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
