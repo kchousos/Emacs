@@ -928,6 +928,9 @@ if one already exists."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(custom-safe-themes
+   '("5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
+     "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(package-selected-packages
    '(auctex cape cdlatex citar-embark corfu csv-mode darkroom dashboard direnv
             gptel ligature link-hint marginalia markdown-ts-mode math-preview
