@@ -209,8 +209,8 @@
   (when (find-font (font-spec :name "Iosevka"))
     (set-face-attribute 'default nil :family "Iosevka" :height 120)
     (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 120))
-  (when (find-font (font-spec :name "Lato"))
-    (set-face-attribute 'variable-pitch nil :family "Lato" :height 130)))
+  (when (find-font (font-spec :name "Inter"))
+    (set-face-attribute 'variable-pitch nil :family "Inter" :height 130)))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -624,7 +624,13 @@ if one already exists."
 (defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
 
 (use-package citar
+  :after org
   :custom
+  (org-cite-insert-processor 'citar)
+  (org-cite-follow-processor 'citar)
+  (org-cite-activate-processor 'citar)
+  (citar-bibliography org-cite-global-bibliography)
+
   (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -736,22 +742,29 @@ if one already exists."
         org-ellipsis "…"
         org-startup-indented t
         org-pretty-entities nil
-        org-export-with-broken-links t
         org-footnote-auto-adjust t
         org-support-shift-select t
-        org-startup-with-inline-images t
+        org-startup-with-inline-images nil
         org-fontify-quote-and-verse-blocks t
         org-link-file-path-type 'relative
         org-use-speed-commands t
-        org-return-follows-link t))
+        org-return-follows-link t)
+
+  ;; Export options
+  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
+        org-export-with-toc nil
+        org-html-postamble nil
+        org-export-with-broken-links t
+        org-export-with-section-numbers nil
+        org-export-with-smart-quotes t
+        org-cite-csl-link-cites t
+        org-cite-export-processors'((latex . (biblatex nil nil)) (t . (csl "ieee.csl" "ieee.csl")))
+        org-cite-global-bibliography '("/home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib")))
 
 (add-hook 'org-mode-hook
   (lambda ()
     (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?= . ?=) (?~ . ?~)))
     (setq-local electric-pair-text-pairs electric-pair-pairs)))
-
-
-;; (setq org-cite-global-bibliography '("/home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib"))
 
 (defun my/find-first-headline ()
   "Move point to just after the first headline in the file."
@@ -981,3 +994,5 @@ if one already exists."
 (add-hook 'after-init-hook
           (lambda ()
             (message "Emacs configuration loaded successfully!")))
+(put 'downcase-region 'disabled nil)
+(put 'upcase-region 'disabled nil)
