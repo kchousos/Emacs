@@ -734,7 +734,7 @@ if one already exists."
   (setq org-image-actual-width (list 0.5)
         org-image-align 'center
         org-ellipsis "…"
-        org-startup-indented nil
+        org-startup-indented t
         org-pretty-entities nil
         org-export-with-broken-links t
         org-footnote-auto-adjust t
@@ -914,6 +914,12 @@ if one already exists."
                                           "typst-lsp"))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Docker
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package dockerfile-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Tramp
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -946,7 +952,13 @@ if one already exists."
  '(custom-safe-themes
    '("5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(auctex cape cdlatex citar-embark corfu csv-mode darkroom dashboard direnv
+            dockerfile-mode gptel ligature link-hint marginalia markdown-ts-mode
+            math-preview modus-themes olivetti openwith orderless org-appear
+            org-download org-mode org-modern pet quarto-mode ruff-format
+            rust-mode telephone-line tree-sitter-langs treesit-auto
+            typst-ts-mode vertico vterm vundo yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
