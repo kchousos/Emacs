@@ -336,6 +336,13 @@
         modus-themes-subtle-line-numbers t
         modus-themes-fringes nil ; {nil,'subtle,'intense}
 
+        ;; Make line numbers less intense
+        modus-themes-common-palette-overrides
+        '((fg-line-number-inactive "gray50")
+          (fg-line-number-active fg-main)
+          (bg-line-number-inactive unspecified)
+          (bg-line-number-active unspecified))
+
         ;; mode-line settings
         modus-themes-common-palette-overrides
         '(;; make border same color (e.g. borderless)
@@ -440,7 +447,9 @@
 ;; Direnv
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package direnv)
+(use-package direnv
+  :custom
+  (direnv-always-show-summary nil))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Programming
@@ -471,6 +480,9 @@
 (add-hook 'python-base-mode-hook 'ruff-format-on-save-mode)
 (add-hook 'python-base-mode-hook 'direnv-mode)
 
+;; Yaml
+(use-package yaml-mode)
+
 ;; Rust
 (use-package rust-mode)
 ;; (add-hook 'rust-mode-hook 'eglot-ensure)
@@ -481,6 +493,8 @@
 ;; Programming mode hooks
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
+(add-hook 'prog-mode-hook #'flyspell-prog-mode)
+(add-hook 'prog-mode-hook #'line-number-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminal
@@ -744,7 +758,7 @@ if one already exists."
         org-pretty-entities nil
         org-footnote-auto-adjust t
         org-support-shift-select t
-        org-startup-with-inline-images nil
+        org-startup-with-inline-images t
         org-fontify-quote-and-verse-blocks t
         org-link-file-path-type 'relative
         org-use-speed-commands t
@@ -760,6 +774,9 @@ if one already exists."
         org-cite-csl-link-cites t
         org-cite-export-processors'((latex . (biblatex nil nil)) (t . (csl "ieee.csl" "ieee.csl")))
         org-cite-global-bibliography '("/home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib")))
+
+(use-package oc-csl
+  :ensure nil)
 
 (add-hook 'org-mode-hook
   (lambda ()
@@ -873,10 +890,19 @@ if one already exists."
   :custom
   (yas-snippet-dirs '("~/.config/emacs/snippets")))
 
+(yas-reload-all)
 (add-hook 'org-mode-hook  'yas-minor-mode-on)
 (add-hook 'prog-mode-hook 'yas-minor-mode-on)
 (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
 (add-hook 'prog-mode-hook 'yas-minor-mode-on)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Git
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package git-gutter
+  :config
+  (global-git-gutter-mode t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
@@ -902,6 +928,9 @@ if one already exists."
 (use-package openwith
   :config
   (setq openwith-associations '(("\\.pdf\\'" "setsid -w xdg-open" (file))
+                                ;;("\\.png\\'" "setsid -w xdg-open" (file))
+                                ;;("\\.jpg\\'" "setsid -w xdg-open" (file))
+                                ;;("\\.jpeg\\'" "setsid -w xdg-open" (file))
                                 ;; ("\\.html\\'" "firefox" (file))
                                 ("\\.mp4\\'" "setsid -w xdg-open" (file))
                                 ("\\.mkv\\'" "setsid -w xdg-open" (file))
@@ -963,15 +992,20 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
+   '("1ad12cda71588cc82e74f1cabeed99705c6a60d23ee1bb355c293ba9c000d4ac"
+     "da69584c7fe6c0acadd7d4ce3314d5da8c2a85c5c9d0867c67f7924d413f4436"
+     "df39cc8ecf022613fc2515bccde55df40cb604d7568cb96cd7fe1eff806b863b"
+     "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
+     "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(package-selected-packages
-   '(auctex cape cdlatex citar-embark corfu csv-mode darkroom dashboard direnv
-            dockerfile-mode gptel ligature link-hint marginalia markdown-ts-mode
-            math-preview modus-themes olivetti openwith orderless org-appear
-            org-download org-mode org-modern pet quarto-mode ruff-format
-            rust-mode telephone-line tree-sitter-langs treesit-auto
-            typst-ts-mode vertico vterm vundo yasnippet zk-desktop))
+   '(auctex cape cdlatex citar-embark corfu csv-mode darkroom dashboard diff-hl
+            direnv dockerfile-mode ef-themes git-gutter gptel ligature link-hint
+            marginalia markdown-ts-mode math-preview modus-themes oc-csl
+            olivetti openwith orderless org-appear org-download org-mode
+            org-modern pet quarto-mode ruff-format rust-mode telephone-line
+            tree-sitter-langs treesit-auto typst-ts-mode vertico vterm vundo
+            yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
