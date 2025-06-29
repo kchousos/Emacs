@@ -207,8 +207,8 @@
   (when (find-font (font-spec :name "Noto Color Emoji"))
     (set-fontset-font t 'symbol (font-spec :family "Noto Color Emoji" :size 24)))
   (when (find-font (font-spec :name "Iosevka"))
-    (set-face-attribute 'default nil :family "Iosevka" :height 120)
-    (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 120))
+    (set-face-attribute 'default nil :family "Iosevka" :height 110)
+    (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110))
   (when (find-font (font-spec :name "Inter"))
     (set-face-attribute 'variable-pitch nil :family "Inter" :height 130)))
 
@@ -476,8 +476,6 @@
                                         "basedpyright-langserver" "--stdio")))
 
 ;; Python
-(use-package ruff-format)
-(add-hook 'python-base-mode-hook 'ruff-format-on-save-mode)
 (add-hook 'python-base-mode-hook 'direnv-mode)
 
 ;; Yaml
@@ -489,6 +487,16 @@
 (add-to-list 'eglot-server-programs
              '((rust-ts-mode rust-mode) .
                ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
+
+;; Formatting
+(use-package apheleia
+  :config
+  ;; Replace default (black) to use ruff for sorting import and formatting.
+  (setf (alist-get 'python-mode apheleia-mode-alist)
+        '(ruff-isort ruff))
+  (setf (alist-get 'python-ts-mode apheleia-mode-alist)
+        '(ruff-isort ruff))
+  (apheleia-global-mode))
 
 ;; Programming mode hooks
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
@@ -579,7 +587,7 @@ if one already exists."
 (with-eval-after-load 'markdown-mode
   ;; Highlight pandoc-style citations
   (font-lock-add-keywords 'markdown-mode
-   '(("\\(@[^][:space:]]+\\)" 1 font-lock-keyword-face)))
+                          '(("\\(@[^][:space:]]+\\)" 1 font-lock-keyword-face)))
 
   ;; Tag highlighting
   (defface my/tag-face
@@ -764,6 +772,8 @@ if one already exists."
         org-use-speed-commands t
         org-return-follows-link t)
 
+  (setq org-highlight-latex-and-related '(native))
+  
   ;; Export options
   (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
@@ -779,9 +789,9 @@ if one already exists."
   :ensure nil)
 
 (add-hook 'org-mode-hook
-  (lambda ()
-    (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?= . ?=) (?~ . ?~)))
-    (setq-local electric-pair-text-pairs electric-pair-pairs)))
+          (lambda ()
+            (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?= . ?=) (?~ . ?~)))
+            (setq-local electric-pair-text-pairs electric-pair-pairs)))
 
 (defun my/find-first-headline ()
   "Move point to just after the first headline in the file."
@@ -800,7 +810,7 @@ if one already exists."
 (use-package org-latex-preview
   :ensure nil
   :config
-  (plist-put org-format-latex-options :zoom 1.2)
+  (plist-put org-format-latex-options :zoom 1.3)
   (plist-put org-format-latex-options :page-width 0.8)
 
   (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
@@ -855,10 +865,10 @@ if one already exists."
 (use-package ligature
   :config
   ;; Enable all programming ligatures in programming modes
-  (ligature-set-ligatures 'prog-mode '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
-                                       "<<" "??" ";;" "->" "<-" "-->" "<--" "=>" "!!" "-->" "<--"
-                                       "=<<" "=~" "/=" "++" "--" "===" "<>" "</>" "!==" "</"
-                                       ))
+  (ligature-set-ligatures '(prog-mode text-mode) '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
+                                                   "<<" "??" ";;" "->" "<-" "-->" "<--" "=>" "!!" "-->" "<--"
+                                                   "=<<" "=~" "/=" "++" "--" "===" "<>" "</>" "!==" "</"
+                                                   ))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
   (global-ligature-mode t))
@@ -910,8 +920,8 @@ if one already exists."
 
 (setq dired-listing-switches "-al --group-directories-first")
 (add-hook 'dired-mode-hook
-      (lambda ()
-        (dired-hide-details-mode)))
+          (lambda ()
+            (dired-hide-details-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LLMs
@@ -978,8 +988,8 @@ if one already exists."
   (modify-syntax-entry ?# "<" url-list-mode-syntax-table)
   (modify-syntax-entry ?\n ">" url-list-mode-syntax-table)
   (font-lock-add-keywords nil
-   '(("^#.*" . font-lock-comment-face)
-     ("\\b[a-f0-9]\\{7,40\\}\\b" . font-lock-keyword-face))) ;; SHA-1 hash
+                          '(("^#.*" . font-lock-comment-face)
+                            ("\\b[a-f0-9]\\{7,40\\}\\b" . font-lock-keyword-face))) ;; SHA-1 hash
   (goto-address-mode 0)) ;; Optional: make URLs clickable
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -999,23 +1009,16 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(package-selected-packages
-   '(auctex cape cdlatex citar-embark corfu csv-mode darkroom dashboard diff-hl
-            direnv dockerfile-mode ef-themes git-gutter gptel ligature link-hint
-            marginalia markdown-ts-mode math-preview modus-themes oc-csl
-            olivetti openwith orderless org-appear org-download org-mode
-            org-modern pet quarto-mode ruff-format rust-mode telephone-line
-            tree-sitter-langs treesit-auto typst-ts-mode vertico vterm vundo
-            yaml-mode yasnippet zk-desktop))
+   '(apheleia auctex cape cdlatex citar-embark corfu csv-mode darkroom dashboard
+              diff-hl direnv dockerfile-mode ef-themes git-gutter gptel ligature
+              link-hint marginalia markdown-ts-mode math-preview mermaid-mode
+              modus-themes oc-csl olivetti openwith orderless org-appear
+              org-download org-mode org-modern pet quarto-mode ruff-format
+              rust-mode telephone-line tree-sitter-langs treesit-auto
+              typst-ts-mode vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
-
-(custom-set-faces
- ;; custom-set-faces was added by Custom.
- ;; If you edit it by hand, you could mess it up, so be careful.
- ;; Your init file should contain only one such instance.
- ;; If there is more than one, they won't work right.
- )
 
 ;; Enable previously disabled commands
 (put 'dired-find-alternate-file 'disabled nil)
