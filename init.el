@@ -209,8 +209,8 @@
   (when (find-font (font-spec :name "Iosevka"))
     (set-face-attribute 'default nil :family "Iosevka" :height 110)
     (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110))
-  (when (find-font (font-spec :name "Inter"))
-    (set-face-attribute 'variable-pitch nil :family "Inter" :height 130)))
+  (when (find-font (font-spec :name "Iosevka Aile"))
+    (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :height 110)))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -559,6 +559,7 @@ if one already exists."
 (defun my-prose-setup ()
   "Setup for prose writing."
   (visual-line-mode 1)
+  (variable-pitch-mode 1)
   (setq truncate-lines nil))
 
 (add-hook 'text-mode-hook #'my-prose-setup)
@@ -691,7 +692,7 @@ if one already exists."
     (insert (format "* %s %s\n\n" new-id title)))
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
-  (zk-directory "~/Documents/02-Areas/Slipbox")
+  (zk-directory "~/Documents/02-Areas/Slipbox/")
   (zk-file-extension "org")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
@@ -711,7 +712,7 @@ if one already exists."
 (use-package zk-desktop
   :after zk-index
   :custom
-  (zk-desktop-directory "~/Documents/02-Areas/Slipbox")
+  (zk-desktop-directory "~/Documents/02-Areas/Slipbox/")
   (zk-desktop-basename "Desktop - ")
   (zk-desktop-major-mode 'org-mode))
 
