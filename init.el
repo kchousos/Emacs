@@ -336,13 +336,6 @@
         modus-themes-subtle-line-numbers t
         modus-themes-fringes nil ; {nil,'subtle,'intense}
 
-        ;; Make line numbers less intense
-        modus-themes-common-palette-overrides
-        '((fg-line-number-inactive "gray50")
-          (fg-line-number-active fg-main)
-          (bg-line-number-inactive unspecified)
-          (bg-line-number-active unspecified))
-
         ;; mode-line settings
         modus-themes-common-palette-overrides
         '(;; make border same color (e.g. borderless)
@@ -351,7 +344,15 @@
           ;; make active window's mode-line purple
           (bg-mode-line-active bg-lavender)
           (fg-mode-line-active fg-main)
-          (border-mode-line-active bg-magenta-intense)))
+          (border-mode-line-active bg-magenta-intense)
+
+          ;; Make line numbers less intense
+          (fg-line-number-inactive "gray50")
+          (fg-line-number-active fg-main)
+          (bg-line-number-inactive unspecified)
+          (bg-line-number-active unspecified)
+          ))
+
   :config
   (load-theme 'modus-operandi t)
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
@@ -502,7 +503,7 @@
 (add-hook 'prog-mode-hook #'display-fill-column-indicator-mode)
 (add-hook 'prog-mode-hook #'hl-line-mode)
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
-(add-hook 'prog-mode-hook #'line-number-mode)
+(add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminal
@@ -562,7 +563,8 @@ if one already exists."
   (variable-pitch-mode 1)
   (setq truncate-lines nil))
 
-(add-hook 'text-mode-hook #'my-prose-setup)
+(add-hook 'org-mode-hook #'my-prose-setup)
+(add-hook 'markdown-mode-hook #'my-prose-setup)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Markdown
