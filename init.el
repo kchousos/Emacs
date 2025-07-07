@@ -21,7 +21,7 @@
 (when (featurep 'native-compile)
   (setq native-comp-async-report-warnings-errors nil
         native-comp-deferred-compilation t)
-  (add-to-list 'native-comp-eln-load-path 
+  (add-to-list 'native-comp-eln-load-path
                (expand-file-name "eln-cache/" user-emacs-directory)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -210,7 +210,7 @@
     (set-face-attribute 'default nil :family "Iosevka" :height 110)
     (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110))
   (when (find-font (font-spec :name "Inter"))
-    (set-face-attribute 'variable-pitch nil :family "Inter" :height 110)))
+    (set-face-attribute 'variable-pitch nil :family "Inter" :height 1.0)))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -229,7 +229,7 @@
 (global-set-key (kbd "M-o") 'other-window)
 
 ;; Line numbers toggle
-(global-set-key (kbd "M-<f2>") 
+(global-set-key (kbd "M-<f2>")
                 (lambda () (interactive) (display-line-numbers-mode 'toggle)))
 
 ;; Scrollbar toggle
@@ -574,6 +574,7 @@ if one already exists."
   :mode "\\.md\\'"
   :hook ((markdown-mode . olivetti-mode)
          (markdown-mode . save-place-local-mode)
+         (markdown-mode . flyspell-mode)
          (markdown-mode . my/markdown-highlight-tags))
   :custom
   (markdown-enable-math t)
@@ -637,12 +638,6 @@ if one already exists."
   (add-hook 'markdown-mode-hook #'nb/markdown-unhighlight))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Quarto
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(use-package quarto-mode)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -659,8 +654,8 @@ if one already exists."
   (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
-  (citar-file-open-functions '(("html" . citar-file-open-external) 
-                               ("pdf" . citar-file-open-external) 
+  (citar-file-open-functions '(("html" . citar-file-open-external)
+                               ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
   (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
@@ -776,7 +771,7 @@ if one already exists."
         org-return-follows-link t)
 
   (setq org-highlight-latex-and-related '(native))
-  
+
   ;; Export options
   (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
@@ -870,7 +865,7 @@ if one already exists."
   ;; Enable all programming ligatures in programming modes
   (ligature-set-ligatures '(prog-mode text-mode) '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
                                                    "<<" "??" ";;" "->" "<-" "-->" "<--" "=>" "!!" "-->" "<--"
-                                                   "=<<" "=~" "/=" "++" "--" "===" "<>" "</>" "!==" "</"
+                                                   "=<<" "=~" "/=" "++" "--" "===" "<>" "</>" "!==" "</" "<!--"
                                                    ))
   ;; Enables ligature checks globally in all buffers. You can also do it
   ;; per mode with `ligature-mode'.
@@ -981,6 +976,22 @@ if one already exists."
 (setq tramp-default-method "ssh")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Eww
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(add-hook 'eww-mode-hook #'olivetti-mode)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Windows
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;;resizing windows
+(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "S-C-<down>") 'shrink-window)
+(global-set-key (kbd "S-C-<up>") 'enlarge-window)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom modes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1016,9 +1027,9 @@ if one already exists."
               diff-hl direnv dockerfile-mode ef-themes git-gutter gptel ligature
               link-hint marginalia markdown-ts-mode math-preview mermaid-mode
               modus-themes oc-csl olivetti openwith orderless org-appear
-              org-download org-mode org-modern pet quarto-mode ruff-format
-              rust-mode telephone-line tree-sitter-langs treesit-auto
-              typst-ts-mode vertico vterm vundo yaml-mode yasnippet zk-desktop))
+              org-download org-mode org-modern pet ruff-format rust-mode
+              telephone-line tree-sitter-langs treesit-auto typst-ts-mode
+              vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
@@ -1036,3 +1047,9 @@ if one already exists."
             (message "Emacs configuration loaded successfully!")))
 (put 'downcase-region 'disabled nil)
 (put 'upcase-region 'disabled nil)
+(custom-set-faces
+ ;; custom-set-faces was added by Custom.
+ ;; If you edit it by hand, you could mess it up, so be careful.
+ ;; Your init file should contain only one such instance.
+ ;; If there is more than one, they won't work right.
+ )
