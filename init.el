@@ -69,7 +69,7 @@
 (tooltip-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
-(blink-cursor-mode 1)
+(blink-cursor-mode -1)
 
 ;; Better defaults
 (setq-default cursor-type 'box
@@ -574,8 +574,10 @@ if one already exists."
   :mode "\\.md\\'"
   :hook ((markdown-mode . olivetti-mode)
          (markdown-mode . save-place-local-mode)
-         (markdown-mode . flyspell-mode)
+         ;; (markdown-mode . flyspell-mode)
          (markdown-mode . my/markdown-highlight-tags))
+  :bind
+  (("C-c C-x @" . citar-insert-citation))
   :custom
   (markdown-enable-math t)
   (markdown-command "pandoc --katex -s")
@@ -586,6 +588,8 @@ if one already exists."
   (markdown-enable-wiki-links t)
   (markdown-unordered-list-item-prefix "- ")
   (markdown-wiki-link-alias-first nil))
+
+(setq-default markdown-hide-markup t)
 
 ;; Markdown customizations
 (with-eval-after-load 'markdown-mode
@@ -655,7 +659,7 @@ if one already exists."
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
   (citar-file-open-functions '(("html" . citar-file-open-external)
-                               ("pdf" . citar-file-open-external)
+                               ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
   (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
@@ -754,7 +758,7 @@ if one already exists."
   :hook ((org-mode . olivetti-mode)
          (org-mode . my/markdown-highlight-tags)
          (org-mode . save-place-local-mode)
-         (org-mode . flyspell-mode)
+         ;; (org-mode . flyspell-mode)
          (org-mode . org-cdlatex-mode))
   :config
   (setq org-image-actual-width (list 0.5)
@@ -913,6 +917,14 @@ if one already exists."
   (global-git-gutter-mode t))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Spell and grammar checking
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '(markdown-mode . ("harper-ls" "--stdio"))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Dired
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1022,14 +1034,7 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(package-selected-packages
-   '(apheleia auctex cape cdlatex citar-embark corfu csv-mode darkroom dashboard
-              diff-hl direnv dockerfile-mode ef-themes git-gutter gptel ligature
-              link-hint marginalia markdown-ts-mode math-preview mermaid-mode
-              modus-themes oc-csl olivetti openwith orderless org-appear
-              org-download org-mode org-modern pet ruff-format rust-mode
-              telephone-line tree-sitter-langs treesit-auto typst-ts-mode
-              vertico vterm vundo yaml-mode yasnippet zk-desktop))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
