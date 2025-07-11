@@ -210,7 +210,7 @@
     (set-face-attribute 'default nil :family "Iosevka" :height 110)
     (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110))
   (when (find-font (font-spec :name "Inter"))
-    (set-face-attribute 'variable-pitch nil :family "Inter" :height 1.0)))
+    (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -220,6 +220,15 @@
   (set-font-faces))
 
 (setq line-spacing 0.1) ; Slightly increased for better readability
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Disable annoying buffers
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(with-eval-after-load 'quail (defun quail-completion ()))
+
+(setq-default message-log-max nil)
+(kill-buffer "*Messages*")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Key Bindings
@@ -252,6 +261,12 @@
 
 (global-set-key (kbd "C-x 3") #'split-and-follow-vertically)
 (global-set-key (kbd "C-x 2") #'split-and-follow-horizontally)
+
+;;resizing windows
+(global-set-key (kbd "C-<left>") 'shrink-window-horizontally)
+(global-set-key (kbd "C-<right>") 'enlarge-window-horizontally)
+(global-set-key (kbd "C-<up>") 'enlarge-window)
+(global-set-key (kbd "C-<down>") 'shrink-window)
 
 ;; Input method
 (add-hook 'after-init-hook (lambda () (setq default-input-method "greek")))
@@ -472,6 +487,8 @@
 (use-package eglot
   ;; :custom
   ;; (eglot-ignored-server-capabilities '(:inlayHintProvider))
+  :bind
+  (("C-c C-q" . eglot-code-actions))
   :config
   (add-to-list 'eglot-server-programs '((python-base-mode)
                                         "basedpyright-langserver" "--stdio")))
@@ -485,9 +502,10 @@
 ;; Rust
 (use-package rust-mode)
 ;; (add-hook 'rust-mode-hook 'eglot-ensure)
-(add-to-list 'eglot-server-programs
-             '((rust-ts-mode rust-mode) .
-               ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))
+(with-eval-after-load 'eglot
+  (add-to-list 'eglot-server-programs
+               '((rust-ts-mode rust-mode) .
+                 ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
 
 ;; Formatting
 (use-package apheleia
@@ -645,7 +663,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -655,14 +673,14 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
+  (citar-bibliography '("~/Library/References/biblio.bib"))
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
   (citar-file-open-functions '(("html" . citar-file-open-external)
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -691,6 +709,8 @@ if one already exists."
   (defun my/zk-new-note-header (title new-id &optional orig-id)
     "Insert header in new notes with TITLE and NEW-ID."
     (insert (format "* %s %s\n\n" new-id title)))
+  :bind
+  ("C-c k" . zk-find-file)
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
   (zk-directory "~/Documents/02-Areas/Slipbox/")
@@ -758,7 +778,7 @@ if one already exists."
   :hook ((org-mode . olivetti-mode)
          (org-mode . my/markdown-highlight-tags)
          (org-mode . save-place-local-mode)
-         ;; (org-mode . flyspell-mode)
+         (org-mode . flyspell-mode)
          (org-mode . org-cdlatex-mode))
   :config
   (setq org-image-actual-width (list 0.5)
@@ -777,7 +797,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(native))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-postamble nil
         org-export-with-broken-links t
