@@ -339,10 +339,10 @@
   :ensure t
   :init
   (setq modus-themes-headings
-        '((1 . (1.0))
-          (2 . (1.0))
-          (3 . (1.0))
-          (4 . (1.0))
+        '((1 . (1.2))
+          (2 . (1.15))
+          (3 . (1.1))
+          (4 . (1.05))
           (t . (1.0)))
 
         modus-themes-italic-constructs t
@@ -589,7 +589,7 @@ if one already exists."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package markdown-mode
-  :mode "\\.md\\'"
+  :mode ("\\.md\\'" "\\.qmd\\'")
   :hook ((markdown-mode . olivetti-mode)
          (markdown-mode . save-place-local-mode)
          ;; (markdown-mode . flyspell-mode)
@@ -663,7 +663,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -673,14 +673,14 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/Library/References/biblio.bib"))
+  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
   (citar-file-open-functions '(("html" . citar-file-open-external)
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -713,12 +713,12 @@ if one already exists."
   ("C-c k" . zk-find-file)
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
-  (zk-directory "~/Documents/02-Areas/Slipbox/")
+  (zk-directory "~/HDD/Documents/02-Areas/Slipbox/")
   (zk-file-extension "org")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
   (zk-tag-regexp "\\s#\\+[A-Za-zΑ-Ωα-ωΆ-Ώά-ώ_/\\-][A-Za-zΑ-Ωα-ωΆ-Ώά-ώ0-9_/\\-]*")
-  (zk-new-note-link-insert 'zk)
+  (zk-new-note-link-insert 'ask)
   (zk-link-and-title nil)
   :config
   (zk-setup-auto-link-buttons)
@@ -781,23 +781,24 @@ if one already exists."
          (org-mode . flyspell-mode)
          (org-mode . org-cdlatex-mode))
   :config
-  (setq org-image-actual-width (list 0.5)
-        org-image-align 'center
-        org-ellipsis "…"
-        org-startup-indented t
-        org-pretty-entities nil
-        org-footnote-auto-adjust t
-        org-support-shift-select t
-        org-startup-with-inline-images t
-        org-fontify-quote-and-verse-blocks t
-        org-link-file-path-type 'relative
-        org-use-speed-commands t
-        org-return-follows-link t)
+  (setq ; org-image-actual-width (list 0.5)
+   org-image-align 'center
+   org-ellipsis "…"
+   org-startup-indented t
+   org-pretty-entities nil
+   org-footnote-auto-adjust t
+   org-support-shift-select t
+   org-startup-with-inline-images t
+   org-fontify-quote-and-verse-blocks t
+   org-link-file-path-type 'relative
+   org-use-speed-commands t
+   org-footnote-section nil
+   org-return-follows-link t)
 
   (setq org-highlight-latex-and-related '(native))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-postamble nil
         org-export-with-broken-links t
@@ -805,7 +806,18 @@ if one already exists."
         org-export-with-smart-quotes t
         org-cite-csl-link-cites t
         org-cite-export-processors'((latex . (biblatex nil nil)) (t . (csl "ieee.csl" "ieee.csl")))
-        org-cite-global-bibliography '("/home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib")))
+        org-cite-global-bibliography '("/home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib")
+        org-html-toplevel-hlevel 1
+        org-html-footnotes-section
+        "<div id=\"footnotes\">
+<hr/>
+<h2 class=\"footnotes\">%s </h2>
+<div id=\"text-footnotes\">
+%s
+</div>
+</div>"
+
+        ))
 
 (use-package oc-csl
   :ensure nil)
@@ -1014,14 +1026,11 @@ if one already exists."
 (add-hook 'eww-mode-hook #'olivetti-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Windows
+;; Kill buffers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;;resizing windows
-(global-set-key (kbd "S-C-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "S-C-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "S-C-<down>") 'shrink-window)
-(global-set-key (kbd "S-C-<up>") 'enlarge-window)
+(kill-buffer "*scratch*")
+(kill-buffer "*Async-native-compile-log*")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom modes
