@@ -69,7 +69,7 @@
 (tooltip-mode -1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
-(blink-cursor-mode -1)
+(blink-cursor-mode 1)
 
 ;; Better defaults
 (setq-default cursor-type 'box
@@ -559,6 +559,8 @@ if one already exists."
 ;; Writing and Note-taking
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package centered-cursor-mode)
+
 (use-package olivetti
   :custom
   (olivetti-body-width 120))
@@ -710,7 +712,18 @@ if one already exists."
     "Insert header in new notes with TITLE and NEW-ID."
     (insert (format "* %s %s\n\n" new-id title)))
   :bind
-  ("C-c k" . zk-find-file)
+  ("C-c z k" . zk-find-file)
+  ("C-c z g" . zk-grep)
+  ("C-c z f" . zk-find-file-by-full-text-search)
+  ("C-c z b" . zk-backlinks)
+  ("C-c z t i" . zk-tag-insert)
+  ("C-c z t s" . zk-tag-search)
+  ("C-c z r" . zk-rename-note)
+  ("C-c z n" . zk-new-note)
+  ("C-c z i" . zk-insert-link)
+  ("C-c z c" . zk-current-notes)
+  ("C-c z I" . zk-index)
+  ("C-c z o" . zk-follow-link-at-point)
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
   (zk-directory "~/HDD/Documents/02-Areas/Slipbox/")
@@ -1056,7 +1069,15 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark corfu csv-mode
+              darkroom dashboard diff-hl direnv dockerfile-mode edit-indirect
+              ef-themes git-gutter gptel ligature link-hint marginalia
+              markdown-mode markdown-ts-mode math-preview mermaid-mode
+              modus-themes olivetti openwith orderless org-appear org-download
+              org-mode org-modern pet ruff-format rust-mode selectric-mode
+              telephone-line tree-sitter-langs treesit-auto typst-ts-mode
+              vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
