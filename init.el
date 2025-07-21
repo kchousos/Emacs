@@ -210,7 +210,7 @@
     (set-face-attribute 'default nil :family "Iosevka" :height 110)
     (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110))
   (when (find-font (font-spec :name "Inter"))
-    (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")))
+    (set-face-attribute 'variable-pitch nil :family "Inter")))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -1072,7 +1072,7 @@ if one already exists."
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark corfu csv-mode
               darkroom dashboard diff-hl direnv dockerfile-mode edit-indirect
-              ef-themes git-gutter gptel ligature link-hint marginalia
+              ef-themes eglot git-gutter gptel ligature link-hint marginalia
               markdown-mode markdown-ts-mode math-preview mermaid-mode
               modus-themes olivetti openwith orderless org-appear org-download
               org-mode org-modern pet ruff-format rust-mode selectric-mode
