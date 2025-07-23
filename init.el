@@ -209,8 +209,8 @@
   (when (find-font (font-spec :name "Iosevka"))
     (set-face-attribute 'default nil :family "Iosevka" :height 110)
     (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110))
-  (when (find-font (font-spec :name "Inter"))
-    (set-face-attribute 'variable-pitch nil :family "Inter")))
+  (when (find-font (font-spec :name "Iosevka Aile"))
+    (set-face-attribute 'variable-pitch nil :family "Iosevka Aile")))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
