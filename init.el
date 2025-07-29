@@ -1107,4 +1107,3 @@ if one already exists."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (kill-buffer "*scratch*")
-(kill-buffer "*Async-native-compile-log*")
