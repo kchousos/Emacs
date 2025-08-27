@@ -720,6 +720,7 @@ if one already exists."
   ("C-c z t s" . zk-tag-search)
   ("C-c z r" . zk-rename-note)
   ("C-c z n" . zk-new-note)
+  ("C-c z N" . zk-network)
   ("C-c z i" . zk-insert-link)
   ("C-c z c" . zk-current-notes)
   ("C-c z I" . zk-index)
