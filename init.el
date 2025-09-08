@@ -98,6 +98,8 @@
       x-select-enable-primary t
       save-interprogram-paste-before-kill t)
 
+(setq initial-scratch-message nil)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Scrolling and Navigation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -665,7 +667,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -675,14 +677,14 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/Library/References/biblio.bib"))
+  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
   (citar-file-open-functions '(("html" . citar-file-open-external)
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -716,8 +718,8 @@ if one already exists."
   ("C-c z g" . zk-grep)
   ("C-c z f" . zk-find-file-by-full-text-search)
   ("C-c z b" . zk-backlinks)
-  ("C-c z t i" . zk-tag-insert)
-  ("C-c z t s" . zk-tag-search)
+  ("C-c z t" . zk-tag-insert)
+  ("C-c z y" . zk-tag-search)
   ("C-c z r" . zk-rename-note)
   ("C-c z n" . zk-new-note)
   ("C-c z N" . zk-network)
@@ -727,7 +729,7 @@ if one already exists."
   ("C-c z o" . zk-follow-link-at-point)
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
-  (zk-directory "~/Documents/02-Areas/Slipbox/")
+  (zk-directory "~/HDD/Documents/02-Areas/Slipbox/")
   (zk-file-extension "org")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
@@ -747,7 +749,7 @@ if one already exists."
 (use-package zk-desktop
   :after zk-index
   :custom
-  (zk-desktop-directory "~/Documents/02-Areas/Slipbox/")
+  (zk-desktop-directory "~/HDD/Documents/02-Areas/Slipbox/")
   (zk-desktop-basename "Desktop - ")
   (zk-desktop-major-mode 'org-mode))
 
@@ -792,7 +794,7 @@ if one already exists."
   :hook ((org-mode . olivetti-mode)
          (org-mode . my/markdown-highlight-tags)
          (org-mode . save-place-local-mode)
-         (org-mode . flyspell-mode)
+         ;; (org-mode . flyspell-mode)
          (org-mode . org-cdlatex-mode))
   :config
   (setq ; org-image-actual-width (list 0.5)
@@ -812,7 +814,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(native))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-postamble nil
         org-export-with-broken-links t
@@ -1020,6 +1022,13 @@ if one already exists."
                    ,(eglot-alternatives `(,typst-ts-lsp-download-path
                                           "tinymist"
                                           "typst-lsp"))))))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; ERC
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq erc-autojoin-channels-alist '(("Libera.Chat" "#lobsters" "#crypto")
+                                    ("Lainchan" "#lainchan" "#laintracker")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Docker
