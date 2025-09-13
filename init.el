@@ -678,6 +678,7 @@ if one already exists."
   (citar-bibliography org-cite-global-bibliography)
 
   (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
+  (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
   (citar-file-open-functions '(("html" . citar-file-open-external)
@@ -721,7 +722,7 @@ if one already exists."
   ("C-c z t" . zk-tag-insert)
   ("C-c z y" . zk-tag-search)
   ("C-c z r" . zk-rename-note)
-  ("C-c z n" . zk-new-note)
+  ;; ("C-c z n" . zk-new-note)
   ("C-c z N" . zk-network)
   ("C-c z i" . zk-insert-link)
   ("C-c z c" . zk-current-notes)
