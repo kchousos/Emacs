@@ -591,7 +591,6 @@ if one already exists."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Markdown
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
 (use-package markdown-mode
   :mode ("\\.md\\'" "\\.qmd\\'")
   :hook ((markdown-mode . olivetti-mode)
@@ -723,7 +722,7 @@ if one already exists."
   ("C-c z y" . zk-tag-search)
   ("C-c z r" . zk-rename-note)
   ;; ("C-c z n" . zk-new-note)
-  ("C-c z n" . zk-network)
+  ("C-c z N" . zk-network)
   ("C-c z n" . citar-open-notes)
   ("C-c z i" . zk-insert-link)
   ("C-c z c" . zk-current-notes)
@@ -813,7 +812,7 @@ if one already exists."
    org-footnote-section nil
    org-return-follows-link t)
 
-  (setq org-highlight-latex-and-related '(native))
+  (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; Export options
   (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
