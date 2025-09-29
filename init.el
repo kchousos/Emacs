@@ -749,6 +749,8 @@ if one already exists."
 
 (use-package zk-desktop
   :after zk-index
+  :config
+  (zk-desktop-setup-embark)
   :custom
   (zk-desktop-directory "~/Documents/02-Areas/Slipbox/")
   (zk-desktop-basename "Desktop - ")
@@ -1083,12 +1085,12 @@ if one already exists."
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark corfu csv-mode
               darkroom dashboard diff-hl direnv dockerfile-mode edit-indirect
-              ef-themes eglot git-gutter gptel ligature link-hint marginalia
-              markdown-mode markdown-ts-mode math-preview mermaid-mode
-              modus-themes olivetti openwith orderless org-appear org-download
-              org-mode org-modern pet ruff-format rust-mode selectric-mode
-              telephone-line tree-sitter-langs treesit-auto typst-ts-mode
-              vertico vterm vundo yaml-mode yasnippet zk-desktop))
+              ef-themes eglot emacs-everywhere git-gutter gptel ligature
+              link-hint marginalia markdown-mode markdown-ts-mode math-preview
+              mermaid-mode modus-themes olivetti openwith orderless org-appear
+              org-download org-mode org-modern pet ripgrep ruff-format rust-mode
+              selectric-mode telephone-line tree-sitter-langs treesit-auto
+              typst-ts-mode vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
