@@ -1,0 +1,14 @@
+# -*- mode: snippet -*-
+# name: google-docstring
+# key: doc
+# --
+"""${1:Summary line}.
+
+${2:Extended description}.
+
+Args:
+    ${3:arg} (${4:type}): ${5:description}
+
+Returns:
+    ${6:type}: ${7:description}
+"""
