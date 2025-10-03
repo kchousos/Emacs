@@ -340,35 +340,37 @@
 (use-package modus-themes
   :ensure t
   :init
-  (setq modus-themes-headings
-        '((1 . (1.2))
-          (2 . (1.15))
-          (3 . (1.1))
-          (4 . (1.05))
-          (t . (1.0)))
+  (setq
 
-        modus-themes-italic-constructs t
-        modus-themes-bold-constructs t
-        modus-themes-mixed-fonts t
-        modus-themes-subtle-line-numbers t
-        modus-themes-fringes nil ; {nil,'subtle,'intense}
+   ;; modus-themes-headings
+   ;;      '((1 . (1.2))
+   ;;        (2 . (1.15))
+   ;;        (3 . (1.1))
+   ;;        (4 . (1.05))
+   ;;        (t . (1.0)))
 
-        ;; mode-line settings
-        modus-themes-common-palette-overrides
-        '(;; make border same color (e.g. borderless)
-          ;; (border-mode-line-active bg-mode-line-active)
-          ;; (border-mode-line-inactive bg-mode-line-inactive)
-          ;; make active window's mode-line purple
-          (bg-mode-line-active bg-lavender)
-          (fg-mode-line-active fg-main)
-          (border-mode-line-active bg-magenta-intense)
+   modus-themes-italic-constructs t
+   modus-themes-bold-constructs t
+   modus-themes-mixed-fonts t
+   modus-themes-subtle-line-numbers t
+   modus-themes-fringes nil ; {nil,'subtle,'intense}
 
-          ;; Make line numbers less intense
-          (fg-line-number-inactive "gray50")
-          (fg-line-number-active fg-main)
-          (bg-line-number-inactive unspecified)
-          (bg-line-number-active unspecified)
-          ))
+   ;; mode-line settings
+   modus-themes-common-palette-overrides
+   '(;; make border same color (e.g. borderless)
+     ;; (border-mode-line-active bg-mode-line-active)
+     ;; (border-mode-line-inactive bg-mode-line-inactive)
+     ;; make active window's mode-line purple
+     (bg-mode-line-active bg-lavender)
+     (fg-mode-line-active fg-main)
+     (border-mode-line-active bg-magenta-intense)
+
+     ;; Make line numbers less intense
+     (fg-line-number-inactive "gray50")
+     (fg-line-number-active fg-main)
+     (bg-line-number-inactive unspecified)
+     (bg-line-number-active unspecified)
+     ))
 
   :config
   (load-theme 'modus-operandi t)
@@ -666,7 +668,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -676,7 +678,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/Library/References/biblio.bib"))
+  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -684,7 +686,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -718,10 +720,11 @@ if one already exists."
   ("C-c z g" . zk-grep)
   ("C-c z f" . zk-find-file-by-full-text-search)
   ("C-c z b" . zk-backlinks)
+  ("C-c z l" . zk-links-in-note)
   ("C-c z t" . zk-tag-insert)
   ("C-c z y" . zk-tag-search)
-  ("C-c z r" . zk-rename-note)
-  ;; ("C-c z n" . zk-new-note)
+  ("C-c z R" . zk-rename-note)
+  ("C-c z w" . zk-new-note)
   ("C-c z N" . zk-network)
   ("C-c z n" . citar-open-notes)
   ("C-c z i" . zk-insert-link)
@@ -745,16 +748,39 @@ if one already exists."
   :after zk
   :custom
   (zk-index-view-hide-cursor nil)
-  (zk-index-invisible-ids nil))
+  (zk-index-invisible-ids nil)
+  :config
+  (zk-index-setup-embark))
+
+(defvar zk-index-mode-map
+  (let ((map (make-sparse-keymap)))
+    (define-key map (kbd "n") #'zk-index-next-line)
+    (define-key map (kbd "p") #'zk-index-previous-line)
+    (define-key map (kbd "v") #'zk-index-view-note)
+    (define-key map (kbd "o") #'other-window)
+    (define-key map (kbd "f") #'zk-index-focus)
+    (define-key map (kbd "s") #'zk-index-search)
+    (define-key map (kbd "g") #'zk-index-query-refresh)
+    (define-key map (kbd "c") #'zk-index-current-notes)
+    (define-key map (kbd "i") #'zk-index-refresh)
+    (define-key map (kbd "I") #'zk-index-insert-link)
+    (define-key map (kbd "S") #'zk-index-sort-size)
+    (define-key map (kbd "M") #'zk-index-sort-modified)
+    (define-key map (kbd "C") #'zk-index-sort-created)
+    (define-key map (kbd "RET") #'zk-index-open-note)
+    (define-key map (kbd "q") #'delete-window)
+    (make-composed-keymap map tabulated-list-mode-map))
+  "Keymap for ZK-Index buffer.")
 
 (use-package zk-desktop
   :after zk-index
   :config
   (zk-desktop-setup-embark)
-  :custom
-  (zk-desktop-directory "~/Documents/02-Areas/Slipbox/")
-  (zk-desktop-basename "Desktop - ")
-  (zk-desktop-major-mode 'org-mode))
+  :init
+  (setq zk-desktop-directory zk-directory)
+  (setq zk-desktop-invisible-ids nil)
+  (setq zk-desktop-basename "ZK-Desktop:")
+  (setq zk-desktop-major-mode 'org-mode))
 
 ;; ZK-Citar integration
 (with-eval-after-load 'citar
@@ -803,11 +829,12 @@ if one already exists."
   (setq ; org-image-actual-width (list 0.5)
    org-image-align 'center
    org-ellipsis "…"
-   org-startup-indented t
+   org-startup-indented nil
    org-pretty-entities nil
    org-footnote-auto-adjust t
    org-support-shift-select t
    org-startup-with-inline-images t
+   org-display-remote-inline-images 'download
    org-fontify-quote-and-verse-blocks t
    org-link-file-path-type 'relative
    org-use-speed-commands t
@@ -817,7 +844,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-postamble nil
         org-export-with-broken-links t
@@ -1082,15 +1109,9 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(package-selected-packages
-   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark corfu csv-mode
-              darkroom dashboard diff-hl direnv dockerfile-mode edit-indirect
-              ef-themes eglot emacs-everywhere git-gutter gptel ligature
-              link-hint marginalia markdown-mode markdown-ts-mode math-preview
-              mermaid-mode modus-themes olivetti openwith orderless org-appear
-              org-download org-mode org-modern pet ripgrep ruff-format rust-mode
-              selectric-mode telephone-line tree-sitter-langs treesit-auto
-              typst-ts-mode vertico vterm vundo yaml-mode yasnippet zk-desktop))
+ '(org-agenda-files
+   '("~/Documents/02-Areas/Slipbox/20250928183841 § MSc ΑΛΜΑ courses.org"))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
