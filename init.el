@@ -723,7 +723,7 @@ if one already exists."
   ("C-c z l" . zk-links-in-note)
   ("C-c z t" . zk-tag-insert)
   ("C-c z y" . zk-tag-search)
-  ("C-c z R" . zk-rename-note)
+  ("C-c z r" . zk-rename-note)
   ("C-c z w" . zk-new-note)
   ("C-c z n" . zk-network)
   ("C-c z N" . citar-open-notes)
