@@ -982,6 +982,7 @@ if one already exists."
 
 (yas-reload-all)
 (add-hook 'org-mode-hook  'yas-minor-mode-on)
+(add-hook 'markdown-mode-hook  'yas-minor-mode-on)
 (add-hook 'prog-mode-hook 'yas-minor-mode-on)
 (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
 (add-hook 'prog-mode-hook 'yas-minor-mode-on)
