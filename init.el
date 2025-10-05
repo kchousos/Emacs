@@ -826,20 +826,20 @@ if one already exists."
          ;; (org-mode . flyspell-mode)
          (org-mode . org-cdlatex-mode))
   :config
-  (setq ; org-image-actual-width (list 0.5)
-   org-image-align 'center
-   org-ellipsis "…"
-   org-startup-indented nil
-   org-pretty-entities nil
-   org-footnote-auto-adjust t
-   org-support-shift-select t
-   org-startup-with-inline-images t
-   org-display-remote-inline-images 'download
-   org-fontify-quote-and-verse-blocks t
-   org-link-file-path-type 'relative
-   org-use-speed-commands t
-   org-footnote-section nil
-   org-return-follows-link t)
+  (setq org-image-actual-width (list 0.5)
+        org-image-align 'center
+        org-ellipsis "…"
+        org-startup-indented nil
+        org-pretty-entities nil
+        org-footnote-auto-adjust t
+        org-support-shift-select t
+        org-startup-with-inline-images t
+        org-display-remote-inline-images 'download
+        org-fontify-quote-and-verse-blocks t
+        org-link-file-path-type 'relative
+        org-use-speed-commands t
+        org-footnote-section nil
+        org-return-follows-link t)
 
   (setq org-highlight-latex-and-related '(latex script entities))
 
