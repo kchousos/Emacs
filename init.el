@@ -879,13 +879,26 @@ if one already exists."
   (re-search-forward "^\\* " nil t)
   (forward-line 1))
 
-(global-set-key (kbd "C-c c") #'org-capture)
+;; GTD ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq org-capture-templates
-      '(("i" "Inbox" plain
-         (file+function "~/Documents/02-Areas/Slipbox/00000000000000 Inbox.org" my/find-first-headline)
-         "\n%U\n%?\n\n--------------------------------------------------------------------------------\n\n"
-         :empty-lines 1)))
+;; (setq org-todo-keywords
+;;       '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PROJ(p)" "|" "DONE(d)" "CANC(c)")))
+
+;; ;; Agenda
+;; (setq kchousos/org-agenda-directory "~/Documents/02-Areas/Agenda/")
+
+;; (global-set-key (kbd "C-c a") #'org-agenda)
+;; (setq org-agenda-span 90)
+;; (setq org-agenda-files '(kchousos/org-agenda-directory))
+;; (setq org-extend-today-until 3)
+
+;; ;; Capture
+;; (global-set-key (kbd "C-c c") #'org-capture)
+;; (setq org-capture-templates
+;;       `(("i" "Inbox" entry
+;;          (file ,(concat kchousos/org-agenda-directory "Inbox.org"))
+;;          "* TODO %?"
+;;          :prepend t)))
 
 (use-package org-latex-preview
   :ensure nil
@@ -907,7 +920,6 @@ if one already exists."
 
   ;; More immediate live-previews -- the default delay is 1 second
   (setq org-latex-preview-live-debounce 0.25))
-
 
 ;; Open =zotero://= links from org buffers.
 (defun org-zotero-open (path)
@@ -1110,8 +1122,7 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(org-agenda-files
-   '("~/Documents/02-Areas/Slipbox/20250928183841 § MSc ΑΛΜΑ courses.org"))
+ '(org-agenda-files nil)
  '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
