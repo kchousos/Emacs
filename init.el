@@ -224,13 +224,15 @@
 (setq line-spacing 0.1) ; Slightly increased for better readability
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Disable annoying buffers
+;; Buffers
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (with-eval-after-load 'quail (defun quail-completion ()))
 
 (setq-default message-log-max nil)
 (kill-buffer "*Messages*")
+
+(winner-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Key Bindings
@@ -251,14 +253,14 @@
   "Split window vertically and follow to new window."
   (interactive)
   (split-window-right)
-  (balance-windows)
+  ;; (balance-windows)
   (other-window 1))
 
 (defun split-and-follow-horizontally ()
   "Split window horizontally and follow to new window."
   (interactive)
   (split-window-below)
-  (balance-windows)
+  ;; (balance-windows)
   (other-window 1))
 
 (global-set-key (kbd "C-x 3") #'split-and-follow-vertically)
@@ -475,6 +477,12 @@
 ;; Programming
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package comment-tags
+  :custom
+  (comment-tags-require-colon nil)
+  :hook
+  (prog-mode . comment-tags-mode))
+
 ;; tree-sitter
 (use-package tree-sitter
   :config
@@ -499,6 +507,7 @@
 
 ;; Python
 (add-hook 'python-base-mode-hook 'direnv-mode)
+(add-hook 'python-mode-hook '(lambda () (set (make-local-variable 'yas-indent-line) 'fixed)))
 
 ;; Yaml
 (use-package yaml-mode)
@@ -831,6 +840,8 @@ if one already exists."
         org-ellipsis "…"
         org-startup-indented nil
         org-pretty-entities nil
+        org-level-color-stars-only nil
+        org-tags-column 0
         org-footnote-auto-adjust t
         org-support-shift-select t
         org-startup-with-inline-images t
@@ -881,24 +892,65 @@ if one already exists."
 
 ;; GTD ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; (setq org-todo-keywords
-;;       '((sequence "TODO(t)" "NEXT(n)" "WAIT(w)" "PROJ(p)" "|" "DONE(d)" "CANC(c)")))
+(setq org-todo-keywords
+      '((sequence "RUNNING(r)" "NEXT(n)" "TODO(t)" "PROJ(p)" "COURSE" "WAIT(w)" "MAYBE(m)" "|" "DONE(d)" "CANC(c)")))
 
-;; ;; Agenda
-;; (setq kchousos/org-agenda-directory "~/Documents/02-Areas/Agenda/")
+;; Agenda
+(global-set-key (kbd "C-c a") #'org-agenda)
 
-;; (global-set-key (kbd "C-c a") #'org-agenda)
-;; (setq org-agenda-span 90)
-;; (setq org-agenda-files '(kchousos/org-agenda-directory))
-;; (setq org-extend-today-until 3)
+(setq org-log-done 'time
+      org-agenda-block-separator 9472
+      org-agenda-use-time-grid nil
+      org-agenda-include-deadlines t
+      org-agenda-skip-deadline-prewarning-if-scheduled t
+      org-agenda-skip-scheduled-if-deadline-is-shown t
+      org-agenda-span 'day
+      org-agenda-remove-tags t
+      org-agenda-scheduled-leaders '("[S]: " "[S] in %2d days: ")
+      org-agenda-deadline-leaders
+      '("[D]: " "[D] in %2d days: " "[D] %2d days ago: ")
+      org-extend-today-until 4)
 
-;; ;; Capture
-;; (global-set-key (kbd "C-c c") #'org-capture)
-;; (setq org-capture-templates
-;;       `(("i" "Inbox" entry
-;;          (file ,(concat kchousos/org-agenda-directory "Inbox.org"))
-;;          "* TODO %?"
-;;          :prepend t)))
+(setq org-agenda-sorting-strategy
+      '((agenda todo-state-up priority-down category-keep)
+        (todo todo-state-up priority-down category-keep)))
+
+(setq org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-skip-timestamp-if-done t)
+
+(setq org-agenda-custom-commands
+      '((d "Daily Agenda"
+           ((agenda "" nil)) nil)
+        ("a" "Daily Agenda, Running & Next Actions"
+         ((agenda "" nil)
+          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
+        ("A" "Daily Agenda, Running, Next Actions, Projects & Courses"
+         ((agenda "" nil)
+          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))
+          (todo "PROJ" ((org-agenda-overriding-header "Current projects")))
+          (todo "COURSE" ((org-agenda-overriding-header "Semester courses")))) nil)
+        ("c" "Running, Next Actions"
+         ((todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
+        ("p" "Projects and Courses"
+         ((todo "PROJ" ((org-agenda-overriding-header "Current projects")))
+          (todo "COURSE" ((org-agenda-overriding-header "Semester courses")))) nil)))
+
+(setq org-agenda-files '("~/Documents/02-Areas/Agenda/Agenda.org"))
+
+;; Capture
+(global-set-key (kbd "C-c c") #'org-capture)
+(setq org-capture-templates
+      `(("i" "Inbox" entry
+         (file "~/Documents/02-Areas/Agenda/Inbox.org")
+         "* TODO %?"
+         :prepend t)))
+
+;; Clocking
+(setq org-clock-mode-line-total 'today)
 
 (use-package org-latex-preview
   :ensure nil
@@ -930,9 +982,60 @@ if one already exists."
 
 (use-package org-modern
   :custom
-  (org-modern-star 'replace)
-  :hook
-  ((org-mode . org-modern-mode)))
+  (org-modern-star 'replace))
+
+(with-eval-after-load 'org (global-org-modern-mode))
+
+(defun my/set-org-modern-todo-faces ()
+  "Set org-modern TODO keyword faces using modus-themes colors."
+  (modus-themes-with-colors
+    (setq org-modern-todo-faces
+          `(("TODO" :background ,bg-red-intense 
+             :foreground ,fg-main 
+             :weight bold)
+            ("NEXT" :background ,bg-yellow-intense 
+             :foreground ,fg-main 
+             :weight bold)
+            ("RUNNING" :background ,bg-red-subtle
+             :foreground ,fg-main 
+             :weight bold)
+            ("WAIT" :background ,bg-blue-intense 
+             :foreground ,fg-main 
+             :weight bold)
+            ("PROJ" :background ,bg-magenta-intense 
+             :foreground ,fg-main 
+             :weight bold)
+            ("COURSE" :background ,bg-cyan-intense 
+             :foreground ,fg-main 
+             :weight bold)
+            ("MAYBE" :background ,bg-inactive 
+             :foreground ,fg-main 
+             :weight bold)
+            ("DONE" :background ,bg-green-intense 
+             :foreground ,fg-main 
+             :weight bold)
+            ("CANC" :background ,bg-dim 
+             :foreground ,fg-dim 
+             :weight bold)))
+
+    (setq org-fontify-done-headline nil)
+
+    ;; Configure strike-through for CANC headlines
+    ;; (setq org-fontify-done-headline t)
+    
+    ;; Set the face for CANC headlines to include strike-through
+    ;; (set-face-attribute 'org-headline-done nil :strike-through t)
+    
+    ;; Refresh org-modern in all org buffers
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (and (derived-mode-p 'org-mode)
+                   (bound-and-true-p org-modern-mode))
+          (org-modern-mode -1)
+          (org-modern-mode 1))))))
+
+(add-hook 'modus-themes-after-load-theme-hook #'my/set-org-modern-todo-faces)
+(my/set-org-modern-todo-faces)
 
 (use-package org-appear
   :custom
@@ -1122,8 +1225,17 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(org-agenda-files nil)
- '(package-selected-packages nil)
+ '(org-agenda-files '("~/Documents/02-Areas/Agenda/Agenda.org"))
+ '(package-selected-packages
+   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
+              corfu csv-mode darkroom dashboard diff-hl direnv dockerfile-mode
+              edit-indirect ef-themes eglot git-gutter gptel htmlize json-mode
+              ligature link-hint marginalia markdown-mode markdown-ts-mode
+              math-preview mermaid-mode modus-themes olivetti openwith orderless
+              org-appear org-download org-mode org-modern pet ruff-format
+              rust-mode selectric-mode telephone-line tree-sitter-langs
+              treesit-auto typst-ts-mode vertico vterm vundo yaml-mode yasnippet
+              zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
