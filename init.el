@@ -920,8 +920,8 @@ if one already exists."
       org-agenda-skip-timestamp-if-done t)
 
 (setq org-agenda-custom-commands
-      '((d "Daily Agenda"
-           ((agenda "" nil)) nil)
+      '(("d" "Daily Agenda"
+         ((agenda "" nil)) nil)
         ("a" "Daily Agenda, Running & Next Actions"
          ((agenda "" nil)
           (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
