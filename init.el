@@ -884,16 +884,45 @@ if one already exists."
             (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?= . ?=) (?~ . ?~)))
             (setq-local electric-pair-text-pairs electric-pair-pairs)))
 
-(defun my/find-first-headline ()
-  "Move point to just after the first headline in the file."
-  (goto-char (point-min))
-  (re-search-forward "^\\* " nil t)
-  (forward-line 1))
-
 ;; GTD ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq org-todo-keywords
       '((sequence "RUNNING(r)" "NEXT(n)" "TODO(t)" "PROJ(p)" "COURSE" "WAIT(w)" "MAYBE(m)" "|" "DONE(d)" "CANC(c)")))
+
+(defun my/set-org-todo-faces ()
+  "Set Org TODO keyword faces using modus-themes colors."
+  (modus-themes-with-colors
+    (setq org-todo-keyword-faces
+          `(("TODO" . (:foreground ,red
+                                   :weight bold))
+            ("NEXT" . (:foreground ,yellow
+                                   :weight bold))
+            ("RUNNING" . (:foreground ,rust
+                                      :weight bold))
+            ("WAIT" . (:foreground ,blue
+                                   :weight bold))
+            ("PROJ" . (:foreground ,magenta-cooler
+                                   :weight bold))
+            ("COURSE" . (:foreground ,cyan
+                                     :weight bold))
+            ("MAYBE" . (:foreground ,fg-dim
+                                    :weight bold))
+            ("DONE" . (:foreground ,green
+                                   :weight bold))
+            ("CANC" . (:foreground ,fg-dim
+                                   :weight bold)))))
+
+  (setq org-fontify-done-headline nil)
+
+  ;; Refresh org TODO faces in all org buffers
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (derived-mode-p 'org-mode)
+        (org-mode-restart)))))
+;; Call the function to initialize TODO faces
+(my/set-org-todo-faces)
+;; Add hooks to run the function on theme change
+(add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
 
 ;; Agenda
 (global-set-key (kbd "C-c a") #'org-agenda)
@@ -980,73 +1009,73 @@ if one already exists."
 (with-eval-after-load 'org
   (org-link-set-parameters "zotero" :follow #'org-zotero-open))
 
-(use-package org-modern
-  :custom
-  (org-modern-star 'replace))
+;; (use-package org-modern
+;;   :custom
+;;   (org-modern-star 'replace))
 
-(with-eval-after-load 'org (global-org-modern-mode))
+;; (with-eval-after-load 'org (global-org-modern-mode))
 
-(defun my/set-org-modern-todo-faces ()
-  "Set org-modern TODO keyword faces using modus-themes colors."
-  (modus-themes-with-colors
-    (setq org-modern-todo-faces
-          `(("TODO" :background ,bg-red-intense 
-             :foreground ,fg-main 
-             :weight bold)
-            ("NEXT" :background ,bg-yellow-intense 
-             :foreground ,fg-main 
-             :weight bold)
-            ("RUNNING" :background ,bg-red-subtle
-             :foreground ,fg-main 
-             :weight bold)
-            ("WAIT" :background ,bg-blue-intense 
-             :foreground ,fg-main 
-             :weight bold)
-            ("PROJ" :background ,bg-magenta-intense 
-             :foreground ,fg-main 
-             :weight bold)
-            ("COURSE" :background ,bg-cyan-intense 
-             :foreground ,fg-main 
-             :weight bold)
-            ("MAYBE" :background ,bg-inactive 
-             :foreground ,fg-main 
-             :weight bold)
-            ("DONE" :background ,bg-green-intense 
-             :foreground ,fg-main 
-             :weight bold)
-            ("CANC" :background ,bg-dim 
-             :foreground ,fg-dim 
-             :weight bold)))
+;; (defun my/set-org-modern-todo-faces ()
+;;   "Set org-modern TODO keyword faces using modus-themes colors."
+;;   (modus-themes-with-colors
+;;     (setq org-modern-todo-faces
+;;           `(("TODO" :background ,bg-red-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("NEXT" :background ,bg-yellow-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("RUNNING" :background ,bg-red-subtle
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("WAIT" :background ,bg-blue-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("PROJ" :background ,bg-magenta-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("COURSE" :background ,bg-cyan-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("MAYBE" :background ,bg-inactive
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("DONE" :background ,bg-green-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("CANC" :background ,bg-dim
+;;              :foreground ,fg-dim
+;;              :weight bold)))
 
-    (setq org-fontify-done-headline nil)
+;;     (setq org-fontify-done-headline nil)
 
-    ;; Configure strike-through for CANC headlines
-    ;; (setq org-fontify-done-headline t)
-    
-    ;; Set the face for CANC headlines to include strike-through
-    ;; (set-face-attribute 'org-headline-done nil :strike-through t)
-    
-    ;; Refresh org-modern in all org buffers
-    (dolist (buf (buffer-list))
-      (with-current-buffer buf
-        (when (and (derived-mode-p 'org-mode)
-                   (bound-and-true-p org-modern-mode))
-          (org-modern-mode -1)
-          (org-modern-mode 1))))))
+;;     ;; Configure strike-through for CANC headlines
+;;     ;; (setq org-fontify-done-headline t)
 
-(add-hook 'modus-themes-after-load-theme-hook #'my/set-org-modern-todo-faces)
-(my/set-org-modern-todo-faces)
+;;     ;; Set the face for CANC headlines to include strike-through
+;;     ;; (set-face-attribute 'org-headline-done nil :strike-through t)
 
-(use-package org-appear
-  :custom
-  (org-hide-emphasis-markers t)
-  (org-appear-trigger 'always)
-  (org-appear-autoemphasis t)
-  (org-appear-autolinks t)
-  (org-appear-autoentities t)
-  (org-appear-autokeywords t))
+;;     ;; Refresh org-modern in all org buffers
+;;     (dolist (buf (buffer-list))
+;;       (with-current-buffer buf
+;;         (when (and (derived-mode-p 'org-mode)
+;;                    (bound-and-true-p org-modern-mode))
+;;           (org-modern-mode -1)
+;;           (org-modern-mode 1))))))
 
-(add-hook 'org-mode-hook 'org-appear-mode)
+;; (add-hook 'modus-themes-after-load-theme-hook #'my/set-org-modern-todo-faces)
+;; (my/set-org-modern-todo-faces)
+
+;; (use-package org-appear
+;;   :custom
+;;   (org-hide-emphasis-markers t)
+;;   (org-appear-trigger 'always)
+;;   (org-appear-autoemphasis t)
+;;   (org-appear-autolinks t)
+;;   (org-appear-autoentities t)
+;;   (org-appear-autokeywords t))
+
+;; (add-hook 'org-mode-hook 'org-appear-mode)
 
 (use-package org-download
   :custom
