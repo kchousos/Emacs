@@ -57,11 +57,11 @@
 ;; Core UI Settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-;; Disable startup screen and maximize frame
+;; ;; Disable startup screen
 (setq inhibit-startup-message t
-      inhibit-startup-screen t
       inhibit-startup-echo-area-message t)
 
+;; Maximize frame
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; Disable unnecessary UI elements
