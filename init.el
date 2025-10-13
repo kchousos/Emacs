@@ -597,6 +597,8 @@ if one already exists."
   :custom
   (olivetti-body-width 120))
 
+(use-package mixed-pitch)
+
 (use-package darkroom
   :hook ((darkroom-mode . mixed-pitch-mode))
   :custom
@@ -617,7 +619,6 @@ if one already exists."
 
 (add-hook 'org-mode-hook #'my-prose-setup)
 (add-hook 'markdown-mode-hook #'my-prose-setup)
-(add-hook 'Info-mode-hook #'mixed-pitch-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Markdown
@@ -1296,7 +1297,14 @@ if one already exists."
  '(org-agenda-files
    '("/home/kchou/Documents/02-Areas/Agenda/Habits.org"
      "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
+              corfu darkroom dashboard direnv dockerfile-mode emacs-everywhere
+              git-gutter gptel ligature marginalia math-preview mixed-pitch
+              modus-themes olivetti openwith orderless org-appear org-download
+              org-mode org-modern quarto-mode ripgrep ruff-format rust-mode
+              tree-sitter-langs treesit-auto typst-ts-mode valign vertico vterm
+              vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
