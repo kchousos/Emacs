@@ -617,6 +617,7 @@ if one already exists."
 
 (add-hook 'org-mode-hook #'my-prose-setup)
 (add-hook 'markdown-mode-hook #'my-prose-setup)
+(add-hook 'Info-mode-hook #'mixed-pitch-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Markdown
@@ -625,6 +626,7 @@ if one already exists."
   :mode ("\\.md\\'" "\\.qmd\\'")
   :hook ((markdown-mode . olivetti-mode)
          (markdown-mode . save-place-local-mode)
+         (Info-mode . olivetti-mode)
          ;; (markdown-mode . flyspell-mode)
          (markdown-mode . my/markdown-highlight-tags))
   :bind
@@ -696,7 +698,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -706,7 +708,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
+  (citar-bibliography '("~/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -714,7 +716,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -874,7 +876,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
@@ -1294,16 +1296,7 @@ if one already exists."
  '(org-agenda-files
    '("/home/kchou/Documents/02-Areas/Agenda/Habits.org"
      "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"))
- '(package-selected-packages
-   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
-              corfu csv-mode darkroom dashboard diff-hl direnv dockerfile-mode
-              edit-indirect ef-themes eglot git-gutter gptel htmlize json-mode
-              ligature link-hint marginalia markdown-mode markdown-ts-mode
-              math-preview mermaid-mode modus-themes olivetti openwith orderless
-              org-appear org-download org-mode org-modern pet ruff-format
-              rust-mode selectric-mode telephone-line tree-sitter-langs
-              treesit-auto typst-ts-mode valign vertico vterm vundo yaml-mode
-              yasnippet zk-desktop))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
