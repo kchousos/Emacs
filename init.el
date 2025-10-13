@@ -100,6 +100,25 @@
 
 (setq initial-scratch-message nil)
 
+;; Hide minor modes in modeline
+(setq-default mode-line-format '("%e" mode-line-front-space
+                                 (:propertize
+                                  ("" mode-line-mule-info mode-line-client mode-line-modified mode-line-remote)
+                                  display
+                                  (min-width
+                                   (0.0)))
+                                 mode-line-frame-identification
+                                 mode-line-buffer-identification
+                                 (vc-mode vc-mode)
+                                 "  "
+                                 mode-line-position
+                                 "  "
+                                 "  "
+                                 mode-name
+                                 "  "
+                                 mode-line-misc-info
+                                 mode-line-end-spaces))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Scrolling and Navigation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -857,6 +876,7 @@ if one already exists."
   ;; Export options
   (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
+        org-html-checkbox-type 'html
         org-html-postamble nil
         org-export-with-broken-links t
         org-export-with-section-numbers nil
@@ -886,43 +906,45 @@ if one already exists."
 
 ;; GTD ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(setq org-directory "~/Documents/02-Areas/Agenda")
+
 (setq org-todo-keywords
-      '((sequence "RUNNING(r)" "NEXT(n)" "TODO(t)" "PROJ(p)" "COURSE" "WAIT(w)" "MAYBE(m)" "|" "DONE(d)" "CANC(c)")))
+      '((sequence "TODO(t)" "RUNNING(r)" "NEXT(n)" "PROJ(p)" "COURSE" "WAIT(w)" "MAYBE(m)" "|" "DONE(d)" "CANC(c)")))
 
-(defun my/set-org-todo-faces ()
-  "Set Org TODO keyword faces using modus-themes colors."
-  (modus-themes-with-colors
-    (setq org-todo-keyword-faces
-          `(("TODO" . (:foreground ,red
-                                   :weight bold))
-            ("NEXT" . (:foreground ,yellow
-                                   :weight bold))
-            ("RUNNING" . (:foreground ,rust
-                                      :weight bold))
-            ("WAIT" . (:foreground ,blue
-                                   :weight bold))
-            ("PROJ" . (:foreground ,magenta-cooler
-                                   :weight bold))
-            ("COURSE" . (:foreground ,cyan
-                                     :weight bold))
-            ("MAYBE" . (:foreground ,fg-dim
-                                    :weight bold))
-            ("DONE" . (:foreground ,green
-                                   :weight bold))
-            ("CANC" . (:foreground ,fg-dim
-                                   :weight bold)))))
+;; (defun my/set-org-todo-faces ()
+;;   "Set Org TODO keyword faces using modus-themes colors."
+;;   (modus-themes-with-colors
+;;     (setq org-todo-keyword-faces
+;;           `(("TODO" . (:foreground ,red
+;;                                    :weight bold))
+;;             ("NEXT" . (:foreground ,yellow
+;;                                    :weight bold))
+;;             ("RUNNING" . (:foreground ,rust
+;;                                       :weight bold))
+;;             ("WAIT" . (:foreground ,blue
+;;                                    :weight bold))
+;;             ("PROJ" . (:foreground ,magenta-cooler
+;;                                    :weight bold))
+;;             ("COURSE" . (:foreground ,cyan
+;;                                      :weight bold))
+;;             ("MAYBE" . (:foreground ,fg-dim
+;;                                     :weight bold))
+;;             ("DONE" . (:foreground ,green
+;;                                    :weight bold))
+;;             ("CANC" . (:foreground ,fg-dim
+;;                                    :weight bold)))))
 
-  (setq org-fontify-done-headline nil)
+;;   (setq org-fontify-done-headline nil)
 
-  ;; Refresh org TODO faces in all org buffers
-  (dolist (buf (buffer-list))
-    (with-current-buffer buf
-      (when (derived-mode-p 'org-mode)
-        (org-mode-restart)))))
-;; Call the function to initialize TODO faces
-(my/set-org-todo-faces)
-;; Add hooks to run the function on theme change
-(add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
+;;   ;; Refresh org TODO faces in all org buffers
+;;   (dolist (buf (buffer-list))
+;;     (with-current-buffer buf
+;;       (when (derived-mode-p 'org-mode)
+;;         (org-mode-restart)))))
+;; ;; Call the function to initialize TODO faces
+;; (my/set-org-todo-faces)
+;; ;; Add hooks to run the function on theme change
+;; (add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
 
 ;; Agenda
 (global-set-key (kbd "C-c a") #'org-agenda)
@@ -935,7 +957,7 @@ if one already exists."
       org-agenda-skip-scheduled-if-deadline-is-shown t
       org-agenda-span 'day
       org-agenda-remove-tags t
-      org-agenda-scheduled-leaders '("[S]: " "[S] in %2d days: ")
+      org-agenda-scheduled-leaders '("[S]: " "[S] %2d days ago: ")
       org-agenda-deadline-leaders
       '("[D]: " "[D] in %2d days: " "[D] %2d days ago: ")
       org-extend-today-until 4)
@@ -968,18 +990,27 @@ if one already exists."
          ((todo "PROJ" ((org-agenda-overriding-header "Current projects")))
           (todo "COURSE" ((org-agenda-overriding-header "Semester courses")))) nil)))
 
-(setq org-agenda-files '("~/Documents/02-Areas/Agenda/Agenda.org"))
+;; Habits
+
+(require 'org-habit)
+(add-to-list 'org-modules 'org-habit)
+
+(setq org-habit-show-all-today nil
+      org-habit-show-habits-only-for-today nil)
 
 ;; Capture
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
-      `(("i" "Inbox" entry
-         (file "~/Documents/02-Areas/Agenda/Inbox.org")
+      `(("i" "Inbox" entry (file "Inbox.org")
          "* TODO %?"
-         :prepend t)))
+         :prepend t)
+        ("x" "org-protocol-capture" entry (file "Inbox.org")
+         "* [[%:link][%:description]]\n\n %i"
+         :prepend t
+         :immediate-finish t)))
 
 ;; Clocking
-(setq org-clock-mode-line-total 'today)
+(setq org-clock-mode-line-total 'auto)
 
 (use-package org-latex-preview
   :ensure nil
@@ -1009,73 +1040,79 @@ if one already exists."
 (with-eval-after-load 'org
   (org-link-set-parameters "zotero" :follow #'org-zotero-open))
 
-;; (use-package org-modern
-;;   :custom
-;;   (org-modern-star 'replace))
+(use-package valign
+  :custom
+  (valign-fancy-bar t))
+(add-hook 'org-mode-hook #'valign-mode)
 
-;; (with-eval-after-load 'org (global-org-modern-mode))
+(use-package org-modern
+  :custom
+  (org-modern-star 'replace)
+  (org-modern-table nil))
 
-;; (defun my/set-org-modern-todo-faces ()
-;;   "Set org-modern TODO keyword faces using modus-themes colors."
-;;   (modus-themes-with-colors
-;;     (setq org-modern-todo-faces
-;;           `(("TODO" :background ,bg-red-intense
-;;              :foreground ,fg-main
-;;              :weight bold)
-;;             ("NEXT" :background ,bg-yellow-intense
-;;              :foreground ,fg-main
-;;              :weight bold)
-;;             ("RUNNING" :background ,bg-red-subtle
-;;              :foreground ,fg-main
-;;              :weight bold)
-;;             ("WAIT" :background ,bg-blue-intense
-;;              :foreground ,fg-main
-;;              :weight bold)
-;;             ("PROJ" :background ,bg-magenta-intense
-;;              :foreground ,fg-main
-;;              :weight bold)
-;;             ("COURSE" :background ,bg-cyan-intense
-;;              :foreground ,fg-main
-;;              :weight bold)
-;;             ("MAYBE" :background ,bg-inactive
-;;              :foreground ,fg-main
-;;              :weight bold)
-;;             ("DONE" :background ,bg-green-intense
-;;              :foreground ,fg-main
-;;              :weight bold)
-;;             ("CANC" :background ,bg-dim
-;;              :foreground ,fg-dim
-;;              :weight bold)))
+(with-eval-after-load 'org (global-org-modern-mode))
 
-;;     (setq org-fontify-done-headline nil)
+(defun my/set-org-modern-todo-faces ()
+  "Set org-modern TODO keyword faces using modus-themes colors."
+  (modus-themes-with-colors
+    (setq org-modern-todo-faces
+          `(("TODO" :background ,bg-red-intense
+             :foreground ,fg-main
+             :weight bold)
+            ("NEXT" :background ,bg-yellow-intense
+             :foreground ,fg-main
+             :weight bold)
+            ("RUNNING" :background ,bg-red-subtle
+             :foreground ,fg-main
+             :weight bold)
+            ("WAIT" :background ,bg-blue-intense
+             :foreground ,fg-main
+             :weight bold)
+            ("PROJ" :background ,bg-magenta-intense
+             :foreground ,fg-main
+             :weight bold)
+            ("COURSE" :background ,bg-cyan-intense
+             :foreground ,fg-main
+             :weight bold)
+            ("MAYBE" :background ,bg-inactive
+             :foreground ,fg-main
+             :weight bold)
+            ("DONE" :background ,bg-green-intense
+             :foreground ,fg-main
+             :weight bold)
+            ("CANC" :background ,bg-dim
+             :foreground ,fg-dim
+             :weight bold)))
 
-;;     ;; Configure strike-through for CANC headlines
-;;     ;; (setq org-fontify-done-headline t)
+    (setq org-fontify-done-headline nil)
 
-;;     ;; Set the face for CANC headlines to include strike-through
-;;     ;; (set-face-attribute 'org-headline-done nil :strike-through t)
+    ;; Configure strike-through for CANC headlines
+    ;; (setq org-fontify-done-headline t)
 
-;;     ;; Refresh org-modern in all org buffers
-;;     (dolist (buf (buffer-list))
-;;       (with-current-buffer buf
-;;         (when (and (derived-mode-p 'org-mode)
-;;                    (bound-and-true-p org-modern-mode))
-;;           (org-modern-mode -1)
-;;           (org-modern-mode 1))))))
+    ;; Set the face for CANC headlines to include strike-through
+    ;; (set-face-attribute 'org-headline-done nil :strike-through t)
 
-;; (add-hook 'modus-themes-after-load-theme-hook #'my/set-org-modern-todo-faces)
-;; (my/set-org-modern-todo-faces)
+    ;; Refresh org-modern in all org buffers
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (and (derived-mode-p 'org-mode)
+                   (bound-and-true-p org-modern-mode))
+          (org-modern-mode -1)
+          (org-modern-mode 1))))))
 
-;; (use-package org-appear
-;;   :custom
-;;   (org-hide-emphasis-markers t)
-;;   (org-appear-trigger 'always)
-;;   (org-appear-autoemphasis t)
-;;   (org-appear-autolinks t)
-;;   (org-appear-autoentities t)
-;;   (org-appear-autokeywords t))
+(add-hook 'modus-themes-after-load-theme-hook #'my/set-org-modern-todo-faces)
+(my/set-org-modern-todo-faces)
 
-;; (add-hook 'org-mode-hook 'org-appear-mode)
+(use-package org-appear
+  :custom
+  (org-hide-emphasis-markers t)
+  (org-appear-trigger 'always)
+  (org-appear-autoemphasis t)
+  (org-appear-autolinks t)
+  (org-appear-autoentities t)
+  (org-appear-autokeywords t))
+
+(add-hook 'org-mode-hook 'org-appear-mode)
 
 (use-package org-download
   :custom
@@ -1254,7 +1291,9 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(org-agenda-files '("~/Documents/02-Areas/Agenda/Agenda.org"))
+ '(org-agenda-files
+   '("/home/kchou/Documents/02-Areas/Agenda/Habits.org"
+     "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"))
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
               corfu csv-mode darkroom dashboard diff-hl direnv dockerfile-mode
@@ -1263,8 +1302,8 @@ if one already exists."
               math-preview mermaid-mode modus-themes olivetti openwith orderless
               org-appear org-download org-mode org-modern pet ruff-format
               rust-mode selectric-mode telephone-line tree-sitter-langs
-              treesit-auto typst-ts-mode vertico vterm vundo yaml-mode yasnippet
-              zk-desktop))
+              treesit-auto typst-ts-mode valign vertico vterm vundo yaml-mode
+              yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
