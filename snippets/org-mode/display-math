@@ -2,6 +2,4 @@
 # name: display math
 # key: dm
 # --
-\\[
-$0
-\\]
+\\[$0\\]

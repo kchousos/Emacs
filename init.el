@@ -248,8 +248,8 @@
 
 (with-eval-after-load 'quail (defun quail-completion ()))
 
-(setq-default message-log-max nil)
-(kill-buffer "*Messages*")
+(setq-default message-log-max 10)
+;; (kill-buffer "*Messages*")
 
 (winner-mode 1)
 
@@ -555,6 +555,9 @@
 (add-hook 'prog-mode-hook #'flyspell-prog-mode)
 (add-hook 'prog-mode-hook #'display-line-numbers-mode)
 
+;; Docs
+(use-package devdocs)
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Terminal
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -699,7 +702,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -709,7 +712,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/Library/References/biblio.bib"))
+  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -717,7 +720,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -861,6 +864,7 @@ if one already exists."
         org-image-align 'center
         org-ellipsis "…"
         org-startup-indented nil
+        org-startup-numerated nil
         org-pretty-entities nil
         org-level-color-stars-only nil
         org-tags-column 0
@@ -877,7 +881,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
@@ -907,12 +911,14 @@ if one already exists."
             (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?= . ?=) (?~ . ?~)))
             (setq-local electric-pair-text-pairs electric-pair-pairs)))
 
+(require 'org-protocol)
+
 ;; GTD ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (setq org-directory "~/Documents/02-Areas/Agenda")
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "RUNNING(r)" "NEXT(n)" "PROJ(p)" "COURSE" "WAIT(w)" "MAYBE(m)" "|" "DONE(d)" "CANC(c)")))
+      '((sequence "TODO(t)" "NEXT(n)" "PROJ(p)" "COURSE" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)" "WAIT(w)")))
 
 ;; (defun my/set-org-todo-faces ()
 ;;   "Set Org TODO keyword faces using modus-themes colors."
@@ -949,45 +955,54 @@ if one already exists."
 ;; ;; Add hooks to run the function on theme change
 ;; (add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
 
+;; Calendar/Diary
+(setq calendar-mark-diary-entries-flag t)
+
 ;; Agenda
 (global-set-key (kbd "C-c a") #'org-agenda)
+(setq org-agenda-files (list org-directory))
 
 (setq org-log-done 'time
       org-agenda-block-separator 9472
-      org-agenda-use-time-grid nil
+      org-agenda-use-time-grid t
+      org-agenda-start-with-log-mode t
+      org-agenda-log-mode-items '(clock)
       org-agenda-include-deadlines t
       org-agenda-skip-deadline-prewarning-if-scheduled t
       org-agenda-skip-scheduled-if-deadline-is-shown t
       org-agenda-span 'day
       org-agenda-remove-tags t
-      org-agenda-scheduled-leaders '("[S]: " "[S] %2d days ago: ")
-      org-agenda-deadline-leaders
-      '("[D]: " "[D] in %2d days: " "[D] %2d days ago: ")
-      org-extend-today-until 4)
+      ;; org-agenda-scheduled-leaders '("[S]: " "[S] %2d days ago: ")
+      ;; org-agenda-deadline-leaders '("[D]: " "[D] in %2d days: " "[D] %2d days ago: ")
+      org-agenda-deadline-faces '((0.9 . org-imminent-deadline) (0.7 . org-upcoming-deadline)
+                                  (0.0 . org-upcoming-distant-deadline))
+      org-habit-graph-column 46
+      org-extend-today-until 4
+      org-sort-agenda-notime-is-late nil)
 
 (setq org-agenda-sorting-strategy
-      '((agenda todo-state-up priority-down category-keep)
-        (todo todo-state-up priority-down category-keep)))
+      '(habit-down deadline-up time-up priority-down todo-state-up effort-up category-keep))
 
 (setq org-agenda-skip-scheduled-if-done t
       org-agenda-skip-deadline-if-done t
       org-agenda-skip-timestamp-if-done t)
 
 (setq org-agenda-custom-commands
-      '(("d" "Daily Agenda"
-         ((agenda "" nil)) nil)
-        ("a" "Daily Agenda, Running & Next Actions"
+      '(
+        ;; ("d" "Daily Agenda"
+        ;;  ((agenda "" nil)) nil)
+        ("d" "Daily Agenda, Running & Next Actions"
          ((agenda "" nil)
-          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          ;; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
         ("A" "Daily Agenda, Running, Next Actions, Projects & Courses"
          ((agenda "" nil)
-          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          ;; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))
           (todo "PROJ" ((org-agenda-overriding-header "Current projects")))
           (todo "COURSE" ((org-agenda-overriding-header "Semester courses")))) nil)
         ("c" "Running, Next Actions"
-         ((todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+         ( ; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
         ("p" "Projects and Courses"
          ((todo "PROJ" ((org-agenda-overriding-header "Current projects")))
@@ -1005,12 +1020,20 @@ if one already exists."
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "Inbox.org")
-         "* TODO %?"
-         :prepend t)
+         "* TODO %?\n" :prepend t)
+        ("t" "Task" entry (file "Agenda.org")
+         "* TODO %?\n" :prepend t)
+        ("e" "Event" entry (file "Events.org")
+         "* %?\n%t")
         ("x" "org-protocol-capture" entry (file "Inbox.org")
          "* [[%:link][%:description]]\n\n %i"
          :prepend t
          :immediate-finish t)))
+
+;; Refile
+(setq org-refile-use-outline-path 'file
+      org-outline-path-complete-in-steps nil
+      org-refile-targets '((org-agenda-files :maxlevel . 3)))
 
 ;; Clocking
 (setq org-clock-mode-line-total 'auto)
@@ -1065,9 +1088,9 @@ if one already exists."
             ("NEXT" :background ,bg-yellow-intense
              :foreground ,fg-main
              :weight bold)
-            ("RUNNING" :background ,bg-red-subtle
-             :foreground ,fg-main
-             :weight bold)
+            ;; ("RUNNING" :background ,bg-red-subtle
+            ;;  :foreground ,fg-main
+            ;;  :weight bold)
             ("WAIT" :background ,bg-blue-intense
              :foreground ,fg-main
              :weight bold)
@@ -1242,7 +1265,7 @@ if one already exists."
 ;; ERC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq erc-autojoin-channels-alist '(("Libera.Chat" "#lobsters" "#crypto")
+(setq erc-autojoin-channels-alist '(("Libera.Chat" "#lobsters" "#crypto" "#emacs" "#org-mode")
                                     ("Lainchan" "#lainchan" "#laintracker")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1295,16 +1318,21 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("/home/kchou/Documents/02-Areas/Agenda/Habits.org"
-     "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"))
+   '("~/Documents/02-Areas/Agenda/Habits.org"
+     "/home/kchou/Documents/02-Areas/Agenda/Events.org"
+     "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"
+     "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"
+     "/home/kchou/Documents/02-Areas/Agenda/Someday.org"))
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
-              corfu darkroom dashboard direnv dockerfile-mode emacs-everywhere
-              git-gutter gptel ligature marginalia math-preview mixed-pitch
+              corfu csv-mode darkroom dashboard devdocs diff-hl direnv
+              dockerfile-mode edit-indirect ef-themes eglot git-gutter gptel
+              htmlize json-mode ligature link-hint marginalia markdown-mode
+              markdown-ts-mode math-preview mermaid-mode mixed-pitch
               modus-themes olivetti openwith orderless org-appear org-download
-              org-mode org-modern quarto-mode ripgrep ruff-format rust-mode
-              tree-sitter-langs treesit-auto typst-ts-mode valign vertico vterm
-              vundo yaml-mode yasnippet zk-desktop))
+              org-mode org-modern pet ruff-format rust-mode selectric-mode
+              telephone-line tree-sitter-langs treesit-auto typst-ts-mode valign
+              vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
