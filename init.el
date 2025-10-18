@@ -967,6 +967,7 @@ if one already exists."
       org-agenda-use-time-grid t
       org-agenda-start-with-log-mode t
       org-agenda-log-mode-items '(clock)
+      org-log-into-drawer t
       org-agenda-include-deadlines t
       org-agenda-skip-deadline-prewarning-if-scheduled t
       org-agenda-skip-scheduled-if-deadline-is-shown t
