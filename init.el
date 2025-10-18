@@ -863,7 +863,7 @@ if one already exists."
   (setq org-image-actual-width (list 0.5)
         org-image-align 'center
         org-ellipsis "…"
-        org-startup-indented nil
+        org-startup-indented t
         org-startup-numerated nil
         org-pretty-entities nil
         org-level-color-stars-only nil
@@ -918,7 +918,7 @@ if one already exists."
 (setq org-directory "~/Documents/02-Areas/Agenda")
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "PROJ(p)" "COURSE" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)" "WAIT(w)")))
+      '((sequence "TODO(t)" "NEXT(n)" "PROJ(p)" "COURSE" "WAIT(w)" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)")))
 
 ;; (defun my/set-org-todo-faces ()
 ;;   "Set Org TODO keyword faces using modus-themes colors."
@@ -1020,11 +1020,11 @@ if one already exists."
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "Inbox.org")
-         "* TODO %?\n" :prepend t)
+         "* TODO %?\n\n" :prepend t)
         ("t" "Task" entry (file "Agenda.org")
-         "* TODO %?\n" :prepend t)
+         "* TODO %?\n\n" :prepend t)
         ("e" "Event" entry (file "Events.org")
-         "* %?\n%t")
+         "* %?\n%t\n")
         ("x" "org-protocol-capture" entry (file "Inbox.org")
          "* [[%:link][%:description]]\n\n %i"
          :prepend t
