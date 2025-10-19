@@ -702,7 +702,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -712,7 +712,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
+  (citar-bibliography '("~/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -720,7 +720,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -881,7 +881,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
@@ -912,6 +912,8 @@ if one already exists."
             (setq-local electric-pair-text-pairs electric-pair-pairs)))
 
 (require 'org-protocol)
+
+(global-set-key (kbd "C-c l") #'org-store-link)
 
 ;; GTD ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1030,7 +1032,6 @@ if one already exists."
           (todo "COURSE" ((org-agenda-overriding-header "Semester courses")))) nil)))
 
 ;; Habits
-
 (require 'org-habit)
 (add-to-list 'org-modules 'org-habit)
 
@@ -1045,7 +1046,7 @@ if one already exists."
         ("t" "Task" entry (file "Agenda.org")
          "* TODO %?" :prepend t :empty-lines 1)
         ("e" "Event" entry (file+headline "Calendar.org" "Συμβάντα")
-         "** %?\n%^t" :time-prompt t :empty-lines 1)
+         "** %? %^t" :time-prompt t :empty-lines 1)
         ("x" "org-protocol-capture" entry (file "Inbox.org")
          "* [[%:link][%:description]] %i"
          :prepend t
