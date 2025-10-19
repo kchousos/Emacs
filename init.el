@@ -863,7 +863,7 @@ if one already exists."
   (setq org-image-actual-width (list 0.5)
         org-image-align 'center
         org-ellipsis "…"
-        org-startup-indented t
+        org-startup-indented nil
         org-startup-numerated nil
         org-pretty-entities nil
         org-level-color-stars-only nil
@@ -956,13 +956,33 @@ if one already exists."
 ;; (add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
 
 ;; Calendar/Diary
-(setq calendar-mark-diary-entries-flag t)
+(setq org-agenda-diary-file "~/Documents/02-Areas/Agenda/Calendar.org"
+      calendar-mark-diary-entries-flag nil
+      org-agenda-insert-diary-strategy 'top-level
+      org-agenda-include-diary nil
+      holiday-hebrew-holidays nil
+      holiday-islamic-holidays nil
+      holiday-bahai-holidays nil
+      holiday-oriental-holidays nil
+      calendar-christian-all-holidays-flag t)
+
+;;;; Appointments
+(setq appt-time-msg-list nil
+      appt-message-warning-time '10       ;; warn 10 min in advance
+      appt-display-diary nil              ;; do not display diary when (appt-activate) is called
+      appt-display-mode-line t            ;; show in the modeline
+      appt-display-format 'window         ;; display notification in window
+      calendar-mark-diary-entries-flag t) ;; mark diary entries in calendar
+(add-hook 'org-finalize-agenda-hook
+          (org-agenda-to-appt)            ;; copy all agenda schedule to appointments
+          (appt-activate 1))              ;; active appt (appointment notification)
 
 ;; Agenda
 (global-set-key (kbd "C-c a") #'org-agenda)
 (setq org-agenda-files (list org-directory))
 
 (setq org-log-done 'time
+      org-archive-location "::* Archive"
       org-agenda-block-separator 9472
       org-agenda-use-time-grid t
       org-agenda-start-with-log-mode t
@@ -1021,15 +1041,16 @@ if one already exists."
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "Inbox.org")
-         "* TODO %?\n\n" :prepend t)
+         "* TODO %?" :prepend t :empty-lines 1)
         ("t" "Task" entry (file "Agenda.org")
-         "* TODO %?\n\n" :prepend t)
-        ("e" "Event" entry (file "Events.org")
-         "* %?\n%t\n")
+         "* TODO %?" :prepend t :empty-lines 1)
+        ("e" "Event" entry (file+headline "Calendar.org" "Συμβάντα")
+         "** %?\n%^t" :time-prompt t :empty-lines 1)
         ("x" "org-protocol-capture" entry (file "Inbox.org")
-         "* [[%:link][%:description]]\n\n %i"
+         "* [[%:link][%:description]] %i"
          :prepend t
-         :immediate-finish t)))
+         :immediate-finish t
+         :empty-lines 1)))
 
 ;; Refile
 (setq org-refile-use-outline-path 'file
@@ -1319,9 +1340,9 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/02-Areas/Agenda/Habits.org"
-     "/home/kchou/Documents/02-Areas/Agenda/Events.org"
-     "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"
+   '("~/Documents/02-Areas/Agenda/Agenda.org"
+     "/home/kchou/Documents/02-Areas/Agenda/Calendar.org"
+     "/home/kchou/Documents/02-Areas/Agenda/Habits.org"
      "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"
      "/home/kchou/Documents/02-Areas/Agenda/Someday.org"))
  '(package-selected-packages
