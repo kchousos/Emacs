@@ -702,7 +702,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -712,7 +712,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/Library/References/biblio.bib"))
+  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -720,7 +720,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -767,7 +767,7 @@ if one already exists."
   ("C-c z o" . zk-follow-link-at-point)
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
-  (zk-directory "~/Documents/02-Areas/Slipbox/")
+  (zk-directory "~/HDD/Documents/02-Areas/Slipbox/")
   (zk-file-extension "org")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
@@ -848,8 +848,9 @@ if one already exists."
 (with-eval-after-load 'markdown-mode
   (define-key markdown-mode-map (kbd "C-c C-m") #'math-preview-all))
 
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Org-Mode
+;; Org-Mode (this early for load-path compat)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))
@@ -863,7 +864,7 @@ if one already exists."
   (setq org-image-actual-width (list 0.5)
         org-image-align 'center
         org-ellipsis "…"
-        org-startup-indented nil
+        org-startup-indented t
         org-startup-numerated nil
         org-pretty-entities nil
         org-level-color-stars-only nil
@@ -881,7 +882,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
@@ -920,7 +921,7 @@ if one already exists."
 (setq org-directory "~/Documents/02-Areas/Agenda")
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "NEXT(n)" "PROJ(p)" "COURSE" "WAIT(w)" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)")))
+      '((sequence "TODO(t)" "RUNNING(r)" "NEXT(n)" "WAIT(w)" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)")))
 
 ;; (defun my/set-org-todo-faces ()
 ;;   "Set Org TODO keyword faces using modus-themes colors."
@@ -958,15 +959,17 @@ if one already exists."
 ;; (add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
 
 ;; Calendar/Diary
-(setq org-agenda-diary-file "~/Documents/02-Areas/Agenda/Calendar.org"
-      calendar-mark-diary-entries-flag nil
-      org-agenda-insert-diary-strategy 'top-level
+(setq org-agenda-diary-file "~/Documents/02-Areas/Agenda/Events.org"
+      calendar-mark-diary-entries-flag t
+      org-agenda-insert-diary-strategy 'date-tree
       org-agenda-include-diary nil
       holiday-hebrew-holidays nil
       holiday-islamic-holidays nil
       holiday-bahai-holidays nil
       holiday-oriental-holidays nil
       calendar-christian-all-holidays-flag t)
+
+(setq-default calendar-date-style 'iso)
 
 ;;;; Appointments
 (setq appt-time-msg-list nil
@@ -984,24 +987,30 @@ if one already exists."
 (setq org-agenda-files (list org-directory))
 
 (setq org-log-done 'time
+      org-agenda-current-time-string "← Now ─────────────────────────────────────────────────────────"
       org-archive-location "::* Archive"
+      org-lowest-priority ?E
       org-agenda-block-separator 9472
+      org-agenda-tags-column 0
       org-agenda-use-time-grid t
-      org-agenda-start-with-log-mode t
+      org-agenda-start-with-log-mode nil
       org-agenda-log-mode-items '(clock)
       org-log-into-drawer t
       org-agenda-include-deadlines t
+      org-agenda-todo-ignore-scheduled 'all
       org-agenda-skip-deadline-prewarning-if-scheduled t
       org-agenda-skip-scheduled-if-deadline-is-shown t
       org-agenda-span 'day
-      org-agenda-remove-tags t
+      org-agenda-remove-tags nil
       ;; org-agenda-scheduled-leaders '("[S]: " "[S] %2d days ago: ")
       ;; org-agenda-deadline-leaders '("[D]: " "[D] in %2d days: " "[D] %2d days ago: ")
       org-agenda-deadline-faces '((0.9 . org-imminent-deadline) (0.7 . org-upcoming-deadline)
                                   (0.0 . org-upcoming-distant-deadline))
       org-habit-graph-column 46
       org-extend-today-until 4
-      org-sort-agenda-notime-is-late nil)
+      org-sort-agenda-notime-is-late nil
+      org-agenda-entry-text-leaders "    "
+      )
 
 (setq org-agenda-sorting-strategy
       '(habit-down deadline-up time-up priority-down todo-state-up effort-up category-keep))
@@ -1010,26 +1019,44 @@ if one already exists."
       org-agenda-skip-deadline-if-done t
       org-agenda-skip-timestamp-if-done t)
 
+(setq org-agenda-breadcrumbs-separator " ➤ "
+      org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
+                                 (timeline . "  % s")
+                                 (todo ." %i %b")
+                                 (tags . " %i %-12:c %b")
+                                 (search . " %i %-12:c")))
+
 (setq org-agenda-custom-commands
-      '(
-        ;; ("d" "Daily Agenda"
-        ;;  ((agenda "" nil)) nil)
-        ("d" "Daily Agenda, Running & Next Actions"
+      '(("A" "Daily Agenda, Running & Next Actions"
          ((agenda "" nil)
-          ;; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
-          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
-        ("A" "Daily Agenda, Running, Next Actions, Projects & Courses"
-         ((agenda "" nil)
-          ;; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
-          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))
-          (todo "PROJ" ((org-agenda-overriding-header "Current projects")))
-          (todo "COURSE" ((org-agenda-overriding-header "Semester courses")))) nil)
+          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)        
         ("c" "Running, Next Actions"
-         ( ; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+         ((todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
-        ("p" "Projects and Courses"
-         ((todo "PROJ" ((org-agenda-overriding-header "Current projects")))
-          (todo "COURSE" ((org-agenda-overriding-header "Semester courses")))) nil)))
+        ))
+
+;; Calendar integration (CalDav)
+
+(use-package org-caldav
+  :config
+  (setq org-caldav-url "https://nextcloud.kchou.duckdns.org/remote.php/dav/calendars/Kchou/"
+        ;; org-caldav-calendar-id "1-1"
+        org-caldav-calendars '(
+                               (:calendar-id "1-1" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Events")))
+                               (:calendar-id "2x" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Routine")))
+                               (:calendar-id "-" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Lectures")))
+                               (:calendar-id "1-14" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Meetings")))
+                               (:calendar-id "hobby" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Downtime")))
+                               (:calendar-id "training" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Training")))
+                               (:calendar-id "1-3" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Exams")))
+                               )
+        org-caldav-files nil
+        ;; org-caldav-inbox (expand-file-name "Calendar.org" org-directory)
+        org-caldav-datetree-treetype 'week
+        org-caldav-save-directory 'org-directory
+        org-caldav-delete-calendar-entries 'ask
+        org-icalendar-timezone "Europe/Athens"))
 
 ;; Habits
 (require 'org-habit)
@@ -1045,8 +1072,8 @@ if one already exists."
          "* TODO %?" :prepend t :empty-lines 1)
         ("t" "Task" entry (file "Agenda.org")
          "* TODO %?" :prepend t :empty-lines 1)
-        ("e" "Event" entry (file+headline "Calendar.org" "Συμβάντα")
-         "** %? %^t" :time-prompt t :empty-lines 1)
+        ("e" "Event" entry (file "Events.org")
+         "* %?\n%^t" :time-prompt t :empty-lines 0)
         ("x" "org-protocol-capture" entry (file "Inbox.org")
          "* [[%:link][%:description]] %i"
          :prepend t
@@ -1067,7 +1094,7 @@ if one already exists."
   (plist-put org-format-latex-options :zoom 1.3)
   (plist-put org-format-latex-options :page-width 0.8)
 
-  (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
+  ;; (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
 
   ;; Enable consistent equation numbering
   (setq org-latex-preview-numbered t)
@@ -1341,23 +1368,27 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/02-Areas/Agenda/Agenda.org"
+   '("/home/kchou/Documents/02-Areas/Agenda/Anniversaries.org"
      "/home/kchou/Documents/02-Areas/Agenda/Calendar.org"
+     "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"
      "/home/kchou/Documents/02-Areas/Agenda/Habits.org"
-     "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"
-     "/home/kchou/Documents/02-Areas/Agenda/Someday.org"))
+     "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"))
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
               corfu csv-mode darkroom dashboard devdocs diff-hl direnv
               dockerfile-mode edit-indirect ef-themes eglot git-gutter gptel
               htmlize json-mode ligature link-hint marginalia markdown-mode
               markdown-ts-mode math-preview mermaid-mode mixed-pitch
-              modus-themes olivetti openwith orderless org-appear org-download
-              org-mode org-modern pet ruff-format rust-mode selectric-mode
-              telephone-line tree-sitter-langs treesit-auto typst-ts-mode valign
-              vertico vterm vundo yaml-mode yasnippet zk-desktop))
+              modus-themes olivetti openwith orderless org-appear org-caldav
+              org-download org-mode org-modern pet ruff-format rust-mode
+              selectric-mode telephone-line tree-sitter-langs treesit-auto
+              typst-ts-mode valign vertico vterm vundo yaml-mode yasnippet
+              zk-desktop))
  '(package-vc-selected-packages
-   '((typst-ts-mode :vc-backend Git :url
+   '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
+     (org-timeblock :vc-backend Git :url
+                    "https://github.com/ichernyshovvv/org-timeblock/")
+     (typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git"))))
 
 ;; Enable previously disabled commands
