@@ -53,6 +53,8 @@
 ;; Add custom lisp directory to load path
 (add-to-list 'load-path (expand-file-name "lisp" user-emacs-directory))
 
+(use-package org :load-path "~/.config/emacs/elpa/org-mode/lisp/")
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Core UI Settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -850,7 +852,7 @@ if one already exists."
 
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Org-Mode (this early for load-path compat)
+;; Org-Mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 ;; (package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))
@@ -909,7 +911,7 @@ if one already exists."
 
 (add-hook 'org-mode-hook
           (lambda ()
-            (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?= . ?=) (?~ . ?~)))
+            (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?~ . ?~)))
             (setq-local electric-pair-text-pairs electric-pair-pairs)))
 
 (require 'org-protocol)
@@ -1094,7 +1096,7 @@ if one already exists."
   (plist-put org-format-latex-options :zoom 1.3)
   (plist-put org-format-latex-options :page-width 0.8)
 
-  ;; (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
+  (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
 
   ;; Enable consistent equation numbering
   (setq org-latex-preview-numbered t)
@@ -1373,17 +1375,7 @@ if one already exists."
      "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"
      "/home/kchou/Documents/02-Areas/Agenda/Habits.org"
      "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"))
- '(package-selected-packages
-   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
-              corfu csv-mode darkroom dashboard devdocs diff-hl direnv
-              dockerfile-mode edit-indirect ef-themes eglot git-gutter gptel
-              htmlize json-mode ligature link-hint marginalia markdown-mode
-              markdown-ts-mode math-preview mermaid-mode mixed-pitch
-              modus-themes olivetti openwith orderless org-appear org-caldav
-              org-download org-mode org-modern pet ruff-format rust-mode
-              selectric-mode telephone-line tree-sitter-langs treesit-auto
-              typst-ts-mode valign vertico vterm vundo yaml-mode yasnippet
-              zk-desktop))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
