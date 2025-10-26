@@ -17,7 +17,9 @@
 #+LATEX_HEADER:\usepackage{etoolbox}
 #+LATEX_HEADER:\usepackage{xcolor}
 
-#+LATEX_HEADER: \usepackage[english, AUTO]{polyglossia}
+#+LATEX_HEADER: \usepackage{polyglossia}
+#+LATEX_HEADER: \setdefaultlanguage{greek}
+#+LATEX_HEADER: \setotherlanguage{english}
 
 #+LATEX_HEADER: \usepackage{unicode-math} % this also loads fontspec
 #+LATEX_HEADER: \usepackage[utf8]{inputenc}
