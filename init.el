@@ -250,7 +250,7 @@
 
 (with-eval-after-load 'quail (defun quail-completion ()))
 
-(setq-default message-log-max 10)
+(setq-default message-log-max nil)
 ;; (kill-buffer "*Messages*")
 
 (winner-mode 1)
@@ -1029,12 +1029,12 @@ if one already exists."
                                  (search . " %i %-12:c")))
 
 (setq org-agenda-custom-commands
-      '(("A" "Daily Agenda, Running & Next Actions"
+      '(("A" "Daily Agenda, Next Actions"
          ((agenda "" nil)
-          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          ;; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)        
-        ("c" "Running, Next Actions"
-         ((todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+        ("n" "Next Actions"
+         (;(todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
         ))
 
@@ -1196,6 +1196,44 @@ if one already exists."
   :custom
   (org-download-method 'directory)
   (org-download-image-dir "./Attachments"))
+
+;; LaTeX export
+
+(setq org-latex-classes '(("article" "\\documentclass[11pt]{article}"
+                           ("\\section{%s}" . "\\section*{%s}")
+                           ("\\subsection{%s}" . "\\subsection*{%s}")
+                           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                           ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                           ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+                          ("scrartcl" "\\documentclass[11pt]{scrartcl}"
+                           ("\\section{%s}" . "\\section*{%s}")
+                           ("\\subsection{%s}" . "\\subsection*{%s}")
+                           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+                           ("\\paragraph{%s}" . "\\paragraph*{%s}")
+                           ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
+                          ("report" "\\documentclass[11pt]{report}" ("\\part{%s}" . "\\part*{%s}")
+                           ("\\chapter{%s}" . "\\chapter*{%s}") ("\\section{%s}" . "\\section*{%s}")
+                           ("\\subsection{%s}" . "\\subsection*{%s}")
+                           ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
+                          ("book" "\\documentclass[11pt]{book}" ("\\part{%s}" . "\\part*{%s}")
+                           ("\\chapter{%s}" . "\\chapter*{%s}") ("\\section{%s}" . "\\section*{%s}")
+                           ("\\subsection{%s}" . "\\subsection*{%s}")
+                           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
+      org-latex-tables-booktabs t
+      org-latex-with-hyperref
+      "\\hypersetup{
+         pdfauthor={%a},
+         pdftitle={%t},
+         pdfkeywords={%k},
+         pdfsubject={%d},
+         pdfcreator={%c},
+         pdflang={%L},
+         colorlinks=true,    
+         linkcolor={purple},    
+         filecolor={cyan},
+         citecolor={red},    
+         urlcolor={blue}}"
+      )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Typesetting
