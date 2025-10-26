@@ -1,0 +1,36 @@
+# -*- mode: snippet -*-
+# name: LaTeX export preamble
+# key: ol
+# --
+#+LATEX_HEADER_EXTRA: \author{Κωνσταντίνος Χούσος\\\medskip \small ΑΜ: 7115142500008 \\\medskip \small Μεταπτυχιακός (Α.Λ.ΜΑ.)}
+#+LANGUAGE: el
+#+OPTIONS: num:nil toc:nil date:nil title:t author:nil
+#+EXPORT_FILE_NAME: $1
+:PREAMBLE:
+#+LATEX_COMPILER: latexmk
+#+BIBLIOGRAPHY: /home/kchou/Library/References/biblio.bib
+#+LATEX_CLASS: article
+#+LATEX_CLASS_OPTIONS: [greek, a4paper]
+
+#+LATEX_HEADER:\usepackage[margin=1.4in]{geometry}
+#+LATEX_HEADER:\usepackage{microtype, parskip}
+#+LATEX_HEADER:\usepackage{etoolbox}
+#+LATEX_HEADER:\usepackage{xcolor}
+
+#+LATEX_HEADER: \usepackage[english, AUTO]{polyglossia}
+
+#+LATEX_HEADER: \usepackage{unicode-math} % this also loads fontspec
+#+LATEX_HEADER: \usepackage[utf8]{inputenc}
+#+LATEX_HEADER: \setmainfont[Ligatures=TeX]{Libertinus Serif}
+#+LATEX_HEADER: \setmonofont[]{Iosevka}
+
+#+LATEX_HEADER: \usepackage{longtable,booktabs,array,colortbl}
+
+#+LATEX_HEADER:\usepackage[newfloat, cache=false]{minted}
+#+LATEX_HEADER:\setminted{frame=single, framesep=2mm, linenos, breaklines, numbersep=0.5em}
+
+#+LATEX_HEADER:\usepackage[font={footnotesize}, margin=1cm, labelfont=bf]{caption}
+
+#+LATEX_HEADER:\PassOptionsToPackage{unicode}{hyperref}
+:END:
+$0
