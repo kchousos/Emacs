@@ -7,7 +7,7 @@
 #+OPTIONS: num:nil toc:nil date:nil title:t author:nil
 #+EXPORT_FILE_NAME: $1
 :PREAMBLE:
-#+LATEX_COMPILER: latexmk
+#+LATEX_COMPILER: lualatex
 #+BIBLIOGRAPHY: /home/kchou/Library/References/biblio.bib
 #+LATEX_CLASS: article
 #+LATEX_CLASS_OPTIONS: [greek, a4paper]
