@@ -1206,9 +1206,9 @@ if one already exists."
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-org-latex-tables-booktabs t
-org-latex-with-hyperref
-"\\hypersetup{
+(setq org-latex-tables-booktabs t
+      org-latex-with-hyperref
+      "\\hypersetup{
          pdfauthor={%a},
          pdftitle={%t},
          pdfkeywords={%k},
@@ -1221,9 +1221,9 @@ org-latex-with-hyperref
          citecolor={red},    
          urlcolor={blue}}"
 
-org-latex-src-block-backend 'minted
-org-latex-compilers '("pdflatex" "xelatex" "lualatex" "latexmk")
-)
+      org-latex-src-block-backend 'minted
+      org-latex-compilers '("pdflatex" "xelatex" "lualatex" "latexmk")
+      )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Typesetting
