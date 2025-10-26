@@ -1198,30 +1198,17 @@ if one already exists."
   (org-download-image-dir "./Attachments"))
 
 ;; LaTeX export
+(add-to-list 'org-latex-classes
+             '("koma-article" "\\documentclass{scrartcl}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
-(setq org-latex-classes '(("article" "\\documentclass[11pt]{article}"
-                           ("\\section{%s}" . "\\section*{%s}")
-                           ("\\subsection{%s}" . "\\subsection*{%s}")
-                           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                           ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                           ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-                          ("scrartcl" "\\documentclass[11pt]{scrartcl}"
-                           ("\\section{%s}" . "\\section*{%s}")
-                           ("\\subsection{%s}" . "\\subsection*{%s}")
-                           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
-                           ("\\paragraph{%s}" . "\\paragraph*{%s}")
-                           ("\\subparagraph{%s}" . "\\subparagraph*{%s}"))
-                          ("report" "\\documentclass[11pt]{report}" ("\\part{%s}" . "\\part*{%s}")
-                           ("\\chapter{%s}" . "\\chapter*{%s}") ("\\section{%s}" . "\\section*{%s}")
-                           ("\\subsection{%s}" . "\\subsection*{%s}")
-                           ("\\subsubsection{%s}" . "\\subsubsection*{%s}"))
-                          ("book" "\\documentclass[11pt]{book}" ("\\part{%s}" . "\\part*{%s}")
-                           ("\\chapter{%s}" . "\\chapter*{%s}") ("\\section{%s}" . "\\section*{%s}")
-                           ("\\subsection{%s}" . "\\subsection*{%s}")
-                           ("\\subsubsection{%s}" . "\\subsubsection*{%s}")))
-      org-latex-tables-booktabs t
-      org-latex-with-hyperref
-      "\\hypersetup{
+org-latex-tables-booktabs t
+org-latex-with-hyperref
+"\\hypersetup{
          pdfauthor={%a},
          pdftitle={%t},
          pdfkeywords={%k},
@@ -1234,9 +1221,9 @@ if one already exists."
          citecolor={red},    
          urlcolor={blue}}"
 
-      org-latex-src-block-backend 'minted
-      org-latex-compilers '("pdflatex" "xelatex" "lualatex" "latexmk")
-      )
+org-latex-src-block-backend 'minted
+org-latex-compilers '("pdflatex" "xelatex" "lualatex" "latexmk")
+)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Typesetting
