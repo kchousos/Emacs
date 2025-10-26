@@ -1233,6 +1233,8 @@ if one already exists."
          filecolor={cyan},
          citecolor={red},    
          urlcolor={blue}}"
+
+      org-latex-src-block-backend 'minted
       )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
