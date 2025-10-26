@@ -1235,6 +1235,7 @@ if one already exists."
          urlcolor={blue}}"
 
       org-latex-src-block-backend 'minted
+      org-latex-compilers '("pdflatex" "xelatex" "lualatex" "latexmk")
       )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
