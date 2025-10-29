@@ -1001,7 +1001,7 @@ if one already exists."
       org-agenda-include-deadlines t
       org-agenda-todo-ignore-scheduled 'all
       org-agenda-skip-deadline-prewarning-if-scheduled t
-      org-agenda-skip-scheduled-if-deadline-is-shown t
+      org-agenda-skip-scheduled-if-deadline-is-shown nil
       org-agenda-span 'day
       org-agenda-remove-tags nil
       ;; org-agenda-scheduled-leaders '("[S]: " "[S] %2d days ago: ")
@@ -1029,14 +1029,10 @@ if one already exists."
                                  (search . " %i %-12:c")))
 
 (setq org-agenda-custom-commands
-      '(("A" "Daily Agenda, Next Actions"
+      '(("A" "Daily Agenda, Running & Next Actions"
          ((agenda "" nil)
-          ;; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
-          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)        
-        ("n" "Next Actions"
-         (;(todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
-          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
-        ))
+          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)))
 
 ;; Calendar integration (CalDav)
 
@@ -1219,10 +1215,11 @@ if one already exists."
          linkcolor={purple},    
          filecolor={cyan},
          citecolor={red},    
-         urlcolor={blue}}"
+         urlcolor={blue}}
+"
 
+      org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
       org-latex-src-block-backend 'minted
-      org-latex-compilers '("pdflatex" "xelatex" "lualatex" "latexmk")
       )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
