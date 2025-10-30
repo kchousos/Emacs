@@ -881,6 +881,10 @@ if one already exists."
         org-footnote-section nil
         org-return-follows-link t)
 
+  ;; Attachments handling
+  (setq org-yank-image-save-method "./Attachments/"
+        org-yank-dnd-method 'file-link)
+
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; Export options
@@ -1187,11 +1191,6 @@ if one already exists."
   (org-appear-autokeywords t))
 
 (add-hook 'org-mode-hook 'org-appear-mode)
-
-(use-package org-download
-  :custom
-  (org-download-method 'directory)
-  (org-download-image-dir "./Attachments"))
 
 ;; LaTeX export
 (add-to-list 'org-latex-classes
