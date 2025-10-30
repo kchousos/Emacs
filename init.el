@@ -961,7 +961,7 @@ if one already exists."
 ;; (add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
 
 ;; Calendar/Diary
-(setq org-agenda-diary-file "~/Documents/02-Areas/Agenda/Events.org"
+(setq org-agenda-diary-file "~/Documents/02-Areas/Agenda/Calendar.org"
       calendar-mark-diary-entries-flag t
       org-agenda-insert-diary-strategy 'date-tree
       org-agenda-include-diary nil
@@ -1070,7 +1070,7 @@ if one already exists."
          "* TODO %?" :prepend t :empty-lines 1)
         ("t" "Task" entry (file "Agenda.org")
          "* TODO %?" :prepend t :empty-lines 1)
-        ("e" "Event" entry (file "Events.org")
+        ("e" "Event" entry (file "Calendar.org")
          "* %?\n%^t" :time-prompt t :empty-lines 0)
         ("x" "org-protocol-capture" entry (file "Inbox.org")
          "* [[%:link][%:description]] %i"
