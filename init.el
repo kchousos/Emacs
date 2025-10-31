@@ -847,10 +847,6 @@ if one already exists."
 
 (advice-add #'math-preview-all :before (lambda () (math-preview-reset-numbering 1)))
 
-(with-eval-after-load 'markdown-mode
-  (define-key markdown-mode-map (kbd "C-c C-m") #'math-preview-all))
-
-
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Org-Mode
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1004,8 +1000,11 @@ if one already exists."
       org-log-into-drawer t
       org-agenda-include-deadlines t
       org-agenda-todo-ignore-scheduled 'all
-      org-agenda-skip-deadline-prewarning-if-scheduled t
+      org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled
       org-agenda-skip-scheduled-if-deadline-is-shown nil
+      org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-skip-timestamp-if-done t
       org-agenda-span 'day
       org-agenda-remove-tags nil
       ;; org-agenda-scheduled-leaders '("[S]: " "[S] %2d days ago: ")
@@ -1019,11 +1018,8 @@ if one already exists."
       )
 
 (setq org-agenda-sorting-strategy
-      '(habit-down deadline-up time-up priority-down todo-state-up effort-up category-keep))
+      '(habit-down time-up deadline-up priority-down todo-state-up effort-up category-keep))
 
-(setq org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-skip-timestamp-if-done t)
 
 (setq org-agenda-breadcrumbs-separator " ➤ "
       org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
