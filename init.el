@@ -1188,6 +1188,11 @@ if one already exists."
 
 (add-hook 'org-mode-hook 'org-appear-mode)
 
+;; Exporting
+(use-package org-contrib)
+(require 'ox-extra)
+(ox-extras-activate '(ignore-headlines))
+
 ;; LaTeX export
 (add-to-list 'org-latex-classes
              '("koma-article" "\\documentclass{scrartcl}"
