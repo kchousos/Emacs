@@ -704,7 +704,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -714,7 +714,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
+  (citar-bibliography '("~/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -722,7 +722,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -769,7 +769,7 @@ if one already exists."
   ("C-c z o" . zk-follow-link-at-point)
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
-  (zk-directory "~/HDD/Documents/02-Areas/Slipbox/")
+  (zk-directory "~/Documents/02-Areas/Slipbox/")
   (zk-file-extension "org")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
@@ -884,7 +884,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
@@ -1070,6 +1070,8 @@ if one already exists."
          "* TODO %?" :prepend t :empty-lines 1)
         ("t" "Task" entry (file "Agenda.org")
          "* TODO %?" :prepend t :empty-lines 1)
+        ("j" "Journal" entry (file+datetree "Journal.org")
+         "* %<%H:%M>\n%?" :empty-lines 0)
         ("e" "Event" entry (file "Calendar.org")
          "* %?\n%^t" :time-prompt t :empty-lines 0)
         ("x" "org-protocol-capture" entry (file "Inbox.org")
@@ -1400,17 +1402,7 @@ if one already exists."
      "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"
      "/home/kchou/Documents/02-Areas/Agenda/Habits.org"
      "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"))
- '(package-selected-packages
-   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
-              corfu csv-mode darkroom dashboard devdocs diff-hl direnv
-              dockerfile-mode edit-indirect ef-themes eglot git-gutter gptel
-              htmlize json-mode ligature link-hint marginalia markdown-mode
-              markdown-ts-mode math-preview mermaid-mode mixed-pitch
-              modus-themes olivetti openwith orderless org-appear org-caldav
-              org-contrib org-download org-mode org-modern pet ruff-format
-              rust-mode selectric-mode telephone-line tree-sitter-langs
-              treesit-auto typst-ts-mode valign vertico vterm vundo yaml-mode
-              yasnippet zk-desktop))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
