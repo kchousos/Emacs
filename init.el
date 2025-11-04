@@ -1067,7 +1067,7 @@ if one already exists."
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "Inbox.org")
-         "* TODO %?" :prepend t :empty-lines 1)
+         "* %?" :prepend t :empty-lines 1)
         ("t" "Task" entry (file "Agenda.org")
          "* TODO %?" :prepend t :empty-lines 1)
         ("j" "Journal" entry (file+datetree "Journal.org")
