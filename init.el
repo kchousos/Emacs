@@ -1031,7 +1031,7 @@ if one already exists."
 (setq org-agenda-custom-commands
       '(("A" "Daily Agenda, Running & Next Actions"
          ((agenda "" nil)
-          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          ;; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)))
 
 ;; Calendar integration (CalDav)
@@ -1400,7 +1400,17 @@ if one already exists."
      "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"
      "/home/kchou/Documents/02-Areas/Agenda/Habits.org"
      "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
+              corfu csv-mode darkroom dashboard devdocs diff-hl direnv
+              dockerfile-mode edit-indirect ef-themes eglot git-gutter gptel
+              htmlize json-mode ligature link-hint marginalia markdown-mode
+              markdown-ts-mode math-preview mermaid-mode mixed-pitch
+              modus-themes olivetti openwith orderless org-appear org-caldav
+              org-contrib org-download org-mode org-modern pet ruff-format
+              rust-mode selectric-mode telephone-line tree-sitter-langs
+              treesit-auto typst-ts-mode valign vertico vterm vundo yaml-mode
+              yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
