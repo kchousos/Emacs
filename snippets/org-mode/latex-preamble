@@ -5,34 +5,48 @@
 #+TITLE: $1
 #+SUBTITLE: $2
 #+DATE: $3
-#+LATEX_HEADER_EXTRA: \author{Κωνσταντίνος Χούσος\\\medskip \small ΑΜ: 7115142500008 \\\medskip \small Μεταπτυχιακός (Α.Λ.ΜΑ.)}
-#+LANGUAGE: el
-#+OPTIONS: num:nil toc:nil date:t title:t author:nil
-#+EXPORT_FILE_NAME: $4
-:PREAMBLE:
-#+BIBLIOGRAPHY: /home/kchou/Library/References/biblio.bib
-#+LATEX_CLASS: koma-article
-#+LATEX_CLASS_OPTIONS: [paper=a4, parskip=half]
+:preamble:
+#+latex_header_extra: \author{Κωνσταντίνος Χούσος\\\medskip \small ΑΜ: 7115142500008, Α.Λ.ΜΑ.}
+#+language: el
+#+options: num:t toc:nil date:t title:t author:nil
+#+export_file_name: $4
 
-#+LATEX_HEADER: \usepackage[english, AUTO]{polyglossia}
+#+bibliography: /home/kchou/HDD/Library/References/biblio.bib
+#+latex_compiler: xelatex
+#+latex_class: koma-article
+#+latex_class_options: [paper=a4, parskip=half]
 
-#+LATEX_HEADER:\usepackage[margin=1.4in]{geometry}
-#+LATEX_HEADER:\usepackage{microtype}
-#+LATEX_HEADER:\usepackage{etoolbox}
-#+LATEX_HEADER:\usepackage{xcolor}
+#+latex_header: \usepackage[english, AUTO]{polyglossia}
 
-#+LATEX_HEADER: \usepackage{unicode-math} % this also loads fontspec
-#+LATEX_HEADER: \setmainfont[Ligatures=TeX]{Libertinus Serif}
-#+LATEX_HEADER: \setsansfont{Lato}
-#+LATEX_HEADER: \setmathfont{Libertinus Math}
-#+LATEX_HEADER: \setmonofont{Iosevka}
+#+latex_header:\usepackage[margin=1.4in]{geometry}
+#+latex_header:\usepackage{microtype}
+#+latex_header:\usepackage{etoolbox}
+#+latex_header:\usepackage{xcolor}
 
-#+LATEX_HEADER: \usepackage{longtable, booktabs, array, colortbl}
+# #+latex_header: \usepackage{newcomputermodern}
+#+latex_header: \usepackage{unicode-math} % this also loads fontspec
+#+latex_header: \setmainfont[Ligatures=TeX]{Libertinus Serif}
+#+latex_header: \setsansfont{Libertinus Sans}
+#+latex_header: \setmathfont{Libertinus Math}
+#+latex_header: \setmonofont[Scale=MatchLowercase]{Iosevka}
 
-#+LATEX_HEADER:\usepackage[newfloat, cache=false]{minted}
-#+LATEX_HEADER:\setminted{frame=single, framesep=2mm, linenos, breaklines, numbersep=0.5em, fontsize=\footnotesize}
+#+latex_header: \usepackage{longtable, booktabs, array, colortbl}
 
-#+LATEX_HEADER:\usepackage[font={footnotesize}, margin=1cm, labelfont=bf]{caption}
+#+latex_header: \usepackage[newfloat, cache=false]{minted}
+#+latex_header: \setminted{frame=single, framesep=2mm, linenos, breaklines, numbersep=0.5em, fontsize=\footnotesize}
 
-#+LATEX_HEADER:\PassOptionsToPackage{unicode, colorlinks}{hyperref}
+#+latex_header: \usepackage[font={footnotesize}, margin=1cm, labelfont=bf]{caption}
+
+#+latex_header: \PassOptionsToPackage{unicode, colorlinks}{hyperref}
+
+#+latex_header: \usepackage{amsthm}
+#+latex_header: \usepackage[ruled,vlined,linesnumbered]{algorithm2e} 
 :END:
+
+\newpage
+\tableofcontents
+\newpage
+
+* $5
+
+$0

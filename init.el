@@ -1,6 +1,21 @@
 ;; -*- lexical-binding: t; -*-
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Locale settings
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setenv "LC_TIME" "el_GR.UTF-8")
+(setq system-time-locale "el_GR.UTF-8")
+
+(setq calendar-week-start-day 1
+      calendar-day-name-array ["Κυριακή" "Δευτέρα" "Τρίτη" "Τετάρτη"
+                               "Πέμπτη" "Παρασκευή" "Σάββατο"]
+      calendar-month-name-array ["Ιανουάριος" "Φεβρουάριος" "Μάρτιος"
+                                 "Απρίλιος" "Μάιος" "Ιούνιος"
+                                 "Ιούλιος" "Αύγουστος" "Σεπτέμβριος"
+                                 "Οκτώβρης" "Νοέμβρης" "Δεκέμβρης"])
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Performance Optimization
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -704,7 +719,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -714,7 +729,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/Library/References/biblio.bib"))
+  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -722,7 +737,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -881,10 +896,13 @@ if one already exists."
   (setq org-yank-image-save-method "./Attachments/"
         org-yank-dnd-method 'file-link)
 
+  ;; Spacing
+  (setq org-blank-before-new-entry '((heading . t) (plain-list-item . auto)))
+
   (setq org-highlight-latex-and-related '(latex script entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
@@ -978,11 +996,12 @@ if one already exists."
       appt-message-warning-time '10       ;; warn 10 min in advance
       appt-display-diary nil              ;; do not display diary when (appt-activate) is called
       appt-display-mode-line t            ;; show in the modeline
-      appt-display-format 'window         ;; display notification in window
+      appt-display-format 'echo           ;; display notification in window
       calendar-mark-diary-entries-flag t) ;; mark diary entries in calendar
-(add-hook 'org-finalize-agenda-hook
-          (org-agenda-to-appt)            ;; copy all agenda schedule to appointments
-          (appt-activate 1))              ;; active appt (appointment notification)
+(add-hook 'org-agenda-finalize-hook
+          (lambda ()
+            (org-agenda-to-appt)          ;; copy all agenda schedule to appointments
+            (appt-activate 1)))           ;; active appt (appointment notification)
 
 ;; Agenda
 (global-set-key (kbd "C-c a") #'org-agenda)
@@ -1071,7 +1090,8 @@ if one already exists."
         ("t" "Task" entry (file "Agenda.org")
          "* TODO %?" :prepend t :empty-lines 1)
         ("j" "Journal" entry (file+datetree "Journal.org")
-         "* %<%H:%M>\n%?" :empty-lines 0)
+         "\n* %<%H:%M>\n\n%?" :empty-lines 1
+         :tree-type (year month week day))
         ("e" "Event" entry (file "Calendar.org")
          "* %?\n%^t" :time-prompt t :empty-lines 0)
         ("x" "org-protocol-capture" entry (file "Inbox.org")
@@ -1402,7 +1422,17 @@ if one already exists."
      "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"
      "/home/kchou/Documents/02-Areas/Agenda/Habits.org"
      "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
+              corfu csv-mode darkroom dashboard devdocs diff-hl direnv
+              dockerfile-mode edit-indirect ef-themes eglot git-gutter gptel
+              htmlize json-mode ligature link-hint marginalia markdown-mode
+              markdown-ts-mode math-preview mermaid-mode mixed-pitch
+              modus-themes olivetti openwith orderless org-appear org-caldav
+              org-contrib org-download org-mode org-modern pet ruff-format
+              rust-mode selectric-mode telephone-line tree-sitter-langs
+              treesit-auto typst-ts-mode valign vertico vterm vundo yaml-mode
+              yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
