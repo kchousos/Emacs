@@ -1386,6 +1386,18 @@ if one already exists."
 (add-hook 'eww-mode-hook #'olivetti-mode)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Elfeed
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package elfeed)
+(global-set-key (kbd "C-x w") 'elfeed)
+
+(use-package elfeed-org)
+(elfeed-org)
+
+(setq rmh-elfeed-org-files (list "~/Documents/03-Resources/RSS feeds/Feeds.org"))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom modes
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
