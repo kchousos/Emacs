@@ -1401,7 +1401,8 @@ if one already exists."
 (use-package elfeed)
 (global-set-key (kbd "C-c w") 'elfeed)
 (add-hook 'elfeed-show-mode-hook #'olivetti-mode)
-(setq-default elfeed-search-filter "+unread ")
+(setq-default elfeed-search-filter "+unread "
+              elfeed-db-directory "~/Documents/03-Resources/RSS feeds/elfeed-db")
 
 (use-package elfeed-org
   :after elfeed)
