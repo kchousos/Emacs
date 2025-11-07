@@ -13,7 +13,14 @@
       calendar-month-name-array ["Ιανουάριος" "Φεβρουάριος" "Μάρτιος"
                                  "Απρίλιος" "Μάιος" "Ιούνιος"
                                  "Ιούλιος" "Αύγουστος" "Σεπτέμβριος"
-                                 "Οκτώβρης" "Νοέμβρης" "Δεκέμβρης"])
+                                 "Οκτώβριος" "Νοέμβριος" "Δεκέμβριος"])
+
+;; Time display
+(setq display-time-format "%H:%M %Y-%m-%d"
+      display-time-day-and-date t
+      display-time-24hr-format t
+      display-time-default-load-average nil)
+(display-time-mode 1)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Performance Optimization
@@ -73,6 +80,8 @@
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Core UI Settings
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(setq initial-major-mode #'org-mode)
 
 ;; ;; Disable startup screen
 (setq inhibit-startup-message t
@@ -1390,12 +1399,31 @@ if one already exists."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package elfeed)
-(global-set-key (kbd "C-x w") 'elfeed)
+(global-set-key (kbd "C-c w") 'elfeed)
+(add-hook 'elfeed-show-mode-hook #'olivetti-mode)
+(setq-default elfeed-search-filter "+unread ")
 
-(use-package elfeed-org)
+(use-package elfeed-org
+  :after elfeed)
 (elfeed-org)
-
 (setq rmh-elfeed-org-files (list "~/Documents/03-Resources/RSS feeds/Feeds.org"))
+
+(use-package elfeed-tube
+  :after elfeed)
+(elfeed-tube-setup)
+(define-key elfeed-show-mode-map (kbd "F") 'elfeed-tube-fetch)
+(define-key elfeed-show-mode-map [remap save-buffer] 'elfeed-tube-save)
+(define-key elfeed-search-mode-map (kbd "F") 'elfeed-tube-fetch)
+(define-key elfeed-search-mode-map [remap save-buffer] 'elfeed-tube-save)
+
+(setq elfeed-tube-captions-languages
+      '("en" "gr" "english (auto generated)")
+      elfeed-tube-captions-sblock-p t)
+
+(use-package mpv)
+(use-package elfeed-tube-mpv)
+(define-key elfeed-show-mode-map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
+(define-key elfeed-show-mode-map (kbd "C-c C-w") 'elfeed-tube-mpv-where)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom modes
@@ -1429,22 +1457,21 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("/home/kchou/Documents/02-Areas/Agenda/Anniversaries.org"
-     "/home/kchou/Documents/02-Areas/Agenda/Calendar.org"
+   '("/home/kchou/Documents/02-Areas/Agenda/Calendar.org"
      "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"
      "/home/kchou/Documents/02-Areas/Agenda/Habits.org"
      "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"))
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
               corfu csv-mode darkroom dashboard devdocs diff-hl direnv
-              dockerfile-mode edit-indirect ef-themes eglot git-gutter gptel
-              htmlize json-mode ligature link-hint marginalia markdown-mode
-              markdown-ts-mode math-preview mermaid-mode mixed-pitch
-              modus-themes olivetti openwith orderless org-appear org-caldav
-              org-contrib org-download org-mode org-modern pet ruff-format
-              rust-mode selectric-mode telephone-line tree-sitter-langs
-              treesit-auto typst-ts-mode valign vertico vterm vundo yaml-mode
-              yasnippet zk-desktop))
+              dockerfile-mode edit-indirect ef-themes eglot elfeed elfeed-org
+              elfeed-tube elfeed-tube-mpv git-gutter gptel htmlize json-mode
+              ligature link-hint marginalia markdown-mode markdown-ts-mode
+              math-preview mermaid-mode mixed-pitch modus-themes mpv olivetti
+              openwith orderless org-appear org-caldav org-contrib org-download
+              org-mode org-modern pet ruff-format rust-mode selectric-mode
+              telephone-line tree-sitter-langs treesit-auto typst-ts-mode valign
+              vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
