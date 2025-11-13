@@ -919,7 +919,7 @@ if one already exists."
         org-export-with-section-numbers nil
         org-export-with-smart-quotes t
         org-cite-csl-link-cites t
-        org-cite-export-processors'((latex . (biblatex nil nil)) (t . (csl "ieee.csl" "ieee.csl")))
+        org-cite-export-processors '((latex . (biblatex "ieee" nil)) (t . (csl "ieee.csl" "ieee.csl")))
         org-cite-global-bibliography '("/home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib")
         org-html-toplevel-hlevel 1
         org-html-footnotes-section
@@ -989,7 +989,6 @@ if one already exists."
 
 ;; Calendar/Diary
 (setq org-agenda-diary-file "~/Documents/02-Areas/Agenda/Calendar.org"
-      calendar-mark-diary-entries-flag t
       org-agenda-insert-diary-strategy 'date-tree
       org-agenda-include-diary nil
       holiday-hebrew-holidays nil
@@ -1005,8 +1004,9 @@ if one already exists."
       appt-message-warning-time '10       ;; warn 10 min in advance
       appt-display-diary nil              ;; do not display diary when (appt-activate) is called
       appt-display-mode-line t            ;; show in the modeline
-      appt-display-format 'echo           ;; display notification in window
-      calendar-mark-diary-entries-flag t) ;; mark diary entries in calendar
+      appt-display-format 'window         ;; display notification in window
+      appt-audible t
+      calendar-mark-diary-entries-flag nil) ;; mark diary entries in calendar
 (add-hook 'org-agenda-finalize-hook
           (lambda ()
             (org-agenda-to-appt)          ;; copy all agenda schedule to appointments
@@ -1023,7 +1023,7 @@ if one already exists."
       org-agenda-block-separator 9472
       org-agenda-tags-column 0
       org-agenda-use-time-grid t
-      org-agenda-start-with-log-mode nil
+      org-agenda-start-with-log-mode t
       org-agenda-log-mode-items '(clock)
       org-log-into-drawer t
       org-agenda-include-deadlines t
@@ -1057,9 +1057,9 @@ if one already exists."
                                  (search . " %i %-12:c")))
 
 (setq org-agenda-custom-commands
-      '(("A" "Daily Agenda, Running & Next Actions"
-         ((agenda "" nil)
-          ;; (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+      '(("A" "Running & Next Actions"
+         (; (agenda "" nil)
+          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)))
 
 ;; Calendar integration (CalDav)
@@ -1102,7 +1102,7 @@ if one already exists."
          "\n* %<%H:%M>\n\n%?" :empty-lines 1
          :tree-type (year month week day))
         ("e" "Event" entry (file "Calendar.org")
-         "* %?\n%^t" :time-prompt t :empty-lines 0)
+         "* %?\n%^t" :time-prompt t :empty-lines 1)
         ("x" "org-protocol-capture" entry (file "Inbox.org")
          "* [[%:link][%:description]] %i"
          :prepend t
@@ -1399,9 +1399,10 @@ if one already exists."
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
 (use-package elfeed)
-(global-set-key (kbd "C-c w") 'elfeed)
+;; (global-set-key (kbd "C-c w") 'elfeed)
 (add-hook 'elfeed-show-mode-hook #'olivetti-mode)
 (setq-default elfeed-search-filter "+unread "
+              elfeed-search-title-max-width 150
               elfeed-db-directory "~/Documents/03-Resources/RSS feeds/elfeed-db")
 
 (use-package elfeed-org
@@ -1457,11 +1458,7 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(org-agenda-files
-   '("/home/kchou/Documents/02-Areas/Agenda/Calendar.org"
-     "/home/kchou/Documents/02-Areas/Agenda/Agenda.org"
-     "/home/kchou/Documents/02-Areas/Agenda/Habits.org"
-     "/home/kchou/Documents/02-Areas/Agenda/Inbox.org"))
+ '(org-agenda-files '("/home/kchou/Documents/02-Areas/Agenda/Agenda.org"))
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
               corfu csv-mode darkroom dashboard devdocs diff-hl direnv
