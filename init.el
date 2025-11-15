@@ -203,7 +203,8 @@
   (save-place-mode 1))
 
 ;; Bookmarks
-(setq bookmark-save-flag 1)
+(setq bookmark-save-flag 1
+      bookmark-default-file "~/Documents/03-Resources/Emacs/bookmarks")
 
 (savehist-mode 1)
 
@@ -802,7 +803,7 @@ if one already exists."
   ("C-c z o" . zk-follow-link-at-point)
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
-  (zk-directory "~/Documents/02-Areas/Slipbox/")
+  (zk-directory "~/Documents/03-Resources/Slipbox/")
   (zk-file-extension "org")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
@@ -912,7 +913,7 @@ if one already exists."
 
   ;; Attachments handling
   (setq org-yank-image-save-method "./Attachments/"
-        org-yank-dnd-method 'file-link)
+        org-yank-dnd-method 'ask)
 
   ;; Spacing
   (setq org-blank-before-new-entry '((heading . t) (plain-list-item . auto)))
@@ -929,7 +930,7 @@ if one already exists."
         org-export-with-smart-quotes t
         org-cite-csl-link-cites t
         org-cite-export-processors '((latex . (biblatex "ieee" nil)) (t . (csl "ieee.csl" "ieee.csl")))
-        org-cite-global-bibliography '("/home/kchou/Documents/02-Areas/Slipbox/Attachments/biblio.bib")
+        org-cite-global-bibliography '("/home/kchou/Documents/03-Resources/Slipbox/Attachments/biblio.bib")
         org-html-toplevel-hlevel 1
         org-html-footnotes-section
         "<div id=\"footnotes\">
@@ -956,10 +957,10 @@ if one already exists."
 
 ;; GTD ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(setq org-directory "~/Documents/02-Areas/Agenda")
+;; (setq org-directory "~/Documents/03-Resources/Agenda")
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "RUNNING(r)" "NEXT(n)" "WAIT(w)" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)")))
+      '((sequence "TODO(t)" "RUNNING(r)" "NEXT(n)" "WAIT(w)" "IDEA(i)" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)")))
 
 ;; (defun my/set-org-todo-faces ()
 ;;   "Set Org TODO keyword faces using modus-themes colors."
@@ -997,14 +998,14 @@ if one already exists."
 ;; (add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
 
 ;; Calendar/Diary
-(setq org-agenda-diary-file "~/Documents/02-Areas/Agenda/Calendar.org"
-      org-agenda-insert-diary-strategy 'date-tree
-      org-agenda-include-diary nil
-      holiday-hebrew-holidays nil
-      holiday-islamic-holidays nil
-      holiday-bahai-holidays nil
-      holiday-oriental-holidays nil
-      calendar-christian-all-holidays-flag t)
+(setq ; org-agenda-diary-file "~/Documents/03-Resources/Agenda/Calendar.org"
+ org-agenda-insert-diary-strategy 'date-tree
+ org-agenda-include-diary nil
+ holiday-hebrew-holidays nil
+ holiday-islamic-holidays nil
+ holiday-bahai-holidays nil
+ holiday-oriental-holidays nil
+ calendar-christian-all-holidays-flag t)
 
 (setq-default calendar-date-style 'iso)
 
@@ -1031,6 +1032,7 @@ if one already exists."
       org-lowest-priority ?E
       org-agenda-block-separator 9472
       org-agenda-tags-column 0
+      org-agenda-hide-tags-regexp "noexport"
       org-agenda-use-time-grid t
       org-agenda-start-with-log-mode t
       org-agenda-log-mode-items '(clock)
@@ -1059,11 +1061,11 @@ if one already exists."
 
 
 (setq org-agenda-breadcrumbs-separator " ➤ "
-      org-agenda-prefix-format '((agenda . " %i %-12:c%?-12t% s")
+      org-agenda-prefix-format '((agenda . " %-15:c%?-12t% s")
                                  (timeline . "  % s")
-                                 (todo ." %i %b")
-                                 (tags . " %i %-12:c %b")
-                                 (search . " %i %-12:c")))
+                                 (todo ." %-15:c %b")
+                                 (tags . " %-15:c %b")
+                                 (search . " %-15:c")))
 
 (setq org-agenda-custom-commands
       '(("A" "Running & Next Actions"
@@ -1103,16 +1105,16 @@ if one already exists."
 ;; Capture
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
-      `(("i" "Inbox" entry (file "Inbox.org")
+      `(("i" "Inbox" entry (file "~/Documents/00-Inbox/Inbox.org")
          "* %?" :prepend t :empty-lines 1)
-        ("t" "Task" entry (file "Agenda.org")
-         "* TODO %?" :prepend t :empty-lines 1)
-        ("j" "Journal" entry (file+datetree "Journal.org")
-         "\n* %<%H:%M>\n\n%?" :empty-lines 1
-         :tree-type (year month week day))
-        ("e" "Event" entry (file "Calendar.org")
-         "* %?\n%^t" :time-prompt t :empty-lines 1)
-        ("x" "org-protocol-capture" entry (file "Inbox.org")
+        ;; ("t" "Task" entry (file "Agenda.org")
+        ;;  "* TODO %?" :prepend t :empty-lines 1)
+        ;; ("j" "Journal" entry (file+datetree "Journal.org")
+        ;;  "\n* %<%H:%M>\n\n%?" :empty-lines 1
+        ;;  :tree-type (year month week day))
+        ;; ("e" "Event" entry (file "Calendar.org")
+        ;;  "* %?\n%^t" :time-prompt t :empty-lines 1)
+        ("x" "org-protocol-capture" entry (file "~/Documents/00-Inbox/Inbox.org")
          "* [[%:link][%:description]] %i"
          :prepend t
          :immediate-finish t
@@ -1176,9 +1178,9 @@ if one already exists."
             ("NEXT" :background ,bg-yellow-intense
              :foreground ,fg-main
              :weight bold)
-            ;; ("RUNNING" :background ,bg-red-subtle
-            ;;  :foreground ,fg-main
-            ;;  :weight bold)
+            ("RUNNING" :background ,bg-red-subtle
+             :foreground ,fg-main
+             :weight bold)
             ("WAIT" :background ,bg-blue-intense
              :foreground ,fg-main
              :weight bold)
@@ -1189,6 +1191,9 @@ if one already exists."
              :foreground ,fg-main
              :weight bold)
             ("MAYBE" :background ,bg-inactive
+             :foreground ,fg-main
+             :weight bold)
+            ("IDEA" :background ,bg-magenta-intense
              :foreground ,fg-main
              :weight bold)
             ("DONE" :background ,bg-green-intense
@@ -1467,7 +1472,23 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(org-agenda-files '("/home/kchou/Documents/02-Areas/Agenda/Agenda.org"))
+ '(org-agenda-files
+   '("~/Documents/00-Inbox/Inbox.org"
+     "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
+     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Υπολογιστική Πολυπλοκότητα/Πολυπλοκότητα.org"
+     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Θεωρία Γραφημάτων/Γραφήματα.org"
+     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Αλγόριθμοι/Αλγόριθμοι.org"
+     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Κρυπτογραφία/Κρυπτογραφία.org"
+     "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
+     "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
+     "/home/kchou/Documents/01-Projects/Υποστήριξη 1ης εργασίας ΤΝ1/AI1 TA.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 1 (Theory)/algorithms_1-theory.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 1 (Code)/algorithms_1-code.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Complexity - Project 2/complexity_2.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 1/crypto_1.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Graphs - Project 2/graphs_2.org"
+     "/home/kchou/Documents/03-Resources/Slipbox/20251114162314 Zettelkasten housekeeping.org"
+     "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
               corfu csv-mode darkroom dashboard devdocs diff-hl direnv
