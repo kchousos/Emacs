@@ -908,7 +908,7 @@ if one already exists."
         org-fontify-quote-and-verse-blocks t
         org-link-file-path-type 'relative
         org-use-speed-commands t
-        org-footnote-section nil
+        org-footnote-section "Footnotes"
         org-return-follows-link t)
 
   ;; Attachments handling
@@ -960,7 +960,7 @@ if one already exists."
 ;; (setq org-directory "~/Documents/03-Resources/Agenda")
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "RUNNING(r)" "NEXT(n)" "WAIT(w)" "IDEA(i)" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)")))
+      '((sequence "TODO(t)" "IN PROGRESS(p)" "NEXT(n)" "ON HOLD(h)" "IDEA(i)" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)")))
 
 ;; (defun my/set-org-todo-faces ()
 ;;   "Set Org TODO keyword faces using modus-themes colors."
@@ -970,9 +970,9 @@ if one already exists."
 ;;                                    :weight bold))
 ;;             ("NEXT" . (:foreground ,yellow
 ;;                                    :weight bold))
-;;             ("RUNNING" . (:foreground ,rust
+;;             ("IN PROGRESS" . (:foreground ,rust
 ;;                                       :weight bold))
-;;             ("WAIT" . (:foreground ,blue
+;;             ("ON HOLD" . (:foreground ,blue
 ;;                                    :weight bold))
 ;;             ("PROJ" . (:foreground ,magenta-cooler
 ;;                                    :weight bold))
@@ -1070,7 +1070,7 @@ if one already exists."
 (setq org-agenda-custom-commands
       '(("A" "Running & Next Actions"
          (; (agenda "" nil)
-          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          (todo "IN PROGRESS" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)))
 
 ;; Calendar integration (CalDav)
@@ -1178,10 +1178,10 @@ if one already exists."
             ("NEXT" :background ,bg-yellow-intense
              :foreground ,fg-main
              :weight bold)
-            ("RUNNING" :background ,bg-red-subtle
+            ("IN PROGRESS" :background ,bg-red-subtle
              :foreground ,fg-main
              :weight bold)
-            ("WAIT" :background ,bg-blue-intense
+            ("ON HOLD" :background ,bg-blue-intense
              :foreground ,fg-main
              :weight bold)
             ("PROJ" :background ,bg-magenta-intense
@@ -1473,7 +1473,7 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/00-Inbox/Inbox.org"
+   '("/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Υπολογιστική Πολυπλοκότητα/Πολυπλοκότητα.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Θεωρία Γραφημάτων/Γραφήματα.org"
@@ -1482,7 +1482,6 @@ if one already exists."
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
      "/home/kchou/Documents/01-Projects/Υποστήριξη 1ης εργασίας ΤΝ1/AI1 TA.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 1 (Theory)/algorithms_1-theory.org"
      "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 1 (Code)/algorithms_1-code.org"
      "/home/kchou/Documents/01-Projects/ALMA - Complexity - Project 2/complexity_2.org"
      "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 1/crypto_1.org"
