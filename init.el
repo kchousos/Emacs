@@ -1256,7 +1256,7 @@ if one already exists."
          pdfsubject={%d},
          pdfcreator={%c},
          pdflang={%L},
-         colorlinks=true,    
+         colorlinks=true,
          linkcolor={purple},    
          filecolor={cyan},
          citecolor={red},    
@@ -1340,6 +1340,22 @@ if one already exists."
 (add-hook 'dired-mode-hook
           (lambda ()
             (dired-hide-details-mode)))
+
+(use-package dired
+  :ensure nil
+  :init
+  (require 'dired-x)
+
+  :bind
+  (:map dired-mode-map
+	    ("C-h" . dired-omit-mode))
+
+  :hook
+  (dired-mode . (lambda () (dired-omit-mode))) ;; hide .dot files by default
+
+  :config
+  (setq dired-omit-files   ;; hide .dot files when in dired-omit-mode
+        (concat dired-omit-files "\\|^\\.[^.].*")))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; LLMs
@@ -1438,6 +1454,7 @@ if one already exists."
 
 (use-package mpv)
 (use-package elfeed-tube-mpv)
+(define-key elfeed-show-mode-map (kbd "RET") 'elfeed-tube-mpv)
 (define-key elfeed-show-mode-map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
 (define-key elfeed-show-mode-map (kbd "C-c C-w") 'elfeed-tube-mpv-where)
 
@@ -1490,7 +1507,7 @@ if one already exists."
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
-              corfu csv-mode darkroom dashboard devdocs diff-hl direnv
+              corfu csv-mode darkroom dashboard devdocs diff-hl dired direnv
               dockerfile-mode edit-indirect ef-themes eglot elfeed elfeed-org
               elfeed-tube elfeed-tube-mpv git-gutter gptel htmlize json-mode
               ligature link-hint marginalia markdown-mode markdown-ts-mode
