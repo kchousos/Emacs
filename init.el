@@ -277,6 +277,7 @@
 
 (setq-default message-log-max nil)
 ;; (kill-buffer "*Messages*")
+(with-eval-after-load 'quail (defun quail-completion ()))
 
 (winner-mode 1)
 
@@ -412,6 +413,8 @@
      (bg-mode-line-active bg-lavender)
      (fg-mode-line-active fg-main)
      (border-mode-line-active bg-magenta-intense)
+
+     (comment fg-alt)
 
      ;; Make line numbers less intense
      (fg-line-number-inactive "gray50")
@@ -559,6 +562,9 @@
   :config
   (add-to-list 'eglot-server-programs '((python-base-mode)
                                         "basedpyright-langserver" "--stdio")))
+
+;; C
+(define-key c-mode-map (kbd "C-c C-c") 'compile)
 
 ;; Python
 (add-hook 'python-base-mode-hook 'direnv-mode)
@@ -1250,6 +1256,8 @@ if one already exists."
 (setq org-latex-tables-booktabs t
       org-latex-with-hyperref
       "\\hypersetup{
+         pdfencoding=auto,
+         psdextra,
          pdfauthor={%a},
          pdftitle={%t},
          pdfkeywords={%k},
@@ -1462,9 +1470,9 @@ if one already exists."
 ;; Modeline
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(use-package telephone-line
-  :config
-  (telephone-line-mode 1))
+;; (use-package telephone-line
+;;   :config
+;;   (telephone-line-mode 1))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom modes
@@ -1491,14 +1499,16 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("1ad12cda71588cc82e74f1cabeed99705c6a60d23ee1bb355c293ba9c000d4ac"
+   '("01a9797244146bbae39b18ef37e6f2ca5bebded90d9fe3a2f342a9e863aaa4fd"
+     "1ad12cda71588cc82e74f1cabeed99705c6a60d23ee1bb355c293ba9c000d4ac"
      "da69584c7fe6c0acadd7d4ce3314d5da8c2a85c5c9d0867c67f7924d413f4436"
      "df39cc8ecf022613fc2515bccde55df40cb604d7568cb96cd7fe1eff806b863b"
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("/home/kchou/Documents/00-Inbox/Inbox.org"
+   '("~/Documents/03-Resources/Slipbox/Slipbox.org"
+     "/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Υπολογιστική Πολυπλοκότητα/Πολυπλοκότητα.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Θεωρία Γραφημάτων/Γραφήματα.org"
@@ -1509,21 +1519,20 @@ if one already exists."
      "/home/kchou/Documents/01-Projects/Υποστήριξη 1ης εργασίας ΤΝ1/AI1 TA.org"
      "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 1 (Code)/algorithms_1-code.org"
      "/home/kchou/Documents/01-Projects/ALMA - Complexity - Project 2/complexity_2.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 1/crypto_1.org"
      "/home/kchou/Documents/01-Projects/ALMA - Graphs - Project 2/graphs_2.org"
-     "/home/kchou/Documents/03-Resources/Slipbox/20251114162314 Zettelkasten housekeeping.org"
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
               corfu csv-mode darkroom dashboard devdocs diff-hl dired direnv
               dockerfile-mode edit-indirect ef-themes eglot elfeed elfeed-org
-              elfeed-tube elfeed-tube-mpv git-gutter gptel htmlize json-mode
-              ligature link-hint marginalia markdown-mode markdown-ts-mode
-              math-preview mermaid-mode mixed-pitch modus-themes mpv olivetti
-              openwith orderless org-appear org-caldav org-contrib org-download
-              org-mode org-modern pet ruff-format rust-mode selectric-mode
-              telephone-line tree-sitter-langs treesit-auto typst-ts-mode valign
-              vertico vterm vundo yaml-mode yasnippet zk-desktop))
+              elfeed-tube elfeed-tube-mpv fish-mode git-gutter gptel
+              gruber-darker-theme htmlize json-mode ligature link-hint
+              marginalia markdown-mode markdown-ts-mode math-preview
+              mermaid-mode mixed-pitch modus-themes mpv olivetti openwith
+              orderless org-appear org-caldav org-contrib org-download org-mode
+              org-modern pet ruff-format rust-mode selectric-mode telephone-line
+              tree-sitter-langs treesit-auto typst-ts-mode valign vertico vterm
+              vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
