@@ -565,7 +565,8 @@
                                         "basedpyright-langserver" "--stdio")))
 
 ;; C
-(define-key c-mode-map (kbd "C-c C-c") 'compile)
+(with-eval-after-load 'cc-mode
+  (define-key c-mode-map (kbd "C-c C-c") 'compile))
 
 ;; Python
 (add-hook 'python-base-mode-hook 'direnv-mode)
