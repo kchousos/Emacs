@@ -1509,7 +1509,8 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/03-Resources/Slipbox/Slipbox.org"
+   '("/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 2/crypto_2.org"
+     "/home/kchou/Documents/03-Resources/Slipbox/Slipbox.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Υπολογιστική Πολυπλοκότητα/Πολυπλοκότητα.org"
@@ -1519,15 +1520,13 @@ if one already exists."
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
      "/home/kchou/Documents/01-Projects/Υποστήριξη 1ης εργασίας ΤΝ1/AI1 TA.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 1 (Code)/algorithms_1-code.org"
      "/home/kchou/Documents/01-Projects/ALMA - Complexity - Project 2/complexity_2.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Graphs - Project 2/graphs_2.org"
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
               corfu csv-mode darkroom dashboard devdocs diff-hl dired direnv
               dockerfile-mode edit-indirect ef-themes eglot elfeed elfeed-org
-              elfeed-tube elfeed-tube-mpv fish-mode git-gutter gptel
+              elfeed-tube elfeed-tube-mpv elpher fish-mode git-gutter gptel
               gruber-darker-theme htmlize json-mode ligature link-hint
               marginalia markdown-mode markdown-ts-mode math-preview
               mermaid-mode mixed-pitch modus-themes mpv olivetti openwith
