@@ -536,6 +536,11 @@
 ;; Programming
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(use-package eldoc-box
+  :config
+  (with-eval-after-load 'eglot
+    (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode t)))
+
 (use-package comment-tags
   :custom
   (comment-tags-require-colon nil)
@@ -787,6 +792,9 @@ if one already exists."
 ;; Zettelkasten (ZK)
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
+(define-prefix-command 'zk-map)
+(global-set-key (kbd "C-z") 'zk-map)
+
 (use-package zk
   :init
   (add-hook 'completion-at-point-functions #'zk-completion-at-point 'append)
@@ -794,21 +802,22 @@ if one already exists."
     "Insert header in new notes with TITLE and NEW-ID."
     (insert (format "* %s %s\n\n" new-id title)))
   :bind
-  ("C-c z k" . zk-find-file)
-  ("C-c z g" . zk-grep)
-  ("C-c z f" . zk-find-file-by-full-text-search)
-  ("C-c z b" . zk-backlinks)
-  ("C-c z l" . zk-links-in-note)
-  ("C-c z t" . zk-tag-insert)
-  ("C-c z y" . zk-tag-search)
-  ("C-c z r" . zk-rename-note)
-  ("C-c z w" . zk-new-note)
-  ("C-c z n" . zk-network)
-  ("C-c z N" . citar-open-notes)
-  ("C-c z i" . zk-insert-link)
-  ("C-c z c" . zk-current-notes)
-  ("C-c z I" . zk-index)
-  ("C-c z o" . zk-follow-link-at-point)
+  (:map zk-map
+        ("k" . zk-find-file)
+        ("g" . zk-grep)
+        ("f" . zk-find-file-by-full-text-search)
+        ("b" . zk-backlinks)
+        ("l" . zk-links-in-note)
+        ("t" . zk-tag-insert)
+        ("y" . zk-tag-search)
+        ("r" . zk-rename-note)
+        ("w" . zk-new-note)
+        ("n" . zk-network)
+        ("N" . citar-open-notes)
+        ("i" . zk-insert-link)
+        ("c" . zk-current-notes)
+        ("I" . zk-index)
+        ("o" . zk-follow-link-at-point))
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
   (zk-directory "~/Documents/03-Resources/Slipbox/")
@@ -908,6 +917,7 @@ if one already exists."
         org-startup-numerated nil
         org-pretty-entities nil
         org-level-color-stars-only nil
+        org-export-with-sub-superscripts nil
         org-tags-column 0
         org-footnote-auto-adjust t
         org-support-shift-select t
@@ -926,7 +936,7 @@ if one already exists."
   ;; Spacing
   (setq org-blank-before-new-entry '((heading . t) (plain-list-item . auto)))
 
-  (setq org-highlight-latex-and-related '(latex script entities))
+  (setq org-highlight-latex-and-related '(latex entities))
 
   ;; Export options
   (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
@@ -1045,6 +1055,7 @@ if one already exists."
       org-agenda-start-with-log-mode t
       org-agenda-log-mode-items '(clock)
       org-log-into-drawer t
+      org-log-state-notes-insert-after-drawers t
       org-agenda-include-deadlines t
       org-agenda-todo-ignore-scheduled 'all
       org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled
@@ -1063,6 +1074,8 @@ if one already exists."
       org-sort-agenda-notime-is-late nil
       org-agenda-entry-text-leaders "    "
       )
+
+(setf (cdr (assoc 'note org-log-note-headings)) "%t")
 
 (setq org-agenda-sorting-strategy
       '(habit-down time-up deadline-up priority-down todo-state-up effort-up category-keep))
@@ -1429,6 +1442,14 @@ if one already exists."
 (setq tramp-default-method "ssh")
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Hide mode-line
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package hide-mode-line
+  :bind
+  ("<f9>" . global-hide-mode-line-mode))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Eww
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1534,15 +1555,15 @@ if one already exists."
  '(package-selected-packages
    '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
               corfu csv-mode darkroom dashboard devdocs diff-hl dired direnv
-              dockerfile-mode edit-indirect ef-themes eglot elfeed elfeed-org
-              elfeed-tube elfeed-tube-mpv elpher fish-mode git-gutter gptel
-              gruber-darker-theme hide-mode-line htmlize json-mode ligature
-              link-hint marginalia markdown-mode markdown-ts-mode math-preview
-              mermaid-mode mixed-pitch modus-themes mpv olivetti openwith
-              orderless org-appear org-caldav org-contrib org-download org-mode
-              org-modern pet ruff-format rust-mode selectric-mode telephone-line
-              tree-sitter-langs treesit-auto typst-ts-mode valign vertico vterm
-              vundo yaml-mode yasnippet zk-desktop))
+              dockerfile-mode edit-indirect ef-themes eglot eldoc-box elfeed
+              elfeed-org elfeed-tube elfeed-tube-mpv elpher fish-mode git-gutter
+              gptel gruber-darker-theme hide-mode-line htmlize json-mode
+              ligature link-hint marginalia markdown-mode markdown-ts-mode
+              math-preview mermaid-mode mixed-pitch modus-themes mpv olivetti
+              openwith orderless org-appear org-caldav org-contrib org-download
+              org-mode org-modern pet ruff-format rust-mode selectric-mode
+              telephone-line tree-sitter-langs treesit-auto typst-ts-mode valign
+              vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
