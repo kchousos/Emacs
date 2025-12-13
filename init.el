@@ -407,13 +407,14 @@
 
    ;; mode-line settings
    modus-themes-common-palette-overrides
-   '(;; make border same color (e.g. borderless)
-     ;; (border-mode-line-active bg-mode-line-active)
-     ;; (border-mode-line-inactive bg-mode-line-inactive)
-     ;; make active window's mode-line purple
-     (bg-mode-line-active bg-lavender)
-     (fg-mode-line-active fg-main)
-     (border-mode-line-active bg-magenta-intense)
+   '(
+     ;;   ;; make border same color (e.g. borderless)
+     ;;   ;; (border-mode-line-active bg-mode-line-active)
+     ;;   ;; (border-mode-line-inactive bg-mode-line-inactive)
+     ;;   ;; make active window's mode-line purple
+     ;;   (bg-mode-line-active bg-lavender)
+     ;;   (fg-mode-line-active fg-main)
+     ;;   (border-mode-line-active bg-magenta-intense)
 
      (comment fg-alt)
 
@@ -425,7 +426,8 @@
      ))
 
   :config
-  (load-theme 'modus-operandi t)
+  (load-theme 'modus-operandi-tinted t)
+  (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted))
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -647,7 +649,7 @@ if one already exists."
 
 (use-package olivetti
   :custom
-  (olivetti-body-width 120))
+  (olivetti-body-width 130))
 
 (use-package mixed-pitch)
 
@@ -829,7 +831,17 @@ if one already exists."
   (zk-link-and-title nil)
   :config
   (zk-setup-auto-link-buttons)
-  (zk-setup-embark))
+  (zk-setup-embark)
+  (defun zk-org-try-to-follow-link (fn &optional arg)
+    "When 'org-open-at-point' FN fails, try 'zk-follow-link-at-point'.
+    Optional ARG."
+    (let ((org-link-search-must-match-exact-headline t))
+      (condition-case nil
+	      (apply fn arg)
+        (error (zk-follow-link-at-point)))))
+  (advice-add 'org-open-at-point :around #'zk-org-try-to-follow-link))
+
+(advice-add 'org-open-at-point :around #'zk-org-try-to-follow-link))
 
 (use-package zk-index
   :after zk
