@@ -200,7 +200,9 @@
 (use-package saveplace
   :ensure nil
   :init
-  (save-place-mode 1))
+  (save-place-mode 1)
+  :custom
+  (save-place-limit 50))
 
 ;; Bookmarks
 (setq bookmark-save-flag 1
@@ -257,8 +259,8 @@
   (when (find-font (font-spec :name "Iosevka"))
     (set-face-attribute 'default nil :family "Iosevka" :height 110)
     (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110))
-  (when (find-font (font-spec :name "Iosevka Aile"))
-    (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :height 110)))
+  (when (find-font (font-spec :name "Inter"))
+    (set-face-attribute 'variable-pitch nil :family "Inter" :height 110)))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -390,6 +392,7 @@
 (use-package modus-themes
   :ensure t
   :init
+  :config
   (setq
 
    ;; modus-themes-headings
@@ -405,30 +408,29 @@
    modus-themes-subtle-line-numbers t
    modus-themes-fringes nil ; {nil,'subtle,'intense}
 
-   ;; mode-line settings
-   modus-themes-common-palette-overrides
-   '(
-     ;;   ;; make border same color (e.g. borderless)
-     ;;   ;; (border-mode-line-active bg-mode-line-active)
-     ;;   ;; (border-mode-line-inactive bg-mode-line-inactive)
-     ;;   ;; make active window's mode-line purple
-     ;;   (bg-mode-line-active bg-lavender)
-     ;;   (fg-mode-line-active fg-main)
-     ;;   (border-mode-line-active bg-magenta-intense)
+   ;; ;; mode-line settings
+   ;; modus-themes-common-palette-overrides
+   ;; '(
+   ;;   ;;   ;; make border same color (e.g. borderless)
+   ;;   ;;   ;; (border-mode-line-active bg-mode-line-active)
+   ;;   ;;   ;; (border-mode-line-inactive bg-mode-line-inactive)
+   ;;   ;;   ;; make active window's mode-line purple
+   ;;   ;;   (bg-mode-line-active bg-lavender)
+   ;;   ;;   (fg-mode-line-active fg-main)
+   ;;   ;;   (border-mode-line-active bg-magenta-intense)
 
-     (comment fg-alt)
+   ;;   (comment fg-alt)
 
-     ;; Make line numbers less intense
-     (fg-line-number-inactive "gray50")
-     (fg-line-number-active fg-main)
-     (bg-line-number-inactive unspecified)
-     (bg-line-number-active unspecified)
-     ))
-
-  :config
-  (load-theme 'modus-operandi-tinted t)
+   ;;   ;; Make line numbers less intense
+   ;;   (fg-line-number-inactive "gray50")
+   ;;   (fg-line-number-active fg-main)
+   ;;   (bg-line-number-inactive unspecified)
+   ;;   (bg-line-number-active unspecified)
+   ;;   )
+   )
   (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted))
-  (define-key global-map (kbd "<f5>") #'modus-themes-toggle))
+  (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+  (modus-themes-load-theme 'modus-operandi-tinted))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Files
@@ -840,8 +842,6 @@ if one already exists."
 	      (apply fn arg)
         (error (zk-follow-link-at-point)))))
   (advice-add 'org-open-at-point :around #'zk-org-try-to-follow-link))
-
-(advice-add 'org-open-at-point :around #'zk-org-try-to-follow-link))
 
 (use-package zk-index
   :after zk
