@@ -427,9 +427,9 @@
      (bg-line-number-inactive unspecified)
      (bg-line-number-active unspecified)
      ))
-  (setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted))
+  (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
-  (modus-themes-load-theme 'modus-operandi-tinted))
+  (modus-themes-load-theme 'modus-operandi))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Files
@@ -754,7 +754,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -764,7 +764,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
+  (citar-bibliography '("~/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -772,7 +772,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -950,7 +950,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(latex entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
@@ -1540,7 +1540,8 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("01a9797244146bbae39b18ef37e6f2ca5bebded90d9fe3a2f342a9e863aaa4fd"
+   '("a68ec832444ed19b83703c829e60222c9cfad7186b7aea5fd794b79be54146e6"
+     "01a9797244146bbae39b18ef37e6f2ca5bebded90d9fe3a2f342a9e863aaa4fd"
      "1ad12cda71588cc82e74f1cabeed99705c6a60d23ee1bb355c293ba9c000d4ac"
      "da69584c7fe6c0acadd7d4ce3314d5da8c2a85c5c9d0867c67f7924d413f4436"
      "df39cc8ecf022613fc2515bccde55df40cb604d7568cb96cd7fe1eff806b863b"
@@ -1564,17 +1565,20 @@ if one already exists."
      "/home/kchou/Documents/01-Projects/Υποστήριξη 1ης εργασίας ΤΝ1/AI1 TA.org"
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
  '(package-selected-packages
-   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
-              corfu csv-mode darkroom dashboard devdocs diff-hl dired direnv
-              dockerfile-mode edit-indirect ef-themes eglot eldoc-box elfeed
-              elfeed-org elfeed-tube elfeed-tube-mpv elpher fish-mode git-gutter
-              gptel gruber-darker-theme hide-mode-line htmlize json-mode
-              ligature link-hint marginalia markdown-mode markdown-ts-mode
-              math-preview mermaid-mode mixed-pitch modus-themes mpv olivetti
-              openwith orderless org-appear org-caldav org-contrib org-download
-              org-mode org-modern pet ruff-format rust-mode selectric-mode
-              telephone-line tree-sitter-langs treesit-auto typst-ts-mode valign
-              vertico vterm vundo yaml-mode yasnippet zk-desktop))
+   '(adwaita-dark-theme apheleia auctex cape cdlatex centered-cursor-mode
+                        citar-embark comment-tags corfu csv-mode darkroom
+                        dashboard devdocs diff-hl dired direnv dockerfile-mode
+                        edit-indirect ef-themes eglot eldoc-box elfeed
+                        elfeed-org elfeed-tube elfeed-tube-mpv elpher fish-mode
+                        git-gutter gptel gruber-darker-theme hide-mode-line
+                        htmlize json-mode ligature link-hint marginalia
+                        markdown-mode markdown-ts-mode math-preview mermaid-mode
+                        mixed-pitch modus-themes mpv olivetti openwith orderless
+                        org-appear org-caldav org-contrib org-download org-mode
+                        org-modern pet ruff-format rust-mode selectric-mode
+                        telephone-line tree-sitter-langs treesit-auto
+                        typst-ts-mode valign vertico vterm vundo yaml-mode
+                        yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
