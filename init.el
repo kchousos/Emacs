@@ -145,6 +145,9 @@
                                  mode-line-misc-info
                                  mode-line-end-spaces))
 
+;; Will work in Emacs versions >= 31
+;; (setq mode-line-collapse-minor-modes '(not))
+
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Scrolling and Navigation
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -402,7 +405,7 @@
    ;;        (4 . (1.05))
    ;;        (t . (1.0)))
 
-   modus-themes-italic-constructs t
+   modus-themes-italic-constructs nil
    modus-themes-bold-constructs t
    modus-themes-mixed-fonts t
    modus-themes-subtle-line-numbers t
@@ -754,7 +757,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -764,7 +767,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/Library/References/biblio.bib"))
+  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -772,7 +775,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -950,7 +953,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(latex entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
@@ -1061,11 +1064,11 @@ if one already exists."
       org-lowest-priority ?E
       org-agenda-block-separator 9472
       org-agenda-tags-column 0
-      org-agenda-hide-tags-regexp "noexport"
+      org-agenda-hide-tags-regexp "noexport\\|ignore"
       org-agenda-use-time-grid t
       org-agenda-start-with-log-mode t
       org-agenda-log-mode-items '(clock)
-      org-log-into-drawer t
+      org-log-into-drawer nil
       org-log-state-notes-insert-after-drawers t
       org-agenda-include-deadlines t
       org-agenda-todo-ignore-scheduled 'all
@@ -1540,7 +1543,8 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("a68ec832444ed19b83703c829e60222c9cfad7186b7aea5fd794b79be54146e6"
+   '("d2c76098def8b2b10b45d2092c86ca9c8b95d58fabbc8850d28899181d8f6581"
+     "a68ec832444ed19b83703c829e60222c9cfad7186b7aea5fd794b79be54146e6"
      "01a9797244146bbae39b18ef37e6f2ca5bebded90d9fe3a2f342a9e863aaa4fd"
      "1ad12cda71588cc82e74f1cabeed99705c6a60d23ee1bb355c293ba9c000d4ac"
      "da69584c7fe6c0acadd7d4ce3314d5da8c2a85c5c9d0867c67f7924d413f4436"
@@ -1549,7 +1553,8 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/01-Projects/ALMA - Algorithms - Project 2 (Theory)/algorithms_2-theory.org"
+   '("~/Documents/01-Projects/ALMA - Cryptography - Project 3/crypto_3.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 2 (Code)/algorithms_2-code.org"
      "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 2/crypto_2.org"
      "/home/kchou/Documents/01-Projects/ALMA - Complexity - Project 3/complexity_3.org"
      "/home/kchou/Documents/01-Projects/ALMA - Graphs - Project 3/graphs_3.org"
@@ -1562,7 +1567,6 @@ if one already exists."
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Κρυπτογραφία/Κρυπτογραφία.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
-     "/home/kchou/Documents/01-Projects/Υποστήριξη 1ης εργασίας ΤΝ1/AI1 TA.org"
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
  '(package-selected-packages
    '(adwaita-dark-theme apheleia auctex cape cdlatex centered-cursor-mode
@@ -1584,7 +1588,8 @@ if one already exists."
      (org-timeblock :vc-backend Git :url
                     "https://github.com/ichernyshovvv/org-timeblock/")
      (typst-ts-mode :vc-backend Git :url
-                    "https://codeberg.org/meow_king/typst-ts-mode.git"))))
+                    "https://codeberg.org/meow_king/typst-ts-mode.git")))
+ '(send-mail-function 'mailclient-send-it))
 
 ;; Enable previously disabled commands
 (put 'dired-find-alternate-file 'disabled nil)
