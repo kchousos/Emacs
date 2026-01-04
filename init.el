@@ -262,8 +262,8 @@
   (when (find-font (font-spec :name "Iosevka"))
     (set-face-attribute 'default nil :family "Iosevka" :height 110)
     (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110))
-  (when (find-font (font-spec :name "Inter"))
-    (set-face-attribute 'variable-pitch nil :family "Inter" :height 110)))
+  (when (find-font (font-spec :name "Lato"))
+    (set-face-attribute 'variable-pitch nil :family "Lato" :height 120)))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -757,7 +757,7 @@ if one already exists."
 ;; Bibliography and Citations
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(defvar org-cite-csl--fallback-locales-dir "~/HDD/Library/Zotero data/styles/")
+(defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
 
 (use-package citar
   :after org
@@ -767,7 +767,7 @@ if one already exists."
   (org-cite-activate-processor 'citar)
   (citar-bibliography org-cite-global-bibliography)
 
-  (citar-bibliography '("~/HDD/Library/References/biblio.bib"))
+  (citar-bibliography '("~/Library/References/biblio.bib"))
   (citar-citeproc-csl-style "IEEE")
   (citar-format-reference-function 'citar-citeproc-format-reference)
   (citar-markdown-prompt-for-extra-arguments nil)
@@ -775,7 +775,7 @@ if one already exists."
                                ;; ("pdf" . citar-file-open-external)
                                (t . find-file)))
   (citar-open-entry-function #'citar-open-entry-in-zotero)
-  (citar-citeproc-csl-styles-dir "~/HDD/Library/Zotero data/styles/")
+  (citar-citeproc-csl-styles-dir "~/Library/Zotero data/styles/")
   :hook
   (markdown-mode . citar-capf-setup))
 
@@ -953,7 +953,7 @@ if one already exists."
   (setq org-highlight-latex-and-related '(latex entities))
 
   ;; Export options
-  (setq org-cite-csl-styles-dir "~/HDD/Library/Zotero data/styles/"
+  (setq org-cite-csl-styles-dir "~/Library/Zotero data/styles/"
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
@@ -1302,6 +1302,7 @@ if one already exists."
 
       org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
       org-latex-src-block-backend 'minted
+      org-latex-image-default-width ".75\\linewidth"
       )
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
@@ -1553,11 +1554,9 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/01-Projects/ALMA - Cryptography - Project 3/crypto_3.org"
+   '("/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 3 (Theory)/algorithms_3-theory.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 3/crypto_3.org"
      "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 2 (Code)/algorithms_2-code.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 2/crypto_2.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Complexity - Project 3/complexity_3.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Graphs - Project 3/graphs_3.org"
      "/home/kchou/Documents/03-Resources/Slipbox/Slipbox.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
