@@ -125,6 +125,7 @@
       save-interprogram-paste-before-kill t)
 
 (setq initial-scratch-message nil)
+(global-set-key (kbd "C-x x s") #'scratch-buffer)
 
 ;; Hide minor modes in modeline
 (setq-default mode-line-format '("%e" mode-line-front-space
@@ -262,8 +263,8 @@
   (when (find-font (font-spec :name "Iosevka"))
     (set-face-attribute 'default nil :family "Iosevka" :height 110)
     (set-face-attribute 'fixed-pitch nil :family "Iosevka" :height 110))
-  (when (find-font (font-spec :name "Lato"))
-    (set-face-attribute 'variable-pitch nil :family "Lato" :height 120)))
+  (when (find-font (font-spec :name "Iosevka Aile"))
+    (set-face-attribute 'variable-pitch nil :family "Iosevka Aile" :height 110)))
 
 (if (daemonp)
     (add-hook 'after-make-frame-functions
@@ -271,8 +272,6 @@
                 (with-selected-frame frame
                   (set-font-faces))))
   (set-font-faces))
-
-(setq line-spacing 0.1) ; Slightly increased for better readability
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Buffers
@@ -673,7 +672,9 @@ if one already exists."
   "Setup for prose writing."
   (visual-line-mode 1)
   (variable-pitch-mode 1)
-  (setq truncate-lines nil))
+  (setq truncate-lines nil
+        line-spacing 0.2 ; Slightly increased for better readability
+        ))
 
 (add-hook 'org-mode-hook #'my-prose-setup)
 (add-hook 'markdown-mode-hook #'my-prose-setup)
@@ -809,13 +810,13 @@ if one already exists."
     (insert (format "* %s %s\n\n" new-id title)))
   :bind
   (:map zk-map
-        ("k" . zk-find-file)
+        ("f" . zk-find-file)
         ("g" . zk-grep)
-        ("f" . zk-find-file-by-full-text-search)
+        ("F" . zk-find-file-by-full-text-search)
         ("b" . zk-backlinks)
         ("l" . zk-links-in-note)
         ("t" . zk-tag-insert)
-        ("y" . zk-tag-search)
+        ("T" . zk-tag-search)
         ("r" . zk-rename-note)
         ("w" . zk-new-note)
         ("n" . zk-network)
@@ -832,7 +833,7 @@ if one already exists."
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
   (zk-tag-regexp "\\s#\\+[A-Za-zΑ-Ωα-ωΆ-Ώά-ώ_/\\-][A-Za-zΑ-Ωα-ωΆ-Ώά-ώ0-9_/\\-]*")
   (zk-new-note-link-insert 'ask)
-  (zk-link-and-title nil)
+  (zk-link-and-title 'ask)
   :config
   (zk-setup-auto-link-buttons)
   (zk-setup-embark)
@@ -980,7 +981,7 @@ if one already exists."
 
 (add-hook 'org-mode-hook
           (lambda ()
-            (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?~ . ?~)))
+            ;; (setq-local electric-pair-pairs '((?* . ?*) (?/ . ?/) (?+ . ?+) (?~ . ?~)))
             (setq-local electric-pair-text-pairs electric-pair-pairs)))
 
 (require 'org-protocol)
@@ -1065,19 +1066,19 @@ if one already exists."
       org-agenda-block-separator 9472
       org-agenda-tags-column 0
       org-agenda-hide-tags-regexp "noexport\\|ignore"
-      org-agenda-use-time-grid t
+      org-agenda-use-time-grid nil
       org-agenda-start-with-log-mode t
       org-agenda-log-mode-items '(clock)
       org-log-into-drawer nil
       org-log-state-notes-insert-after-drawers t
       org-agenda-include-deadlines t
       org-agenda-todo-ignore-scheduled 'all
-      org-agenda-skip-deadline-prewarning-if-scheduled 'pre-scheduled
+      org-agenda-skip-deadline-prewarning-if-scheduled nil
       org-agenda-skip-scheduled-if-deadline-is-shown nil
       org-agenda-skip-scheduled-if-done t
       org-agenda-skip-deadline-if-done t
       org-agenda-skip-timestamp-if-done t
-      org-agenda-span 'day
+      org-agenda-span 'week
       org-agenda-remove-tags nil
       ;; org-agenda-scheduled-leaders '("[S]: " "[S] %2d days ago: ")
       ;; org-agenda-deadline-leaders '("[D]: " "[D] in %2d days: " "[D] %2d days ago: ")
@@ -1438,6 +1439,13 @@ if one already exists."
                                           "typst-lsp"))))))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; KMonad
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+(use-package kbd-mode
+  :vc (:url "https://github.com/kmonad/kbd-mode" :rev :newest))
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; ERC
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
@@ -1554,9 +1562,11 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 3 (Theory)/algorithms_3-theory.org"
+   '("~/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Paper Presentation/crypto_slides.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 3 (Code)/algorithms_3-code.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 3 (Theory)/algorithms_3-theory.org"
      "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 3/crypto_3.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 2 (Code)/algorithms_2-code.org"
      "/home/kchou/Documents/03-Resources/Slipbox/Slipbox.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
@@ -1565,7 +1575,6 @@ if one already exists."
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Αλγόριθμοι/Αλγόριθμοι.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Κρυπτογραφία/Κρυπτογραφία.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
-     "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
  '(package-selected-packages
    '(adwaita-dark-theme apheleia auctex cape cdlatex centered-cursor-mode
@@ -1574,7 +1583,7 @@ if one already exists."
                         edit-indirect ef-themes eglot eldoc-box elfeed
                         elfeed-org elfeed-tube elfeed-tube-mpv elpher fish-mode
                         git-gutter gptel gruber-darker-theme hide-mode-line
-                        htmlize json-mode ligature link-hint marginalia
+                        htmlize json-mode kbd-mode ligature link-hint marginalia
                         markdown-mode markdown-ts-mode math-preview mermaid-mode
                         mixed-pitch modus-themes mpv olivetti openwith orderless
                         org-appear org-caldav org-contrib org-download org-mode
@@ -1583,7 +1592,8 @@ if one already exists."
                         typst-ts-mode valign vertico vterm vundo yaml-mode
                         yasnippet zk-desktop))
  '(package-vc-selected-packages
-   '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
+   '((kbd-mode :url "https://github.com/kmonad/kbd-mode")
+     (org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
                     "https://github.com/ichernyshovvv/org-timeblock/")
      (typst-ts-mode :vc-backend Git :url
@@ -1609,9 +1619,3 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Kill buffers
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-(kill-buffer "*scratch*")
