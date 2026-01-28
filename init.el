@@ -786,6 +786,7 @@ if one already exists."
         ("t" . zk-tag-insert)
         ("T" . zk-tag-search)
         ("r" . zk-rename-note)
+        ("R" . zk-random-note)
         ("w" . zk-new-note)
         ("n" . zk-network)
         ("G" . zk-graph)
@@ -859,7 +860,16 @@ if one already exists."
 
         ;; Clean up the intermediate dot file; keep the svg.
         (when (and dot (file-exists-p dot))
-          (ignore-errors (delete-file dot)))))))
+          (ignore-errors (delete-file dot))))))
+
+  (defun zk-random-note ()
+    "Open a random .org file from `zk-directory`."
+    (interactive)
+    (let* ((files (directory-files zk-directory t "\\.org$"))
+           (n (length files)))
+      (if (zerop n)
+          (user-error "No .org files found in %s" zk-directory)
+        (find-file (nth (random n) files))))))
 
 (use-package zk-index
   :after zk
