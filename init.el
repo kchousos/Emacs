@@ -1,8 +1,6 @@
-;; -*- lexical-binding: t; -*-
+;; -*- lexical-binding: t; eval: (outline-minor-mode 1) -*-
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Locale settings
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Locale settings
 
 (setenv "LC_TIME" "el_GR.UTF-8")
 (setq system-time-locale "el_GR.UTF-8")
@@ -20,11 +18,9 @@
       display-time-day-and-date t
       display-time-24hr-format t
       display-time-default-load-average nil)
-(display-time-mode 1)
+(display-time-mode 0)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Performance Optimization
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Performance Optimization
 
 ;; Increase GC threshold during startup
 (setq gc-cons-threshold most-positive-fixnum
@@ -46,9 +42,7 @@
   (add-to-list 'native-comp-eln-load-path
                (expand-file-name "eln-cache/" user-emacs-directory)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Package System & use-package Setup
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Package System & use-package Setup
 
 (require 'package)
 (setq package-archives
@@ -77,9 +71,7 @@
 
 (use-package org :load-path "~/.config/emacs/elpa/org-mode/lisp/")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Core UI Settings
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Core UI Settings
 
 (setq initial-major-mode #'org-mode)
 
@@ -149,9 +141,7 @@
 ;; Will work in Emacs versions >= 31
 ;; (setq mode-line-collapse-minor-modes '(not))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Scrolling and Navigation
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Scrolling and Navigation
 
 (setq scroll-bar-adjust-thumb-portion t
       mouse-wheel-progressive-speed nil
@@ -167,9 +157,7 @@
 ;; Better scrollbar handling
 (set-window-scroll-bars (minibuffer-window) nil nil nil nil t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; File Handling
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; File Handling
 
 ;; Disable backup and auto-save files
 (setq make-backup-files nil
@@ -214,9 +202,7 @@
 
 (savehist-mode 1)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Editing Behavior
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Editing Behavior
 
 ;; Indentation
 (setq-default indent-tabs-mode nil
@@ -251,9 +237,7 @@
 ;; Warnings
 (setq warning-minimum-level :error)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Fonts
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Fonts
 
 (defun set-font-faces ()
   "Set font faces for different contexts."
@@ -273,9 +257,7 @@
                   (set-font-faces))))
   (set-font-faces))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Buffers
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Buffers
 
 (with-eval-after-load 'quail (defun quail-completion ()))
 
@@ -286,9 +268,7 @@
 
 (winner-mode 1)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Key Bindings
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Key Bindings
 
 ;; Window navigation
 (global-set-key (kbd "M-o") 'other-window)
@@ -370,9 +350,7 @@
 (global-set-key (kbd "M-<up>")  #'move-line-up)
 (global-set-key (kbd "M-<down>")  #'move-line-down)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Spell Checking
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Spell Checking
 
 (use-package ispell
   :ensure nil
@@ -387,9 +365,7 @@
 
 (setq dictionary-server "dict.org")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Theme and Appearance
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Theme and Appearance
 
 (use-package modus-themes
   :ensure t
@@ -433,18 +409,14 @@
   (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
   (modus-themes-load-theme 'modus-operandi))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Files
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Files
 
 (use-package autorevert)
 (global-auto-revert-mode)
 (setq auto-revert-use-notify t)
 (setq auto-revert-avoid-polling t)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Essential Packages
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Essential Packages
 
 (use-package which-key
   :diminish which-key-mode
@@ -463,25 +435,23 @@
   ;; (vundo-popup-mode)
   )
 
-(use-package dashboard
-  :custom
-  (dashboard-startup-banner 'official)
-  (dashboard-center-content t)
-  (dashboard-vertically-center-content t)
-  (dashboard-startupify-list '(dashboard-insert-banner
-                               ;; dashboard-insert-newline
-                               ;; dashboard-insert-items
-                               ))
-  (dashboard-items '((projects . 5)
-                     (bookmarks . 3)
-                     (recents . 3)))
-  :config
-  (dashboard-setup-startup-hook)
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
+;; (use-package dashboard
+;;   :custom
+;;   (dashboard-startup-banner 'official)
+;;   (dashboard-center-content t)
+;;   (dashboard-vertically-center-content t)
+;;   (dashboard-startupify-list '(dashboard-insert-banner
+;;                                ;; dashboard-insert-newline
+;;                                ;; dashboard-insert-items
+;;                                ))
+;;   (dashboard-items '((projects . 5)
+;;                      (bookmarks . 3)
+;;                      (recents . 3)))
+;;   :config
+;;   (dashboard-setup-startup-hook)
+;;   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Completion Framework
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Completion Framework
 
 (use-package vertico
   :init
@@ -520,26 +490,20 @@
   (add-to-list 'completion-at-point-functions #'cape-dabbrev)
   (add-to-list 'completion-at-point-functions #'cape-file))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Project Management
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Project Management
 
 (use-package project
   :ensure nil
   :custom
   (project-vc-extra-root-markers '(".envrc" ".project" ".git")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Direnv
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Direnv
 
 (use-package direnv
   :custom
   (direnv-always-show-summary nil))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Programming
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Programming
 
 (use-package eldoc-box
   :config
@@ -612,9 +576,23 @@
 ;; Docs
 (use-package devdocs)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Terminal
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Outline-mode
+
+(setq outline-minor-mode-cycle t)
+
+;;; Searching
+
+(use-package rg)
+
+;; https://github.com/dajva/rg.el/issues/132
+(defun hrm-rg-mode-hook ()
+  "My rg-mode-hook.  Setup outline-minor-mode."
+  (setq-local outline-regexp "File:")
+  (outline-minor-mode 1))
+
+(add-hook 'rg-mode-hook #'hrm-rg-mode-hook)
+
+;;; Terminal
 
 (use-package vterm
   :custom
@@ -644,9 +622,7 @@ if one already exists."
 
 (advice-add 'project-shell :override #'my-project-shell)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Writing and Note-taking
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Writing and Note-taking
 
 (use-package centered-cursor-mode)
 
@@ -679,9 +655,7 @@ if one already exists."
 (add-hook 'org-mode-hook #'my-prose-setup)
 (add-hook 'markdown-mode-hook #'my-prose-setup)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Markdown
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Markdown
 (use-package markdown-mode
   :mode ("\\.md\\'" "\\.qmd\\'")
   :hook ((markdown-mode . olivetti-mode)
@@ -754,9 +728,7 @@ if one already exists."
 
   (add-hook 'markdown-mode-hook #'nb/markdown-unhighlight))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Bibliography and Citations
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Bibliography and Citations
 
 (defvar org-cite-csl--fallback-locales-dir "~/Library/Zotero data/styles/")
 
@@ -785,9 +757,7 @@ if one already exists."
   :no-require
   :config (citar-embark-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; PDF handling
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; PDF handling
 
 (use-package doc-view
   :ensure nil
@@ -795,9 +765,7 @@ if one already exists."
   (doc-view-dvipdfm-program "mutool")
   (doc-view-continuous t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Zettelkasten (ZK)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Zettelkasten (ZK)
 
 (define-prefix-command 'zk-map)
 (global-set-key (kbd "C-z") 'zk-map)
@@ -820,6 +788,7 @@ if one already exists."
         ("r" . zk-rename-note)
         ("w" . zk-new-note)
         ("n" . zk-network)
+        ("G" . zk-graph)
         ("N" . citar-open-notes)
         ("i" . zk-insert-link)
         ("c" . zk-current-notes)
@@ -844,7 +813,53 @@ if one already exists."
       (condition-case nil
 	      (apply fn arg)
         (error (zk-follow-link-at-point)))))
-  (advice-add 'org-open-at-point :around #'zk-org-try-to-follow-link))
+  (advice-add 'org-open-at-point :around #'zk-org-try-to-follow-link)
+
+  (defun zk-graph ()
+    "Generate a Zettelkasten graph for the current file."
+    (interactive)
+    (unless buffer-file-name
+      (error "Current buffer is not visiting a file"))
+
+    (let* ((zettel (file-name-nondirectory buffer-file-name))
+           ;; Unique temp files
+           (dot (make-temp-file "zk-graph-" nil ".dot"))
+           (svg (make-temp-file "zk-graph-" nil ".svg"))
+           ;; Where your script lives/should run from (edit if needed)
+           (default-directory zk-directory))
+
+      (unwind-protect
+          (progn
+            ;; 1) Run: ruby extract_associated_zettel.rb <zettel>  -> dot file
+            (with-temp-file dot
+              (let ((exit (process-file "ruby" nil (current-buffer) nil
+                                        "extract_associated_zettel.rb" zettel)))
+                (unless (and (integerp exit) (zerop exit))
+                  (error "ruby script failed (exit %S). See %s" exit dot))))
+
+            ;; 2) Run: neato -Tsvg -o <svg> <dot>
+            (let ((exit (process-file "neato" nil nil nil
+                                      "-T" "svg" "-o" svg dot)))
+              (unless (and (integerp exit) (zerop exit))
+                (error "neato failed (exit %S)" exit)))
+
+            (message "Wrote graph: %s" svg)
+
+            ;; 3) Open it (platform-aware)
+            (cond
+             ((eq system-type 'darwin)
+              (start-process "zk-graph-open" nil "open" svg))
+             ((memq system-type '(gnu/linux linux))
+              (start-process "zk-graph-open" nil "xdg-open" svg))
+             ((eq system-type 'windows-nt)
+              (w32-shell-execute "open" svg))
+             (t
+              ;; Fallback: open in Emacs
+              (find-file svg))))
+
+        ;; Clean up the intermediate dot file; keep the svg.
+        (when (and dot (file-exists-p dot))
+          (ignore-errors (delete-file dot)))))))
 
 (use-package zk-index
   :after zk
@@ -892,9 +907,7 @@ if one already exists."
           zk-citar-citekey-regexp "^[0-9]+[[:space:]]+L1[[:space:]]+\\(\\S-+\\)[[:space:]]+-.*"
           zk-citar-title-template "L1 ${=key=} - ${title}")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; LaTeX
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LaTeX
 
 (use-package cdlatex
   :hook ((latex-mode . cdlatex-mode)
@@ -902,9 +915,7 @@ if one already exists."
 
 (setq cdlatex-math-symbol-alist '((93 ("\\Rightarrow" "\\implies"))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Math rendering
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Math rendering
 
 (use-package math-preview
   ;; :hook ((markdown-mode . math-preview-all))
@@ -913,9 +924,7 @@ if one already exists."
 
 (advice-add #'math-preview-all :before (lambda () (math-preview-reset-numbering 1)))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Org-Mode
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Org-Mode
 
 ;; (package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))
 (use-package org :load-path "~/.config/emacs/elpa/org-mode/lisp/"
@@ -988,12 +997,69 @@ if one already exists."
 
 (global-set-key (kbd "C-c l") #'org-store-link)
 
-;; GTD ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;;; Agenda/GTD
 
 ;; (setq org-directory "~/Documents/03-Resources/Agenda")
 
 (setq org-todo-keywords
       '((sequence "TODO(t)" "IN PROGRESS(p)" "NEXT(n)" "ON HOLD(h)" "IDEA(i)" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)")))
+
+(global-set-key (kbd "C-c a") #'org-agenda)
+(setq org-agenda-files (list org-directory))
+
+(setq org-log-done 'time
+      org-agenda-current-time-string "← Now ─────────────────────────────────────────────────────────"
+      org-archive-location "::* Archive"
+      org-lowest-priority ?E
+      org-agenda-block-separator 9472
+      org-agenda-tags-column 0
+      org-agenda-hide-tags-regexp "noexport\\|ignore"
+      org-agenda-use-time-grid nil
+      org-agenda-start-with-log-mode t
+      org-agenda-log-mode-items '(clock)
+      org-log-into-drawer t
+      org-log-state-notes-insert-after-drawers t
+      org-agenda-include-deadlines t
+      org-agenda-todo-ignore-scheduled 'all
+      org-agenda-skip-deadline-prewarning-if-scheduled nil
+      org-agenda-skip-scheduled-if-deadline-is-shown nil
+      org-agenda-skip-scheduled-if-done t
+      org-agenda-skip-deadline-if-done t
+      org-agenda-skip-timestamp-if-done t
+      org-agenda-span 'day
+      org-agenda-remove-tags nil
+      ;; org-agenda-scheduled-leaders '("[S]: " "[S] %2d days ago: ")
+      ;; org-agenda-deadline-leaders '("[D]: " "[D] in %2d days: " "[D] %2d days ago: ")
+      org-agenda-deadline-faces '((0.9 . org-imminent-deadline) (0.7 . org-upcoming-deadline)
+                                  (0.0 . org-upcoming-distant-deadline))
+      org-habit-graph-column 46
+      org-extend-today-until 4
+      org-sort-agenda-notime-is-late nil
+      org-agenda-entry-text-leaders "    "
+      )
+
+(setf (cdr (assoc 'note org-log-note-headings)) "%t")
+
+(setq org-agenda-sorting-strategy
+      '(habit-down time-up deadline-up priority-down todo-state-up effort-up category-keep))
+
+
+(setq org-agenda-breadcrumbs-separator " ➤ "
+      org-agenda-prefix-format '((agenda . " %-15:c%?-12t% s")
+                                 (timeline . "  % s")
+                                 (todo ." %-15:c %b")
+                                 (tags . " %-15:c %b")
+                                 (search . " %-15:c")))
+
+(setq org-agenda-custom-commands
+      '(("A" "Running & Next Actions"
+         (; (agenda "" nil)
+          (todo "IN PROGRESS" ((org-agenda-overriding-header "Running tasks")))
+          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
+        ("P" "Projects"
+         (; (agenda "" nil)
+          (tags "+exam+LEVEL=1|+work+LEVEL=1|+assignment+LEVEL=1" ((org-agenda-overriding-header "Projects")))
+          ) nil)))
 
 ;; (defun my/set-org-todo-faces ()
 ;;   "Set Org TODO keyword faces using modus-themes colors."
@@ -1030,7 +1096,8 @@ if one already exists."
 ;; ;; Add hooks to run the function on theme change
 ;; (add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
 
-;; Calendar/Diary
+;;;;; Calendar/Diary
+
 (setq ; org-agenda-diary-file "~/Documents/03-Resources/Agenda/Calendar.org"
  org-agenda-insert-diary-strategy 'date-tree
  org-agenda-include-diary nil
@@ -1042,7 +1109,8 @@ if one already exists."
 
 (setq-default calendar-date-style 'iso)
 
-;;;; Appointments
+;;;;; Appointments
+
 (setq appt-time-msg-list nil
       appt-message-warning-time '10       ;; warn 10 min in advance
       appt-display-diary nil              ;; do not display diary when (appt-activate) is called
@@ -1055,90 +1123,8 @@ if one already exists."
             (org-agenda-to-appt)          ;; copy all agenda schedule to appointments
             (appt-activate 1)))           ;; active appt (appointment notification)
 
-;; Agenda
-(global-set-key (kbd "C-c a") #'org-agenda)
-(setq org-agenda-files (list org-directory))
+;;;; Capture
 
-(setq org-log-done 'time
-      org-agenda-current-time-string "← Now ─────────────────────────────────────────────────────────"
-      org-archive-location "::* Archive"
-      org-lowest-priority ?E
-      org-agenda-block-separator 9472
-      org-agenda-tags-column 0
-      org-agenda-hide-tags-regexp "noexport\\|ignore"
-      org-agenda-use-time-grid nil
-      org-agenda-start-with-log-mode t
-      org-agenda-log-mode-items '(clock)
-      org-log-into-drawer nil
-      org-log-state-notes-insert-after-drawers t
-      org-agenda-include-deadlines t
-      org-agenda-todo-ignore-scheduled 'all
-      org-agenda-skip-deadline-prewarning-if-scheduled nil
-      org-agenda-skip-scheduled-if-deadline-is-shown nil
-      org-agenda-skip-scheduled-if-done t
-      org-agenda-skip-deadline-if-done t
-      org-agenda-skip-timestamp-if-done t
-      org-agenda-span 'week
-      org-agenda-remove-tags nil
-      ;; org-agenda-scheduled-leaders '("[S]: " "[S] %2d days ago: ")
-      ;; org-agenda-deadline-leaders '("[D]: " "[D] in %2d days: " "[D] %2d days ago: ")
-      org-agenda-deadline-faces '((0.9 . org-imminent-deadline) (0.7 . org-upcoming-deadline)
-                                  (0.0 . org-upcoming-distant-deadline))
-      org-habit-graph-column 46
-      org-extend-today-until 4
-      org-sort-agenda-notime-is-late nil
-      org-agenda-entry-text-leaders "    "
-      )
-
-(setf (cdr (assoc 'note org-log-note-headings)) "%t")
-
-(setq org-agenda-sorting-strategy
-      '(habit-down time-up deadline-up priority-down todo-state-up effort-up category-keep))
-
-
-(setq org-agenda-breadcrumbs-separator " ➤ "
-      org-agenda-prefix-format '((agenda . " %-15:c%?-12t% s")
-                                 (timeline . "  % s")
-                                 (todo ." %-15:c %b")
-                                 (tags . " %-15:c %b")
-                                 (search . " %-15:c")))
-
-(setq org-agenda-custom-commands
-      '(("A" "Running & Next Actions"
-         (; (agenda "" nil)
-          (todo "IN PROGRESS" ((org-agenda-overriding-header "Running tasks")))
-          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)))
-
-;; Calendar integration (CalDav)
-
-(use-package org-caldav
-  :config
-  (setq org-caldav-url "https://nextcloud.kchou.duckdns.org/remote.php/dav/calendars/Kchou/"
-        ;; org-caldav-calendar-id "1-1"
-        org-caldav-calendars '(
-                               (:calendar-id "1-1" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Events")))
-                               (:calendar-id "2x" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Routine")))
-                               (:calendar-id "-" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Lectures")))
-                               (:calendar-id "1-14" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Meetings")))
-                               (:calendar-id "hobby" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Downtime")))
-                               (:calendar-id "training" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Training")))
-                               (:calendar-id "1-3" :inbox '((file+olp+datetree (expand-file-name "Calendar.org" org-directory) "Exams")))
-                               )
-        org-caldav-files nil
-        ;; org-caldav-inbox (expand-file-name "Calendar.org" org-directory)
-        org-caldav-datetree-treetype 'week
-        org-caldav-save-directory 'org-directory
-        org-caldav-delete-calendar-entries 'ask
-        org-icalendar-timezone "Europe/Athens"))
-
-;; Habits
-(require 'org-habit)
-(add-to-list 'org-modules 'org-habit)
-
-(setq org-habit-show-all-today nil
-      org-habit-show-habits-only-for-today nil)
-
-;; Capture
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "~/Documents/00-Inbox/Inbox.org")
@@ -1156,13 +1142,17 @@ if one already exists."
          :immediate-finish t
          :empty-lines 1)))
 
-;; Refile
+;;;; Refile
+
 (setq org-refile-use-outline-path 'file
       org-outline-path-complete-in-steps nil
       org-refile-targets '((org-agenda-files :maxlevel . 3)))
 
-;; Clocking
+;;;; Clocking
+
 (setq org-clock-mode-line-total 'auto)
+
+;;;; LaTeX previews
 
 (use-package org-latex-preview
   :ensure nil
@@ -1185,12 +1175,16 @@ if one already exists."
   ;; More immediate live-previews -- the default delay is 1 second
   (setq org-latex-preview-live-debounce 0.25))
 
+;;;; Zotero integration
+
 ;; Open =zotero://= links from org buffers.
 (defun org-zotero-open (path)
   (browse-url-xdg-open (format "zotero:%s" path)))
 
 (with-eval-after-load 'org
   (org-link-set-parameters "zotero" :follow #'org-zotero-open))
+
+;;;; Visual improvements
 
 (use-package valign
   :custom
@@ -1269,7 +1263,8 @@ if one already exists."
 
 (add-hook 'org-mode-hook 'org-appear-mode)
 
-;; Exporting
+;;;; Exporting
+
 (use-package org-contrib)
 (require 'ox-extra)
 (ox-extras-activate '(ignore-headlines))
@@ -1306,9 +1301,7 @@ if one already exists."
       org-latex-image-default-width ".75\\linewidth"
       )
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Typesetting
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Typesetting
 
 (use-package ligature
   :config
@@ -1321,9 +1314,7 @@ if one already exists."
   ;; per mode with `ligature-mode'.
   (global-ligature-mode t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Embark (keybinds)
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Embark (keybinds)
 
 (use-package embark
   :bind
@@ -1340,9 +1331,7 @@ if one already exists."
 ;; (push 'embark--allow-edit
 ;;       (alist-get 'eglot-rename embark-target-injection-hooks))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Snippets
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Snippets
 
 (use-package yasnippet
   :custom
@@ -1355,25 +1344,19 @@ if one already exists."
 (add-hook 'LaTeX-mode-hook 'yas-minor-mode-on)
 (add-hook 'prog-mode-hook 'yas-minor-mode-on)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Git
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Git
 
 (use-package git-gutter
   :config
   (global-git-gutter-mode t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Spell and grammar checking
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Spell and grammar checking
 
 (with-eval-after-load 'eglot
   (add-to-list 'eglot-server-programs
                '(markdown-mode . ("harper-ls" "--stdio"))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Dired
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Dired
 
 (setq dired-listing-switches "-al --group-directories-first")
 (add-hook 'dired-mode-hook
@@ -1396,17 +1379,13 @@ if one already exists."
   (setq dired-omit-files   ;; hide .dot files when in dired-omit-mode
         (concat dired-omit-files "\\|^\\.[^.].*")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; LLMs
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; LLMs
 
 (use-package gptel
   :custom
   (gptel-default-mode #'org-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; File handling
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; File handling
 
 (use-package openwith
   :config
@@ -1420,9 +1399,7 @@ if one already exists."
                                 ))
   (openwith-mode t))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Typst
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Typst
 
 ;; (package-vc-install "https://codeberg.org/meow_king/typst-ts-mode.git")
 
@@ -1438,56 +1415,40 @@ if one already exists."
                                           "tinymist"
                                           "typst-lsp"))))))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; KMonad
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; KMonad
 
 (use-package kbd-mode
   :vc (:url "https://github.com/kmonad/kbd-mode" :rev :newest))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; ERC
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; ERC
 
 (setq erc-autojoin-channels-alist '(("Libera.Chat" "#lobsters" "#crypto" "#emacs" "#org-mode")
                                     ("Lainchan" "#lainchan" "#laintracker")))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Docker
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Docker
 
 (use-package dockerfile-mode)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Tramp
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Tramp
 
 (setq tramp-default-method "ssh")
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Hide mode-line
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Hide mode-line
 
 (use-package hide-mode-line
   :bind
   ("<f9>" . global-hide-mode-line-mode))
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Eww
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Eww
 
 (add-hook 'eww-mode-hook #'olivetti-mode)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Elpher
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Elpher
 
 (use-package elpher)
 (add-hook 'elpher-mode-hook #'olivetti-mode)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Elfeed
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Elfeed
 
 (use-package elfeed)
 ;; (global-set-key (kbd "C-c w") 'elfeed)
@@ -1519,17 +1480,7 @@ if one already exists."
 (define-key elfeed-show-mode-map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
 (define-key elfeed-show-mode-map (kbd "C-c C-w") 'elfeed-tube-mpv-where)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Modeline
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; (use-package telephone-line
-;;   :config
-;;   (telephone-line-mode 1))
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Custom modes
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Custom modes
 
 (define-derived-mode url-list-mode text-mode "URL List"
   "Major mode for editing lists of URLs, allowing # comments and highlighting SHA1 hashes."
@@ -1542,9 +1493,7 @@ if one already exists."
                             ("\\b[a-f0-9]\\{7,40\\}\\b" . font-lock-keyword-face))) ;; SHA-1 hash
   (goto-address-mode 0)) ;; Optional: make URLs clickable
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Custom Settings
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Custom Settings
 
 (custom-set-variables
  ;; custom-set-variables was added by Custom.
@@ -1562,16 +1511,14 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
+   '("/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
      "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Paper Presentation/crypto_slides.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 3 (Code)/algorithms_3-code.org"
      "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 3 (Theory)/algorithms_3-theory.org"
      "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 3/crypto_3.org"
      "/home/kchou/Documents/03-Resources/Slipbox/Slipbox.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Υπολογιστική Πολυπλοκότητα/Πολυπλοκότητα.org"
-     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Θεωρία Γραφημάτων/Γραφήματα.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Αλγόριθμοι/Αλγόριθμοι.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Κρυπτογραφία/Κρυπτογραφία.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
@@ -1587,10 +1534,10 @@ if one already exists."
                         markdown-mode markdown-ts-mode math-preview mermaid-mode
                         mixed-pitch modus-themes mpv olivetti openwith orderless
                         org-appear org-caldav org-contrib org-download org-mode
-                        org-modern pet ruff-format rust-mode selectric-mode
-                        telephone-line tree-sitter-langs treesit-auto
-                        typst-ts-mode valign vertico vterm vundo yaml-mode
-                        yasnippet zk-desktop))
+                        org-modern outshine pet rg ruff-format rust-mode
+                        selectric-mode telephone-line tree-sitter-langs
+                        treesit-auto typst-ts-mode valign vertico vterm vundo
+                        yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((kbd-mode :url "https://github.com/kmonad/kbd-mode")
      (org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
@@ -1604,9 +1551,7 @@ if one already exists."
 (put 'dired-find-alternate-file 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Startup Message
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;;; Startup Message
 
 (add-hook 'after-init-hook
           (lambda ()
