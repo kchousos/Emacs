@@ -961,6 +961,7 @@ if one already exists."
         org-link-file-path-type 'relative
         org-use-speed-commands t
         org-footnote-section "Footnotes"
+        org-list-demote-modify-bullet '(("+" . "-") ("-" . "+"))
         org-return-follows-link t)
 
   ;; Attachments handling
@@ -1533,21 +1534,7 @@ if one already exists."
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Κρυπτογραφία/Κρυπτογραφία.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
- '(package-selected-packages
-   '(adwaita-dark-theme apheleia auctex cape cdlatex centered-cursor-mode
-                        citar-embark comment-tags corfu csv-mode darkroom
-                        dashboard devdocs diff-hl dired direnv dockerfile-mode
-                        edit-indirect ef-themes eglot eldoc-box elfeed
-                        elfeed-org elfeed-tube elfeed-tube-mpv elpher fish-mode
-                        git-gutter gptel gruber-darker-theme hide-mode-line
-                        htmlize json-mode kbd-mode ligature link-hint marginalia
-                        markdown-mode markdown-ts-mode math-preview mermaid-mode
-                        mixed-pitch modus-themes mpv olivetti openwith orderless
-                        org-appear org-caldav org-contrib org-download org-mode
-                        org-modern outshine pet rg ruff-format rust-mode
-                        selectric-mode telephone-line tree-sitter-langs
-                        treesit-auto typst-ts-mode valign vertico vterm vundo
-                        yaml-mode yasnippet zk-desktop))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((kbd-mode :url "https://github.com/kmonad/kbd-mode")
      (org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")

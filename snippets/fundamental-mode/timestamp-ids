@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Timestamp ID
+# key: tt
+# --
+`(format-time-string "%Y%m%d%H%M%S")`
