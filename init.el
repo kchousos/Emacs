@@ -331,6 +331,9 @@
 ;; Completion
 (global-set-key (kbd "M-/") #'completion-at-point)
 
+;; Compilation
+(define-key global-map (kbd "C-c p c") 'compile)
+
 ;; Move lines
 (defun move-line-up ()
   "Move up the current line."
@@ -435,21 +438,21 @@
   ;; (vundo-popup-mode)
   )
 
-;; (use-package dashboard
-;;   :custom
-;;   (dashboard-startup-banner 'official)
-;;   (dashboard-center-content t)
-;;   (dashboard-vertically-center-content t)
-;;   (dashboard-startupify-list '(dashboard-insert-banner
-;;                                ;; dashboard-insert-newline
-;;                                ;; dashboard-insert-items
-;;                                ))
-;;   (dashboard-items '((projects . 5)
-;;                      (bookmarks . 3)
-;;                      (recents . 3)))
-;;   :config
-;;   (dashboard-setup-startup-hook)
-;;   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
+(use-package dashboard
+  :custom
+  (dashboard-startup-banner 'official)
+  (dashboard-center-content t)
+  (dashboard-vertically-center-content t)
+  (dashboard-startupify-list '(dashboard-insert-banner
+                               ;; dashboard-insert-newline
+                               ;; dashboard-insert-items
+                               ))
+  (dashboard-items '((projects . 5)
+                     (bookmarks . 3)
+                     (recents . 3)))
+  :config
+  (dashboard-setup-startup-hook)
+  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
 
 ;;; Completion Framework
 
@@ -537,10 +540,6 @@
   :config
   (add-to-list 'eglot-server-programs '((python-base-mode)
                                         "basedpyright-langserver" "--stdio")))
-
-;; C
-(with-eval-after-load 'cc-mode
-  (define-key c-mode-map (kbd "C-c C-c") 'compile))
 
 ;; Python
 (add-hook 'python-base-mode-hook 'direnv-mode)
@@ -773,15 +772,23 @@ if one already exists."
 (use-package zk
   :init
   (add-hook 'completion-at-point-functions #'zk-completion-at-point 'append)
+
   (defun my/zk-new-note-header (title new-id &optional orig-id)
     "Insert header in new notes with TITLE and NEW-ID."
     (insert (format "* %s %s\n\n" new-id title)))
+
+  (defun my/zk-copy-current-id ()
+    "Call `zk--current-id` and copy its result to the clipboard."
+    (interactive)
+    (let ((id (zk--current-id)))
+      (kill-new id)
+      (message "Copied zk id: %s" id)))
   :bind
   (:map zk-map
         ("f" . zk-find-file)
         ("g" . zk-grep)
         ("F" . zk-find-file-by-full-text-search)
-        ("b" . zk-backlinks)
+        ("B" . zk-backlinks)
         ("l" . zk-links-in-note)
         ("t" . zk-tag-insert)
         ("T" . zk-tag-search)
@@ -792,8 +799,9 @@ if one already exists."
         ("G" . zk-graph)
         ("N" . citar-open-notes)
         ("i" . zk-insert-link)
-        ("c" . zk-current-notes)
+        ("b" . zk-current-notes)
         ("I" . zk-index)
+        ("c" . my/zk-copy-current-id)
         ("o" . zk-follow-link-at-point))
   :custom
   (zk-new-note-header-function 'my/zk-new-note-header)
@@ -801,7 +809,7 @@ if one already exists."
   (zk-file-extension "org")
   (zk-id-time-string-format "%Y%m%d%H%M%S")
   (zk-id-regexp "\\([0-9]\\{14\\}\\)")
-  (zk-tag-regexp "\\s#\\+[A-Za-zΑ-Ωα-ωΆ-Ώά-ώ_/\\-][A-Za-zΑ-Ωα-ωΆ-Ώά-ώ0-9_/\\-]*")
+  (zk-tag-regexp "\\s#\\+[0-9A-Za-zΑ-Ωα-ωΆ-Ώά-ώ_/\\-][A-Za-zΑ-Ωα-ωΆ-Ώά-ώ0-9_/\\-]*")
   (zk-new-note-link-insert 'ask)
   (zk-link-and-title 'ask)
   :config
@@ -812,7 +820,7 @@ if one already exists."
     Optional ARG."
     (let ((org-link-search-must-match-exact-headline t))
       (condition-case nil
-	      (apply fn arg)
+          (apply fn arg)
         (error (zk-follow-link-at-point)))))
   (advice-add 'org-open-at-point :around #'zk-org-try-to-follow-link)
 
@@ -945,24 +953,27 @@ if one already exists."
          (org-mode . org-cdlatex-mode))
   :config
   (setq org-image-actual-width (list 0.5)
+        org-export-with-broken-links 'mark
         org-image-align 'center
         org-ellipsis "…"
         org-startup-indented t
+        org-indent-mode-turns-on-hiding-stars nil
         org-startup-numerated nil
         org-pretty-entities nil
-        org-level-color-stars-only nil
+        org-level-color-stars-only t
         org-export-with-sub-superscripts nil
         org-tags-column 0
         org-footnote-auto-adjust t
         org-support-shift-select t
         org-startup-with-inline-images t
         org-display-remote-inline-images 'download
-        org-fontify-quote-and-verse-blocks t
+        org-fontify-quote-and-verse-blocks nil
         org-link-file-path-type 'relative
         org-use-speed-commands t
         org-footnote-section "Footnotes"
-        org-list-demote-modify-bullet '(("+" . "-") ("-" . "+"))
-        org-return-follows-link t)
+        org-list-demote-modify-bullet '(("-" . "+") ("+" . "*")  ("*" . "-"))
+        org-link-descriptive nil
+        org-return-follows-link nil)
 
   ;; Attachments handling
   (setq org-yank-image-save-method "./Attachments/"
@@ -978,11 +989,11 @@ if one already exists."
         org-export-with-toc nil
         org-html-checkbox-type 'html
         org-html-postamble nil
-        org-export-with-broken-links t
+        org-export-with-broken-links 'mark
         org-export-with-section-numbers nil
         org-export-with-smart-quotes t
         org-cite-csl-link-cites t
-        org-cite-export-processors '((latex . (biblatex "ieee" nil)) (t . (csl "ieee.csl" "ieee.csl")))
+        org-cite-export-processors '((latex . (csl "ieee.csl" "ieee.csl")) (t . (csl "ieee.csl" "ieee.csl")))
         org-cite-global-bibliography '("/home/kchou/Documents/03-Resources/Slipbox/Attachments/biblio.bib")
         org-html-toplevel-hlevel 1
         org-html-footnotes-section
@@ -1026,14 +1037,14 @@ if one already exists."
       org-agenda-tags-column 0
       org-agenda-hide-tags-regexp "noexport\\|ignore"
       org-agenda-use-time-grid nil
-      org-agenda-start-with-log-mode t
+      org-agenda-start-with-log-mode nil
       org-agenda-log-mode-items '(clock)
       org-log-into-drawer t
       org-log-state-notes-insert-after-drawers t
       org-agenda-include-deadlines t
       org-agenda-todo-ignore-scheduled 'all
       org-agenda-skip-deadline-prewarning-if-scheduled nil
-      org-agenda-skip-scheduled-if-deadline-is-shown nil
+      org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
       org-agenda-skip-scheduled-if-done t
       org-agenda-skip-deadline-if-done t
       org-agenda-skip-timestamp-if-done t
@@ -1072,40 +1083,40 @@ if one already exists."
           (tags "+exam+LEVEL=1|+work+LEVEL=1|+assignment+LEVEL=1" ((org-agenda-overriding-header "Projects")))
           ) nil)))
 
-;; (defun my/set-org-todo-faces ()
-;;   "Set Org TODO keyword faces using modus-themes colors."
-;;   (modus-themes-with-colors
-;;     (setq org-todo-keyword-faces
-;;           `(("TODO" . (:foreground ,red
-;;                                    :weight bold))
-;;             ("NEXT" . (:foreground ,yellow
-;;                                    :weight bold))
-;;             ("IN PROGRESS" . (:foreground ,rust
-;;                                       :weight bold))
-;;             ("ON HOLD" . (:foreground ,blue
-;;                                    :weight bold))
-;;             ("PROJ" . (:foreground ,magenta-cooler
-;;                                    :weight bold))
-;;             ("COURSE" . (:foreground ,cyan
-;;                                      :weight bold))
-;;             ("MAYBE" . (:foreground ,fg-dim
-;;                                     :weight bold))
-;;             ("DONE" . (:foreground ,green
-;;                                    :weight bold))
-;;             ("CANC" . (:foreground ,fg-dim
-;;                                    :weight bold)))))
+(defun my/set-org-todo-faces ()
+  "Set Org TODO keyword faces using modus-themes colors."
+  (modus-themes-with-colors
+    (setq org-todo-keyword-faces
+          `(("TODO" . (:foreground ,red-faint
+                                   :weight bold))
+            ("NEXT" . (:foreground ,yellow
+                                   :weight bold))
+            ("IN PROGRESS" . (:foreground ,red
+                                          :weight bold))
+            ("ON HOLD" . (:foreground ,blue
+                                      :weight bold))
+            ("IDEA" . (:foreground ,magenta-cooler
+                                   :weight bold))
+            ("COURSE" . (:foreground ,cyan
+                                     :weight bold))
+            ("MAYBE" . (:foreground ,fg-dim
+                                    :weight bold))
+            ("DONE" . (:foreground ,green
+                                   :weight bold))
+            ("CANC" . (:foreground ,fg-dim
+                                   :weight bold)))))
 
-;;   (setq org-fontify-done-headline nil)
+  (setq org-fontify-done-headline nil)
 
-;;   ;; Refresh org TODO faces in all org buffers
-;;   (dolist (buf (buffer-list))
-;;     (with-current-buffer buf
-;;       (when (derived-mode-p 'org-mode)
-;;         (org-mode-restart)))))
-;; ;; Call the function to initialize TODO faces
-;; (my/set-org-todo-faces)
-;; ;; Add hooks to run the function on theme change
-;; (add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
+  ;; Refresh org TODO faces in all org buffers
+  (dolist (buf (buffer-list))
+    (with-current-buffer buf
+      (when (derived-mode-p 'org-mode)
+        (org-mode-restart)))))
+;; Call the function to initialize TODO faces
+(my/set-org-todo-faces)
+;; Add hooks to run the function on theme change
+(add-hook 'modus-themes-after-load-theme-hook 'my/set-org-todo-faces)
 
 ;;;;; Calendar/Diary
 
@@ -1168,7 +1179,7 @@ if one already exists."
 (use-package org-latex-preview
   :ensure nil
   :config
-  (plist-put org-format-latex-options :zoom 1.3)
+  (plist-put org-format-latex-options :zoom 1.4)
   (plist-put org-format-latex-options :page-width 0.8)
 
   (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
@@ -1197,82 +1208,82 @@ if one already exists."
 
 ;;;; Visual improvements
 
-(use-package valign
-  :custom
-  (valign-fancy-bar t))
-(add-hook 'org-mode-hook #'valign-mode)
+;; (use-package valign
+;;   :custom
+;;   (valign-fancy-bar t))
+;; (add-hook 'org-mode-hook #'valign-mode)
 
-(use-package org-modern
-  :custom
-  (org-modern-star 'replace)
-  (org-modern-table nil))
+;; (use-package org-modern
+;;   :custom
+;;   (org-modern-star 'replace)
+;;   (org-modern-table nil))
 
-(with-eval-after-load 'org (global-org-modern-mode))
+;; (with-eval-after-load 'org (global-org-modern-mode))
 
-(defun my/set-org-modern-todo-faces ()
-  "Set org-modern TODO keyword faces using modus-themes colors."
-  (modus-themes-with-colors
-    (setq org-modern-todo-faces
-          `(("TODO" :background ,bg-red-intense
-             :foreground ,fg-main
-             :weight bold)
-            ("NEXT" :background ,bg-yellow-intense
-             :foreground ,fg-main
-             :weight bold)
-            ("IN PROGRESS" :background ,bg-red-subtle
-             :foreground ,fg-main
-             :weight bold)
-            ("ON HOLD" :background ,bg-blue-intense
-             :foreground ,fg-main
-             :weight bold)
-            ("PROJ" :background ,bg-magenta-intense
-             :foreground ,fg-main
-             :weight bold)
-            ("COURSE" :background ,bg-cyan-intense
-             :foreground ,fg-main
-             :weight bold)
-            ("MAYBE" :background ,bg-inactive
-             :foreground ,fg-main
-             :weight bold)
-            ("IDEA" :background ,bg-magenta-intense
-             :foreground ,fg-main
-             :weight bold)
-            ("DONE" :background ,bg-green-intense
-             :foreground ,fg-main
-             :weight bold)
-            ("CANC" :background ,bg-dim
-             :foreground ,fg-dim
-             :weight bold)))
+;; (defun my/set-org-modern-todo-faces ()
+;;   "Set org-modern TODO keyword faces using modus-themes colors."
+;;   (modus-themes-with-colors
+;;     (setq org-modern-todo-faces
+;;           `(("TODO" :background ,bg-red-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("NEXT" :background ,bg-yellow-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("IN PROGRESS" :background ,bg-red-subtle
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("ON HOLD" :background ,bg-blue-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("PROJ" :background ,bg-magenta-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("COURSE" :background ,bg-cyan-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("MAYBE" :background ,bg-inactive
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("IDEA" :background ,bg-magenta-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("DONE" :background ,bg-green-intense
+;;              :foreground ,fg-main
+;;              :weight bold)
+;;             ("CANC" :background ,bg-dim
+;;              :foreground ,fg-dim
+;;              :weight bold)))
 
-    (setq org-fontify-done-headline nil)
+;;     (setq org-fontify-done-headline nil)
 
-    ;; Configure strike-through for CANC headlines
-    ;; (setq org-fontify-done-headline t)
+;;     ;; Configure strike-through for CANC headlines
+;;     ;; (setq org-fontify-done-headline t)
 
-    ;; Set the face for CANC headlines to include strike-through
-    ;; (set-face-attribute 'org-headline-done nil :strike-through t)
+;;     ;; Set the face for CANC headlines to include strike-through
+;;     ;; (set-face-attribute 'org-headline-done nil :strike-through t)
 
-    ;; Refresh org-modern in all org buffers
-    (dolist (buf (buffer-list))
-      (with-current-buffer buf
-        (when (and (derived-mode-p 'org-mode)
-                   (bound-and-true-p org-modern-mode))
-          (org-modern-mode -1)
-          (org-modern-mode 1))))))
+;;     ;; Refresh org-modern in all org buffers
+;;     (dolist (buf (buffer-list))
+;;       (with-current-buffer buf
+;;         (when (and (derived-mode-p 'org-mode)
+;;                    (bound-and-true-p org-modern-mode))
+;;           (org-modern-mode -1)
+;;           (org-modern-mode 1))))))
 
-(add-hook 'modus-themes-after-load-theme-hook #'my/set-org-modern-todo-faces)
-(my/set-org-modern-todo-faces)
+;; (add-hook 'modus-themes-after-load-theme-hook #'my/set-org-modern-todo-faces)
+;; (my/set-org-modern-todo-faces)
 
-(use-package org-appear
-  :custom
-  (org-hide-emphasis-markers t)
-  (org-appear-trigger 'always)
-  (org-appear-autoemphasis t)
-  (org-appear-autolinks t)
-  (org-appear-autoentities t)
-  (org-appear-autokeywords t))
+;; (use-package org-appear
+;;   :custom
+;;   (org-hide-emphasis-markers t)
+;;   (org-appear-trigger 'always)
+;;   (org-appear-autoemphasis t)
+;;   (org-appear-autolinks t)
+;;   (org-appear-autoentities t)
+;;   (org-appear-autokeywords t))
 
-(add-hook 'org-mode-hook 'org-appear-mode)
+;; (add-hook 'org-mode-hook 'org-appear-mode)
 
 ;;;; Exporting
 
@@ -1282,7 +1293,14 @@ if one already exists."
 
 ;; LaTeX export
 (add-to-list 'org-latex-classes
-             '("koma-article" "\\documentclass{scrartcl}"
+             '("koma-article" "\\documentclass[paper=a4, parskip=full]{scrartcl}"
+               ("\\section{%s}" . "\\section*{%s}")
+               ("\\subsection{%s}" . "\\subsection*{%s}")
+               ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
+               ("\\paragraph{%s}" . "\\paragraph*{%s}")
+               ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
+(add-to-list 'org-latex-classes
+             '("extarticle" "\\documentclass{extarticle}"
                ("\\section{%s}" . "\\section*{%s}")
                ("\\subsection{%s}" . "\\subsection*{%s}")
                ("\\subsubsection{%s}" . "\\subsubsection*{%s}")
@@ -1301,29 +1319,83 @@ if one already exists."
          pdfcreator={%c},
          pdflang={%L},
          colorlinks=true,
-         linkcolor={purple},    
+         linkcolor={purple},
          filecolor={cyan},
-         citecolor={red},    
+         citecolor={red},
          urlcolor={blue}}
 "
 
       org-latex-pdf-process '("latexmk -f -pdf -%latex -shell-escape -interaction=nonstopmode -output-directory=%o %f")
       org-latex-src-block-backend 'minted
       org-latex-image-default-width ".75\\linewidth"
-      )
+      org-export-with-section-numbers nil
+      org-export-with-toc nil
+      org-export-with-date nil
+      org-export-with-title nil
+      org-export-with-author nil
+      org-export-with-planning nil          ;; corresponds to p:nil in many setups
+      org-export-with-todo-keywords nil
+      org-export-headline-levels 6
+      org-export-with-statistics-cookies nil
+      org-export-default-language "el"
+      org-latex-default-class "koma-article")
 
-;;; Typesetting
+(with-eval-after-load 'ox-latex
+  ;; Needed for polyglossia/unicode-math font setup
+  (setq org-latex-compiler "xelatex")
 
-(use-package ligature
-  :config
-  ;; Enable all programming ligatures in programming modes
-  (ligature-set-ligatures '(prog-mode text-mode) '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
-                                                   "<<" "??" ";;" "->" "<-" "-->" "<--" "=>" "!!" "-->" "<--"
-                                                   "=<<" "=~" "/=" "++" "--" "===" "<>" "</>" "!==" "</" "<!--"
-                                                   ))
-  ;; Enables ligature checks globally in all buffers. You can also do it
-  ;; per mode with `ligature-mode'.
-  (global-ligature-mode t))
+  ;; Add packages (after org-latex-default-packages-alist) + raw header strings.
+  ;; (setq org-latex-packages-alist
+  ;;       '(
+  ;;         ;; --- Packages
+  ;;         ("english,AUTO" "polyglossia" nil ("lualatex" "xetex"))
+  ;;         ("margin=1.4in" "geometry")
+  ;;         ("" "microtype")
+  ;;         ("" "amssymb")
+  ;;         ("" "amsmath")
+  ;;         ("" "unicode-math" nil ("lualatex" "xetex"))
+
+  ;;         ("" "longtable")
+  ;;         ("" "booktabs")
+  ;;         ("" "array")
+  ;;         ("" "colortbl")
+
+  ;;         ("newfloat,cache=false" "minted" nil ("lualatex" "xetex" "pdflatex"))
+  ;;         ("font={footnotesize},margin=1cm,labelfont=bf" "caption")
+
+  ;;         ("" "amsthm")
+  ;;         ("ruled,vlined,linesnumbered" "algorithm2e")
+
+  ;;         "\\setmainfont[Ligatures=TeX]{Libertinus Serif}"
+  ;;         "\\setsansfont[Scale=MatchUppercase]{Lato}"
+  ;;         "\\setmathfont{Libertinus Math}"
+  ;;         "\\setmonofont[Scale=MatchLowercase]{Iosevka}"
+
+  ;;         "\\setminted{frame=single,framesep=2mm,linenos,breaklines,numbersep=0.5em,fontsize=\\footnotesize}"
+
+  ;;         "\\newtheorem{theorem}{Θεώρημα}"
+  ;;         "\\newtheorem{lemma}{Λήμμα}"
+
+  ;;         "\\let\\oldquote\\quote"
+  ;;         "\\let\\endoldquote\\endquote"
+  ;;         "\\renewenvironment{quote}{\\oldquote\\itshape}{\\endoldquote}"
+
+  ;;         "\\SetAlgorithmName{Αλγόριθμος}{Λίστα αλγορίθμων}"
+  ;;         ))
+  )
+
+;;; Font stuff
+
+;; (use-package ligature
+;;   :config
+;;   ;; Enable all programming ligatures in programming modes
+;;   (ligature-set-ligatures '(prog-mode text-mode) '(":::" "::=" "&&" "||" "::" ":=" "==" "!=" ">=" ">>" "<="
+;;                                                    "<<" "??" ";;" "->" "<-" "-->" "<--" "=>" "!!" "-->" "<--"
+;;                                                    "=<<" "=~" "/=" "++" "--" "===" "<>" "</>" "!==" "</" "<!--"
+;;                                                    ))
+;;   ;; Enables ligature checks globally in all buffers. You can also do it
+;;   ;; per mode with `ligature-mode'.
+;;   (global-ligature-mode t))
 
 ;;; Embark (keybinds)
 
@@ -1381,7 +1453,7 @@ if one already exists."
 
   :bind
   (:map dired-mode-map
-	    ("C-h" . dired-omit-mode))
+        ("C-h" . dired-omit-mode))
 
   :hook
   (dired-mode . (lambda () (dired-omit-mode))) ;; hide .dot files by default
@@ -1523,18 +1595,24 @@ if one already exists."
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
    '("/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Paper Presentation/crypto_slides.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Algorithms - Project 3 (Theory)/algorithms_3-theory.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Project 3/crypto_3.org"
      "/home/kchou/Documents/03-Resources/Slipbox/Slipbox.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
-     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Υπολογιστική Πολυπλοκότητα/Πολυπλοκότητα.org"
-     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Αλγόριθμοι/Αλγόριθμοι.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Κρυπτογραφία/Κρυπτογραφία.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
- '(package-selected-packages nil)
+ '(package-selected-packages
+   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
+              corfu csv-mode darkroom dashboard devdocs diff-hl direnv
+              dockerfile-mode edit-indirect ef-themes eglot eldoc-box elfeed-org
+              elfeed-tube-mpv elpher fish-mode git-gutter gptel
+              gruber-darker-theme hide-mode-line htmlize json-mode kbd-mode
+              ligature link-hint marginalia markdown-mode markdown-ts-mode
+              math-preview mermaid-mode mixed-pitch olivetti openwith orderless
+              org-appear org-caldav org-contrib org-download org-mode org-modern
+              outshine pet rg ruff-format rust-mode selectric-mode
+              telephone-line tree-sitter-langs treesit-auto typst-ts-mode valign
+              vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((kbd-mode :url "https://github.com/kmonad/kbd-mode")
      (org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
