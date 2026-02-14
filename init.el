@@ -971,7 +971,7 @@ if one already exists."
         org-link-file-path-type 'relative
         org-use-speed-commands t
         org-footnote-section "Footnotes"
-        org-list-demote-modify-bullet '(("-" . "+") ("+" . "*")  ("*" . "-"))
+        org-list-demote-modify-bullet '(("-" . "+") ("+" . "-")  ("*" . "-"))
         org-link-descriptive nil
         org-return-follows-link nil)
 
@@ -980,7 +980,7 @@ if one already exists."
         org-yank-dnd-method 'ask)
 
   ;; Spacing
-  (setq org-blank-before-new-entry '((heading . t) (plain-list-item . auto)))
+  (setq org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
 
   (setq org-highlight-latex-and-related '(latex entities))
 
@@ -1594,7 +1594,10 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
+   '("~/Documents/01-Projects/\"The Zettelkasten Method\" book beta reading/zettelkasten_reading.org"
+     "/home/kchou/Documents/01-Projects/Ταξίδι Παρισιού RECITALS/Paris.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Paper Presentation/crites2020_presentation.org"
+     "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
      "/home/kchou/Documents/03-Resources/Slipbox/Slipbox.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
