@@ -1027,7 +1027,7 @@ if one already exists."
       '((sequence "TODO(t)" "IN PROGRESS(p)" "NEXT(n)" "IDEA(i)" "MAYBE(m)" "|" "DONE(d!)" "ON HOLD(h)" "CANC(c)")))
 
 (global-set-key (kbd "C-c a") #'org-agenda)
-(setq org-agenda-files (list org-directory))
+;; (setq org-agenda-files (list org-directory))
 
 (setq org-log-done 'time
       org-agenda-current-time-string "← Now ─────────────────────────────────────────────────────────"
@@ -1080,7 +1080,7 @@ if one already exists."
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
         ("P" "Projects"
          (; (agenda "" nil)
-          (tags "+exam+LEVEL=1|+work+LEVEL=1|+assignment+LEVEL=1" ((org-agenda-overriding-header "Projects")))
+          (tags "+exam+LEVEL=1|+work+LEVEL=1|+assignment+LEVEL=1|+project+LEVEL=1" ((org-agenda-overriding-header "Projects")))
           ) nil)))
 
 (defun my/set-org-todo-faces ()
@@ -1594,7 +1594,8 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/02-Areas/ΑΛΜΑ/Κρυπτογραφία/Κρυπτογραφία.org"
+   '("~/Documents/01-Projects/BSc Thesis (short version)/studbook.org"
+     "/home/kchou/Documents/01-Projects/The Zettelkasten Method book beta reading/zettelkasten_reading.org"
      "/home/kchou/Documents/01-Projects/Ταξίδι Παρισιού RECITALS/Paris.org"
      "/home/kchou/Documents/01-Projects/The Zettelkasten Method book beta reading/zettelkasten_reading.org"
      "/home/kchou/Documents/01-Projects/BSc Thesis (short version)/studbook.org"
