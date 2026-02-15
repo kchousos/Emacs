@@ -1024,7 +1024,7 @@ if one already exists."
 ;; (setq org-directory "~/Documents/03-Resources/Agenda")
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "IN PROGRESS(p)" "NEXT(n)" "ON HOLD(h)" "IDEA(i)" "MAYBE(m)" "|" "DONE(d!)" "CANC(c)")))
+      '((sequence "TODO(t)" "IN PROGRESS(p)" "NEXT(n)" "IDEA(i)" "MAYBE(m)" "|" "DONE(d!)" "ON HOLD(h)" "CANC(c)")))
 
 (global-set-key (kbd "C-c a") #'org-agenda)
 (setq org-agenda-files (list org-directory))
@@ -1594,14 +1594,16 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/01-Projects/\"The Zettelkasten Method\" book beta reading/zettelkasten_reading.org"
+   '("~/Documents/02-Areas/ΑΛΜΑ/Κρυπτογραφία/Κρυπτογραφία.org"
      "/home/kchou/Documents/01-Projects/Ταξίδι Παρισιού RECITALS/Paris.org"
+     "/home/kchou/Documents/01-Projects/The Zettelkasten Method book beta reading/zettelkasten_reading.org"
+     "/home/kchou/Documents/01-Projects/BSc Thesis (short version)/studbook.org"
+     "/home/kchou/Documents/02-Areas/Σχέση/Σχέση.org"
      "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Paper Presentation/crites2020_presentation.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
      "/home/kchou/Documents/03-Resources/Slipbox/Slipbox.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
-     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Κρυπτογραφία/Κρυπτογραφία.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
  '(package-selected-packages
