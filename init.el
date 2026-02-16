@@ -1063,7 +1063,7 @@ if one already exists."
 (setf (cdr (assoc 'note org-log-note-headings)) "%t")
 
 (setq org-agenda-sorting-strategy
-      '(habit-down time-up deadline-up priority-down todo-state-up effort-up category-keep))
+      '(habit-down priority-down time-up deadline-up todo-state-up effort-up category-keep))
 
 
 (setq org-agenda-breadcrumbs-separator " ➤ "
@@ -1080,7 +1080,7 @@ if one already exists."
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
         ("P" "Projects"
          (; (agenda "" nil)
-          (tags "+exam+LEVEL=1|+work+LEVEL=1|+assignment+LEVEL=1|+project+LEVEL=1" ((org-agenda-overriding-header "Projects")))
+          (tags "+exam+LEVEL=1|+assignment+LEVEL=1|+project+LEVEL=1" ((org-agenda-overriding-header "Projects")))
           ) nil)))
 
 (defun my/set-org-todo-faces ()
@@ -1594,11 +1594,10 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/01-Projects/BSc Thesis (short version)/studbook.org"
+   '("~/Documents/01-Projects/Τριήμερο Καλαμάτας/Καλαμάτα.org"
+     "/home/kchou/Documents/01-Projects/BSc Thesis (short version)/studbook.org"
      "/home/kchou/Documents/01-Projects/The Zettelkasten Method book beta reading/zettelkasten_reading.org"
      "/home/kchou/Documents/01-Projects/Ταξίδι Παρισιού RECITALS/Paris.org"
-     "/home/kchou/Documents/01-Projects/The Zettelkasten Method book beta reading/zettelkasten_reading.org"
-     "/home/kchou/Documents/01-Projects/BSc Thesis (short version)/studbook.org"
      "/home/kchou/Documents/02-Areas/Σχέση/Σχέση.org"
      "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Paper Presentation/crites2020_presentation.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
