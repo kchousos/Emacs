@@ -575,6 +575,10 @@
 ;; Docs
 (use-package devdocs)
 
+;; Lean4
+
+(use-package nael)
+
 ;;; Outline-mode
 
 (setq outline-minor-mode-cycle t)
@@ -1594,7 +1598,8 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/01-Projects/Τριήμερο Καλαμάτας/Καλαμάτα.org"
+   '("~/Documents/01-Projects/ALMA - Blockchains - Marabu/Marabu.org"
+     "/home/kchou/Documents/01-Projects/Τριήμερο Καλαμάτας/Καλαμάτα.org"
      "/home/kchou/Documents/01-Projects/BSc Thesis (short version)/studbook.org"
      "/home/kchou/Documents/01-Projects/The Zettelkasten Method book beta reading/zettelkasten_reading.org"
      "/home/kchou/Documents/01-Projects/Ταξίδι Παρισιού RECITALS/Paris.org"
@@ -1613,9 +1618,9 @@ if one already exists."
               elfeed-tube-mpv elpher fish-mode git-gutter gptel
               gruber-darker-theme hide-mode-line htmlize json-mode kbd-mode
               ligature link-hint marginalia markdown-mode markdown-ts-mode
-              math-preview mermaid-mode mixed-pitch olivetti openwith orderless
-              org-appear org-caldav org-contrib org-download org-mode org-modern
-              outshine pet rg ruff-format rust-mode selectric-mode
+              math-preview mermaid-mode mixed-pitch nael olivetti openwith
+              orderless org-appear org-caldav org-contrib org-download org-mode
+              org-modern outshine pet rg ruff-format rust-mode selectric-mode
               telephone-line tree-sitter-langs treesit-auto typst-ts-mode valign
               vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
