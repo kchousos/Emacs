@@ -511,7 +511,8 @@
 (use-package eldoc-box
   :config
   (with-eval-after-load 'eglot
-    (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-at-point-mode t)))
+    (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode nil)))
+(add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t)
 
 (use-package comment-tags
   :custom
@@ -538,12 +539,24 @@
   :bind
   (("C-c C-q" . eglot-code-actions))
   :config
-  (add-to-list 'eglot-server-programs '((python-base-mode)
-                                        "basedpyright-langserver" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '(python-base-mode . ("basedpyright-langserver" "--stdio")))
+  (add-to-list 'eglot-server-programs
+               '((js-ts-mode typescript-ts-mode tsx-ts-mode)
+                 . ("bunx" "typescript-language-server" "--stdio"))))
 
 ;; Python
 (add-hook 'python-base-mode-hook 'direnv-mode)
 (add-hook 'python-mode-hook '(lambda () (set (make-local-variable 'yas-indent-line) 'fixed)))
+
+;; TypeScript/JavaScript
+
+(use-package typescript-mode)
+
+(add-to-list 'exec-path "~/.bun/bin")
+(setenv "PATH" (concat "~/.bun/bin:" (getenv "PATH")))
+
+(use-package jsdoc)
 
 ;; Yaml
 (use-package yaml-mode)
@@ -555,6 +568,10 @@
   (add-to-list 'eglot-server-programs
                '((rust-ts-mode rust-mode) .
                  ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
+
+;; Solidity
+
+(use-package solidity-mode)
 
 ;; Formatting
 (use-package apheleia
@@ -1154,6 +1171,8 @@ if one already exists."
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "~/Documents/00-Inbox/Inbox.org")
+         "* TODO %?" :prepend t :empty-lines 1)
+        ("s" "Slipbox" entry (file "~/Documents/03-Resources/Slipbox/Slipbox.org")
          "* %?" :prepend t :empty-lines 1)
         ;; ("t" "Task" entry (file "Agenda.org")
         ;;  "* TODO %?" :prepend t :empty-lines 1)
@@ -1598,13 +1617,14 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/01-Projects/ALMA - Blockchains - Marabu/Marabu.org"
-     "/home/kchou/Documents/01-Projects/Τριήμερο Καλαμάτας/Καλαμάτα.org"
+   '("/home/kchou/Documents/01-Projects/ALMA - Smart Contracts - HW 1/hw1.org"
+     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Τυπική Θεμελίωση Μαθηματικών και Βοηθοί Αποδείξεων/Math Foundations.org"
+     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Ανάλυση Έξυπνων Συμβολαίων σε Blockchains/Smart Contracts.org"
+     "/home/kchou/Documents/02-Areas/Ταξίδι Παρισιού RECITALS/Paris.org"
+     "/home/kchou/Documents/01-Projects/ALMA - Blockchains - Marabu/Marabu.org"
      "/home/kchou/Documents/01-Projects/BSc Thesis (short version)/studbook.org"
      "/home/kchou/Documents/01-Projects/The Zettelkasten Method book beta reading/zettelkasten_reading.org"
-     "/home/kchou/Documents/01-Projects/Ταξίδι Παρισιού RECITALS/Paris.org"
      "/home/kchou/Documents/02-Areas/Σχέση/Σχέση.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Cryptography - Paper Presentation/crites2020_presentation.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-cryptography-manager/Cryptography-manager.org"
      "/home/kchou/Documents/03-Resources/Slipbox/Slipbox.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"
@@ -1616,13 +1636,14 @@ if one already exists."
               corfu csv-mode darkroom dashboard devdocs diff-hl direnv
               dockerfile-mode edit-indirect ef-themes eglot eldoc-box elfeed-org
               elfeed-tube-mpv elpher fish-mode git-gutter gptel
-              gruber-darker-theme hide-mode-line htmlize json-mode kbd-mode
-              ligature link-hint marginalia markdown-mode markdown-ts-mode
-              math-preview mermaid-mode mixed-pitch nael olivetti openwith
-              orderless org-appear org-caldav org-contrib org-download org-mode
-              org-modern outshine pet rg ruff-format rust-mode selectric-mode
-              telephone-line tree-sitter-langs treesit-auto typst-ts-mode valign
-              vertico vterm vundo yaml-mode yasnippet zk-desktop))
+              gruber-darker-theme hide-mode-line htmlize jsdoc json-mode
+              kbd-mode ligature link-hint marginalia markdown-mode
+              markdown-ts-mode math-preview mermaid-mode mixed-pitch nael
+              olivetti openwith orderless org-appear org-caldav org-contrib
+              org-download org-mode org-modern outshine pet rg ruff-format
+              rust-mode selectric-mode solidity-mode telephone-line
+              tree-sitter-langs treesit-auto typescript-mode typst-ts-mode
+              valign vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((kbd-mode :url "https://github.com/kmonad/kbd-mode")
      (org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
