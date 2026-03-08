@@ -542,6 +542,8 @@
   (add-to-list 'eglot-server-programs
                '(python-base-mode . ("basedpyright-langserver" "--stdio")))
   (add-to-list 'eglot-server-programs
+               '(solidity-mode . ("nomicfoundation-solidity-language-server" "--stdio")))
+  (add-to-list 'eglot-server-programs
                '((js-ts-mode typescript-ts-mode tsx-ts-mode)
                  . ("bunx" "typescript-language-server" "--stdio"))))
 
@@ -573,6 +575,15 @@
 
 (use-package solidity-mode)
 
+(with-eval-after-load 'apheleia
+  (setf (alist-get 'forge-fmt apheleia-formatters)
+        '("forge" "fmt" "--raw" "-"))
+  (setf (alist-get 'solidity-mode apheleia-mode-alist) 'forge-fmt))
+
+;; Lean4
+
+(use-package nael)
+
 ;; Formatting
 (use-package apheleia
   :config
@@ -591,10 +602,6 @@
 
 ;; Docs
 (use-package devdocs)
-
-;; Lean4
-
-(use-package nael)
 
 ;;; Outline-mode
 
@@ -1406,6 +1413,16 @@ if one already exists."
   ;;         "\\SetAlgorithmName{Αλγόριθμος}{Λίστα αλγορίθμων}"
   ;;         ))
   )
+
+;;;; Org-Babel
+
+(require 'ob-lean4)
+(add-to-list 'org-src-lang-modes '("lean4" . nael))
+
+;; Optional: Add to org-babel-do-load-languages
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '((lean4 . t)))
 
 ;;; Font stuff
 
