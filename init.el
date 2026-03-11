@@ -1108,7 +1108,7 @@ if one already exists."
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
         ("P" "Projects"
          (; (agenda "" nil)
-          (tags "+exam+LEVEL=1|+assignment+LEVEL=1|+project+LEVEL=1" ((org-agenda-overriding-header "Projects")))
+          (tags "+exam+LEVEL=1/-DONE|+assignment+LEVEL=1/-DONE|+project+LEVEL=1/-DONE" ((org-agenda-overriding-header "Projects")))
           ) nil)))
 
 (defun my/set-org-todo-faces ()
@@ -1634,8 +1634,7 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("/home/kchou/Documents/01-Projects/ALMA - Smart Contracts - HW 1/hw1.org"
-     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Τυπική Θεμελίωση Μαθηματικών και Βοηθοί Αποδείξεων/Math Foundations.org"
+   '("/home/kchou/Documents/02-Areas/ΑΛΜΑ/Τυπική Θεμελίωση Μαθηματικών και Βοηθοί Αποδείξεων/Math Foundations.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Ανάλυση Έξυπνων Συμβολαίων σε Blockchains/Smart Contracts.org"
      "/home/kchou/Documents/02-Areas/Ταξίδι Παρισιού RECITALS/Paris.org"
      "/home/kchou/Documents/01-Projects/ALMA - Blockchains - Marabu/Marabu.org"
