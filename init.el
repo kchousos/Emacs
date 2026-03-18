@@ -1424,6 +1424,15 @@ if one already exists."
  'org-babel-load-languages
  '((lean4 . t)))
 
+;;;; Links
+
+(with-eval-after-load 'org
+  (org-link-set-parameters
+   "mid"
+   :follow (lambda (path _)
+             (start-process "xdg-open-mid" nil "xdg-open"
+                            (concat "mid:" path)))))
+
 ;;; Font stuff
 
 ;; (use-package ligature
@@ -1634,7 +1643,9 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("/home/kchou/Documents/02-Areas/ΑΛΜΑ/Τυπική Θεμελίωση Μαθηματικών και Βοηθοί Αποδείξεων/Math Foundations.org"
+   '("~/Documents/01-Projects/ALMA - Smart Contracts - HW2/index.org"
+     "/home/kchou/Documents/01-Projects/Παρουσίαση Ημερίδας Μαθηματικών/index.org"
+     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Τυπική Θεμελίωση Μαθηματικών και Βοηθοί Αποδείξεων/Math Foundations.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Ανάλυση Έξυπνων Συμβολαίων σε Blockchains/Smart Contracts.org"
      "/home/kchou/Documents/02-Areas/Ταξίδι Παρισιού RECITALS/Paris.org"
      "/home/kchou/Documents/01-Projects/ALMA - Blockchains - Marabu/Marabu.org"
