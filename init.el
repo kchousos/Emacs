@@ -584,6 +584,10 @@
 
 (use-package nael)
 
+;; Datalog
+
+(require 'souffle-mode)
+
 ;; Formatting
 (use-package apheleia
   :config
