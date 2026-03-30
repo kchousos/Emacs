@@ -509,9 +509,10 @@
 ;;; Programming
 
 (use-package eldoc-box
-  :config
-  (with-eval-after-load 'eglot
-    (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode nil)))
+  ;; :config
+  ;; (with-eval-after-load 'eglot
+  ;;   (add-hook 'eglot-managed-mode-hook #'eldoc-box-hover-mode nil))
+  )
 (add-hook 'eldoc-box-buffer-setup-hook #'eldoc-box-prettify-ts-errors 0 t)
 
 (use-package comment-tags
@@ -1521,6 +1522,10 @@ if one already exists."
   :custom
   (gptel-default-mode #'org-mode))
 
+(use-package agent-shell)
+(setq agent-shell-anthropic-authentication
+      (agent-shell-anthropic-make-authentication :login t))
+
 ;;; File handling
 
 (use-package openwith
@@ -1664,20 +1669,21 @@ if one already exists."
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS-anonymization-manager/Anonymization-manager.org"
      "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
  '(package-selected-packages
-   '(apheleia auctex cape cdlatex centered-cursor-mode citar-embark comment-tags
-              corfu csv-mode darkroom dashboard devdocs diff-hl direnv
-              dockerfile-mode edit-indirect ef-themes eglot eldoc-box elfeed-org
-              elfeed-tube-mpv elpher fish-mode git-gutter gptel
-              gruber-darker-theme hide-mode-line htmlize jsdoc json-mode
-              kbd-mode ligature link-hint marginalia markdown-mode
-              markdown-ts-mode math-preview mermaid-mode mixed-pitch nael
-              olivetti openwith orderless org-appear org-caldav org-contrib
-              org-download org-mode org-modern outshine pet rg ruff-format
-              rust-mode selectric-mode solidity-mode telephone-line
-              tree-sitter-langs treesit-auto typescript-mode typst-ts-mode
-              valign vertico vterm vundo yaml-mode yasnippet zk-desktop))
+   '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
+                 comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
+                 direnv dockerfile-mode edit-indirect ef-themes eglot eldoc-box
+                 elfeed-org elfeed-tube-mpv elpher fish-mode git-gutter gptel
+                 gruber-darker-theme hide-mode-line htmlize jsdoc json-mode
+                 kbd-mode ligature link-hint marginalia markdown-mode
+                 markdown-ts-mode math-preview mermaid-mode mixed-pitch nael
+                 olivetti openwith orderless org-appear org-caldav org-contrib
+                 org-download org-mode org-modern outshine pet rg ruff-format
+                 rust-mode selectric-mode solidity-mode telephone-line
+                 tree-sitter-langs treesit-auto typescript-mode typst-ts-mode
+                 valign vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
-   '((kbd-mode :url "https://github.com/kmonad/kbd-mode")
+   '((agent-shell-sidebar :url "https://github.com/cmacrae/agent-shell-sidebar")
+     (kbd-mode :url "https://github.com/kmonad/kbd-mode")
      (org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
                     "https://github.com/ichernyshovvv/org-timeblock/")
