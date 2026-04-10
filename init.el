@@ -42,6 +42,30 @@
   (add-to-list 'native-comp-eln-load-path
                (expand-file-name "eln-cache/" user-emacs-directory)))
 
+
+;; Disable Bidirectional Text Scanning
+(setq-default bidi-display-reordering 'left-to-right
+              bidi-paragraph-direction 'left-to-right)
+(setq bidi-inhibit-bpa t)
+
+;; Skip Fontification During Input
+(setq redisplay-skip-fontification-on-input t)
+
+;; Increase Process Output Buffer for LSP
+(setq read-process-output-max (* 4 1024 1024)) ; 4MB
+
+;; Save the Clipboard Before Killing
+(setq save-interprogram-paste-before-kill t)
+
+;; No Duplicates in the Kill Ring
+(setq kill-do-not-save-duplicates t)
+
+;; Proportional Window Resizing
+(setq window-combination-resize t)
+
+;; Faster Mark Popping
+(setq set-mark-command-repeat-pop t)
+
 ;;; Package System & use-package Setup
 
 (require 'package)
