@@ -1645,6 +1645,14 @@ if one already exists."
 (define-key elfeed-show-mode-map (kbd "C-c C-f") 'elfeed-tube-mpv-follow-mode)
 (define-key elfeed-show-mode-map (kbd "C-c C-w") 'elfeed-tube-mpv-where)
 
+(use-package elfeed-score
+  :config
+  (setq elfeed-score-rule-stats-file "/home/kchou/Documents/03-Resources/RSS feeds/elfeed.stats"
+        elfeed-score-serde-score-file "/home/kchou/Documents/03-Resources/RSS feeds/elfeed.score")
+  (progn
+    (elfeed-score-enable)
+    (define-key elfeed-search-mode-map "=" elfeed-score-map)))
+
 ;;; Custom modes
 
 (define-derived-mode url-list-mode text-mode "URL List"
@@ -1676,8 +1684,7 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/01-Projects/Arbitrage/index.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Blockchains - Theory Exercise 2/blockchains_theory_2.org"
+   '("/home/kchou/Documents/01-Projects/Arbitrage/index.org"
      "/home/kchou/Documents/01-Projects/RECITALS/RECITALS.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Προχωρημένα Θέματα Κρυπτογραφίας/Blockchains.org"
      "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Τυπική Θεμελίωση Μαθηματικών και Βοηθοί Αποδείξεων/Math Foundations.org"
@@ -1694,15 +1701,16 @@ if one already exists."
    '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
                  comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
                  direnv dockerfile-mode edit-indirect ef-themes eglot eldoc-box
-                 elfeed-org elfeed-tube-mpv elpher fish-mode git-gutter gptel
-                 gruber-darker-theme hide-mode-line htmlize jsdoc json-mode
-                 kbd-mode ligature link-hint marginalia markdown-mode
-                 markdown-ts-mode math-preview mermaid-mode mixed-pitch nael
-                 olivetti openwith orderless org-appear org-caldav org-contrib
-                 org-download org-mode org-modern outshine pet rg ruff-format
-                 rust-mode selectric-mode solidity-mode telephone-line
-                 tree-sitter-langs treesit-auto typescript-mode typst-ts-mode
-                 valign vertico vterm vundo yaml-mode yasnippet zk-desktop))
+                 elfeed-org elfeed-score elfeed-tube-mpv elpher fish-mode
+                 git-gutter gptel gruber-darker-theme hide-mode-line htmlize
+                 jsdoc json-mode kbd-mode ligature link-hint marginalia
+                 markdown-mode markdown-ts-mode math-preview mermaid-mode
+                 mixed-pitch nael olivetti openwith orderless org-appear
+                 org-caldav org-contrib org-download org-mode org-modern
+                 outshine pet rg ruff-format rust-mode selectric-mode
+                 solidity-mode telephone-line tree-sitter-langs treesit-auto
+                 typescript-mode typst-ts-mode valign vertico vterm vundo
+                 yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((agent-shell-sidebar :url "https://github.com/cmacrae/agent-shell-sidebar")
      (kbd-mode :url "https://github.com/kmonad/kbd-mode")
