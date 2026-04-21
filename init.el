@@ -61,7 +61,7 @@
 (setq kill-do-not-save-duplicates t)
 
 ;; Proportional Window Resizing
-(setq window-combination-resize t)
+(setq window-combination-resize nil)
 
 ;; Faster Mark Popping
 (setq set-mark-command-repeat-pop t)
@@ -185,7 +185,7 @@
 
 ;; Disable backup and auto-save files
 (setq make-backup-files nil
-      auto-save-default nil
+      auto-save-default t
       create-lockfiles nil)
 
 ;; Recent files
@@ -471,9 +471,7 @@
                                ;; dashboard-insert-newline
                                ;; dashboard-insert-items
                                ))
-  (dashboard-items '((projects . 5)
-                     (bookmarks . 3)
-                     (recents . 3)))
+  (dashboard-items '((registers    . 10)))
   :config
   (dashboard-setup-startup-hook)
   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
@@ -1034,7 +1032,10 @@ if one already exists."
 
   ;; Attachments handling
   (setq org-yank-image-save-method "./Attachments/"
-        org-yank-dnd-method 'ask)
+        org-yank-dnd-method 'ask
+        org-attach-id-dir ".data/"
+        org-attach-method 'lns
+        org-attach-auto-tag nil)
 
   ;; Spacing
   (setq org-blank-before-new-entry '((heading . auto) (plain-list-item . auto)))
@@ -1081,17 +1082,22 @@ if one already exists."
 ;; (setq org-directory "~/Documents/03-Resources/Agenda")
 
 (setq org-todo-keywords
-      '((sequence "TODO(t)" "IN PROGRESS(p)" "NEXT(n)" "IDEA(i)" "MAYBE(m)" "|" "DONE(d!)" "ON HOLD(h)" "CANC(c)")))
+      '((sequence "RUNNING(r)" "NEXT(n)" "TODO(t)" "PROJ(p)" "IDEA(i)" "MAYBE(m)" "WAIT(w)" "|" "DONE(d!)" "CANC(c)")))
+
+(setq org-stuck-projects '("/+PROJ-MAYBE-DONE" ("NEXT" "RUNNING") nil ""))
 
 (global-set-key (kbd "C-c a") #'org-agenda)
-;; (setq org-agenda-files (list org-directory))
+(setq org-agenda-files '("~/Documents/01-Projects/Projects.org"
+                         "~/Documents/02-Areas/Areas.org"
+                         "~/Documents/00-Inbox/Inbox.org"))
 
 (setq org-log-done 'time
       org-agenda-current-time-string "← Now ─────────────────────────────────────────────────────────"
-      org-archive-location "::* Archive"
-      org-lowest-priority ?E
+      org-archive-location "%s_archive::"
+      org-lowest-priority ?F
+      org-default-priority ?B
       org-agenda-block-separator 9472
-      org-agenda-tags-column 0
+      org-agenda-tags-column 'auto
       org-agenda-hide-tags-regexp "noexport\\|ignore"
       org-agenda-use-time-grid nil
       org-agenda-start-with-log-mode nil
@@ -1124,21 +1130,20 @@ if one already exists."
 
 
 (setq org-agenda-breadcrumbs-separator " ➤ "
-      org-agenda-prefix-format '((agenda . " %-15:c%?-12t% s")
+      org-agenda-prefix-format '((agenda . " %-18:c%?-12t% s")
                                  (timeline . "  % s")
-                                 (todo ." %-15:c %b")
-                                 (tags . " %-15:c %b")
-                                 (search . " %-15:c")))
+                                 (todo ." %-18:c")
+                                 (tags . " %-18:c")
+                                 (search . " %-18:c")))
 
 (setq org-agenda-custom-commands
-      '(("A" "Running & Next Actions"
-         (; (agenda "" nil)
-          (todo "IN PROGRESS" ((org-agenda-overriding-header "Running tasks")))
+      '(("A" "Running, Next Actions"
+         ((todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
+        ("W" "Waiting on"
+         ((todo "WAIT" ((org-agenda-overriding-header "Waiting on")))) nil)
         ("P" "Projects"
-         (; (agenda "" nil)
-          (tags "+exam+LEVEL=1/-DONE|+assignment+LEVEL=1/-DONE|+project+LEVEL=1/-DONE" ((org-agenda-overriding-header "Projects")))
-          ) nil)))
+         ((todo "PROJ" ((org-agenda-overriding-header "Projects")))) nil)))
 
 (defun my/set-org-todo-faces ()
   "Set Org TODO keyword faces using modus-themes colors."
@@ -1148,14 +1153,14 @@ if one already exists."
                                    :weight bold))
             ("NEXT" . (:foreground ,yellow
                                    :weight bold))
-            ("IN PROGRESS" . (:foreground ,red
-                                          :weight bold))
-            ("ON HOLD" . (:foreground ,blue
+            ("RUNNING" . (:foreground ,red
                                       :weight bold))
-            ("IDEA" . (:foreground ,magenta-cooler
+            ("WAIT" . (:foreground ,fg-dim
                                    :weight bold))
-            ("COURSE" . (:foreground ,cyan
-                                     :weight bold))
+            ("IDEA" . (:foreground ,magenta-warmer
+                                   :weight bold))
+            ("PROJ" . (:foreground ,magenta-cooler
+                                   :weight bold))
             ("MAYBE" . (:foreground ,fg-dim
                                     :weight bold))
             ("DONE" . (:foreground ,green
@@ -1207,9 +1212,9 @@ if one already exists."
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "~/Documents/00-Inbox/Inbox.org")
-         "* TODO %?" :prepend t :empty-lines 1)
-        ("s" "Slipbox" entry (file "~/Documents/03-Resources/Slipbox/Slipbox.org")
          "* %?" :prepend t :empty-lines 1)
+        ;; ("s" "Slipbox" entry (file "~/Documents/03-Resources/Slipbox/Slipbox.org")
+        ;;  "* %?" :prepend t :empty-lines 1)
         ;; ("t" "Task" entry (file "Agenda.org")
         ;;  "* TODO %?" :prepend t :empty-lines 1)
         ;; ("j" "Journal" entry (file+datetree "Journal.org")
@@ -1217,11 +1222,12 @@ if one already exists."
         ;;  :tree-type (year month week day))
         ;; ("e" "Event" entry (file "Calendar.org")
         ;;  "* %?\n%^t" :time-prompt t :empty-lines 1)
-        ("x" "org-protocol-capture" entry (file "~/Documents/00-Inbox/Inbox.org")
-         "* [[%:link][%:description]] %i"
-         :prepend t
-         :immediate-finish t
-         :empty-lines 1)))
+        ;; ("x" "org-protocol-capture" entry (file "~/Documents/00-Inbox/Inbox.org")
+        ;;  "* [[%:link][%:description]] %i"
+        ;;  :prepend t
+        ;;  :immediate-finish t
+        ;;  :empty-lines 1)
+        ))
 
 ;;;; Refile
 
@@ -1588,7 +1594,11 @@ if one already exists."
 ;;; ERC
 
 (setq erc-autojoin-channels-alist '(("Libera.Chat" "#lobsters" "#crypto" "#emacs" "#org-mode")
-                                    ("Lainchan" "#lainchan" "#laintracker")))
+                                    ("Lainchan" "#lainchan" "#laintracker"))
+      erc-hide-list '("JOIN" "PART" "QUIT")
+      erc-lurker-hide-list '("JOIN" "PART" "QUIT")
+      erc-prompt-for-nickserv-password nil)
+(add-to-list 'erc-modules 'notifications)
 
 ;;; Docker
 
@@ -1607,6 +1617,9 @@ if one already exists."
 ;;; Eww
 
 (add-hook 'eww-mode-hook #'olivetti-mode)
+
+(setq browse-url-browser-function 'eww-browse-url
+      eww-search-prefix "https://search.kchou.duckdns.org/search?q=")
 
 ;;; Elpher
 
@@ -1649,6 +1662,7 @@ if one already exists."
   :config
   (setq elfeed-score-rule-stats-file "/home/kchou/Documents/03-Resources/RSS feeds/elfeed.stats"
         elfeed-score-serde-score-file "/home/kchou/Documents/03-Resources/RSS feeds/elfeed.score")
+  (setq elfeed-search-print-entry-function #'elfeed-score-print-entry)
   (progn
     (elfeed-score-enable)
     (define-key elfeed-search-mode-map "=" elfeed-score-map)))
@@ -1684,33 +1698,21 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("/home/kchou/Documents/01-Projects/Arbitrage/index.org"
-     "/home/kchou/Documents/01-Projects/RECITALS/RECITALS.org"
-     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Προχωρημένα Θέματα Κρυπτογραφίας/Blockchains.org"
-     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Τυπική Θεμελίωση Μαθηματικών και Βοηθοί Αποδείξεων/Math Foundations.org"
-     "/home/kchou/Documents/02-Areas/ΑΛΜΑ/Ανάλυση Έξυπνων Συμβολαίων σε Blockchains/Smart Contracts.org"
-     "/home/kchou/Documents/02-Areas/Ταξίδι Παρισιού RECITALS/Paris.org"
-     "/home/kchou/Documents/01-Projects/ALMA - Blockchains - Marabu/Marabu.org"
-     "/home/kchou/Documents/01-Projects/The Zettelkasten Method book beta reading/zettelkasten_reading.org"
-     "/home/kchou/Documents/02-Areas/Σχέση/Σχέση.org"
-     "/home/kchou/Documents/03-Resources/Slipbox/Slipbox.org"
-     "/home/kchou/Documents/00-Inbox/Inbox.org"
-     "/home/kchou/Documents/02-Areas/UoA AI Team/Σύμβαση.org"
-     "/home/kchou/Documents/02-Areas/CoreLab crypto group/Crypto group.org"))
+   '())
  '(package-selected-packages
    '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
                  comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
                  direnv dockerfile-mode edit-indirect ef-themes eglot eldoc-box
-                 elfeed-org elfeed-score elfeed-tube-mpv elpher fish-mode
-                 git-gutter gptel gruber-darker-theme hide-mode-line htmlize
-                 jsdoc json-mode kbd-mode ligature link-hint marginalia
+                 elfeed-org elfeed-score elfeed-tube-mpv elfeed-web elpher
+                 fish-mode git-gutter gptel gruber-darker-theme hide-mode-line
+                 htmlize jsdoc json-mode kbd-mode ligature link-hint marginalia
                  markdown-mode markdown-ts-mode math-preview mermaid-mode
-                 mixed-pitch nael olivetti openwith orderless org-appear
+                 mixed-pitch muse nael olivetti openwith orderless org-appear
                  org-caldav org-contrib org-download org-mode org-modern
                  outshine pet rg ruff-format rust-mode selectric-mode
-                 solidity-mode telephone-line tree-sitter-langs treesit-auto
-                 typescript-mode typst-ts-mode valign vertico vterm vundo
-                 yaml-mode yasnippet zk-desktop))
+                 simple-httpd solidity-mode telephone-line tree-sitter-langs
+                 treesit-auto typescript-mode typst-ts-mode valign vertico vterm
+                 vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((agent-shell-sidebar :url "https://github.com/cmacrae/agent-shell-sidebar")
      (kbd-mode :url "https://github.com/kmonad/kbd-mode")
@@ -1722,7 +1724,6 @@ if one already exists."
  '(send-mail-function 'mailclient-send-it))
 
 ;; Enable previously disabled commands
-(put 'dired-find-alternate-file 'disabled nil)
 (put 'narrow-to-region 'disabled nil)
 
 ;;; Startup Message
@@ -1738,3 +1739,4 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  )
+(put 'dired-find-alternate-file 'disabled nil)
