@@ -1598,7 +1598,7 @@ if one already exists."
       erc-hide-list '("JOIN" "PART" "QUIT")
       erc-lurker-hide-list '("JOIN" "PART" "QUIT")
       erc-prompt-for-nickserv-password nil)
-(add-to-list 'erc-modules 'notifications)
+(with-eval-after-load 'erc (add-to-list 'erc-modules 'notifications))
 
 ;;; Docker
 
