@@ -1106,7 +1106,7 @@ if one already exists."
       org-log-state-notes-insert-after-drawers t
       org-agenda-include-deadlines t
       org-agenda-todo-ignore-scheduled 'all
-      org-agenda-skip-deadline-prewarning-if-scheduled nil
+      org-agenda-skip-deadline-prewarning-if-scheduled 5
       org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
       org-agenda-skip-scheduled-if-done t
       org-agenda-skip-deadline-if-done t
@@ -1697,8 +1697,6 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(org-agenda-files
-   '())
  '(package-selected-packages
    '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
                  comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
