@@ -108,7 +108,7 @@
 
 ;; Disable unnecessary UI elements
 (tool-bar-mode -1)
-(tooltip-mode -1)
+(tooltip-mode 1)
 (menu-bar-mode -1)
 (scroll-bar-mode -1)
 (blink-cursor-mode 1)
@@ -322,11 +322,11 @@
 (global-set-key (kbd "C-x 3") #'split-and-follow-vertically)
 (global-set-key (kbd "C-x 2") #'split-and-follow-horizontally)
 
-;;resizing windows
-(global-set-key (kbd "C-<left>") 'shrink-window-horizontally)
-(global-set-key (kbd "C-<right>") 'enlarge-window-horizontally)
-(global-set-key (kbd "C-<up>") 'enlarge-window)
-(global-set-key (kbd "C-<down>") 'shrink-window)
+;; ;;resizing windows
+;; (global-set-key (kbd "C-<left>") 'shrink-window-horizontally)
+;; (global-set-key (kbd "C-<right>") 'enlarge-window-horizontally)
+;; (global-set-key (kbd "C-<up>") 'enlarge-window)
+;; (global-set-key (kbd "C-<down>") 'shrink-window)
 
 ;; Input method
 (add-hook 'after-init-hook (lambda () (setq default-input-method "greek")))
@@ -1707,7 +1707,7 @@ if one already exists."
                  markdown-mode markdown-ts-mode math-preview mermaid-mode
                  mixed-pitch muse nael olivetti openwith orderless org-appear
                  org-caldav org-contrib org-download org-mode org-modern
-                 outshine pet rg ruff-format rust-mode selectric-mode
+                 outshine pet rg ruff-format rust-mode selectric-mode sicp
                  simple-httpd solidity-mode telephone-line tree-sitter-langs
                  treesit-auto typescript-mode typst-ts-mode valign vertico vterm
                  vundo yaml-mode yasnippet zk-desktop))
