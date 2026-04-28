@@ -464,7 +464,7 @@
 
 (use-package dashboard
   :custom
-  (dashboard-startup-banner '("/home/kchou/Bin/Repos/kchousos/emacs/icons/gnu_color.png"))
+  (dashboard-startup-banner '(official))
   (dashboard-center-content t)
   (dashboard-vertically-center-content t)
   (dashboard-startupify-list '(dashboard-insert-banner
