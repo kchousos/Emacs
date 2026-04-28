@@ -8,6 +8,10 @@
 !lisp/*
 !lisp/*/*
 
+!icons/
+!icons/*
+!icons/*/*
+
 !.gitignore
 !README.md
 !init.el

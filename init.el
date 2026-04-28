@@ -464,7 +464,7 @@
 
 (use-package dashboard
   :custom
-  (dashboard-startup-banner 'official)
+  (dashboard-startup-banner '("/home/kchou/Bin/Repos/kchousos/emacs/icons/gnu_color.png"))
   (dashboard-center-content t)
   (dashboard-vertically-center-content t)
   (dashboard-startupify-list '(dashboard-insert-banner
@@ -1094,7 +1094,7 @@ if one already exists."
 (setq org-log-done 'time
       org-agenda-current-time-string "← Now ─────────────────────────────────────────────────────────"
       org-archive-location "%s_archive::"
-      org-lowest-priority ?F
+      org-lowest-priority ?C
       org-default-priority ?B
       org-agenda-block-separator 9472
       org-agenda-tags-column 'auto
@@ -1618,7 +1618,7 @@ if one already exists."
 
 (add-hook 'eww-mode-hook #'olivetti-mode)
 
-(setq browse-url-browser-function 'eww-browse-url
+(setq browse-url-browser-function 'browse-url-default-browser
       eww-search-prefix "https://search.kchou.duckdns.org/search?q=")
 
 ;;; Elpher
