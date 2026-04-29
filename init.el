@@ -1126,7 +1126,7 @@ if one already exists."
 (setf (cdr (assoc 'note org-log-note-headings)) "%t")
 
 (setq org-agenda-sorting-strategy
-      '(habit-down priority-down time-up deadline-up todo-state-up effort-up category-keep))
+      '(habit-down todo-state-up priority-down time-up deadline-up effort-up category-keep))
 
 
 (setq org-agenda-breadcrumbs-separator " ➤ "
@@ -1212,7 +1212,7 @@ if one already exists."
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "~/Documents/00-Inbox/Inbox.org")
-         "* %?" :prepend t :empty-lines 1)
+         "* %?" :prepend t :empty-lines 0)
         ;; ("s" "Slipbox" entry (file "~/Documents/03-Resources/Slipbox/Slipbox.org")
         ;;  "* %?" :prepend t :empty-lines 1)
         ;; ("t" "Task" entry (file "Agenda.org")
@@ -1551,6 +1551,7 @@ if one already exists."
 (use-package gptel
   :custom
   (gptel-default-mode #'org-mode))
+(gptel-make-anthropic "Claude" :stream t :key gptel-api-key)
 
 (use-package agent-shell)
 (setq agent-shell-anthropic-authentication
