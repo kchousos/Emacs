@@ -109,7 +109,7 @@
 ;; Disable unnecessary UI elements
 (tool-bar-mode -1)
 (tooltip-mode 1)
-(menu-bar-mode -1)
+(menu-bar-mode 1)
 (scroll-bar-mode -1)
 (blink-cursor-mode 1)
 
@@ -1052,7 +1052,7 @@ if one already exists."
         org-export-with-smart-quotes t
         org-cite-csl-link-cites t
         org-cite-export-processors '((latex . (csl "ieee.csl" "ieee.csl")) (t . (csl "ieee.csl" "ieee.csl")))
-        org-cite-global-bibliography '("/home/kchou/Documents/03-Resources/Slipbox/Attachments/biblio.bib")
+        ;; org-cite-global-bibliography '("/home/kchou/Documents/03-Resources/Slipbox/Attachments/biblio.bib")
         org-html-toplevel-hlevel 1
         org-html-footnotes-section
         "<div id=\"footnotes\">
@@ -1064,6 +1064,8 @@ if one already exists."
 </div>"
 
         ))
+
+(require 'ox-beamer)
 
 (use-package oc-csl
   :ensure nil)
@@ -1614,6 +1616,11 @@ if one already exists."
 (use-package hide-mode-line
   :bind
   ("<f9>" . global-hide-mode-line-mode))
+;;; Scroll bar
+
+(use-package mlscroll
+  :ensure t
+  :hook (server-after-make-frame . mlscroll-mode))
 
 ;;; Eww
 
@@ -1706,12 +1713,12 @@ if one already exists."
                  fish-mode git-gutter gptel gruber-darker-theme hide-mode-line
                  htmlize jsdoc json-mode kbd-mode ligature link-hint marginalia
                  markdown-mode markdown-ts-mode math-preview mermaid-mode
-                 mixed-pitch muse nael olivetti openwith orderless org-appear
-                 org-caldav org-contrib org-download org-mode org-modern
-                 outshine pet rg ruff-format rust-mode selectric-mode sicp
-                 simple-httpd solidity-mode telephone-line tree-sitter-langs
-                 treesit-auto typescript-mode typst-ts-mode valign vertico vterm
-                 vundo yaml-mode yasnippet zk-desktop))
+                 mixed-pitch mlscroll muse nael olivetti openwith orderless
+                 org-appear org-caldav org-contrib org-download org-mode
+                 org-modern outshine pet rg ruff-format rust-mode selectric-mode
+                 sicp simple-httpd solidity-mode telephone-line
+                 tree-sitter-langs treesit-auto typescript-mode typst-ts-mode
+                 valign vertico vterm vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((agent-shell-sidebar :url "https://github.com/cmacrae/agent-shell-sidebar")
      (kbd-mode :url "https://github.com/kmonad/kbd-mode")
