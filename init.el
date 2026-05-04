@@ -185,8 +185,10 @@
 
 ;; Disable backup and auto-save files
 (setq make-backup-files nil
-      auto-save-default t
+      auto-save-default nil
       create-lockfiles nil)
+
+(auto-save-visited-mode 1)
 
 ;; Recent files
 (use-package recentf
@@ -1066,6 +1068,7 @@ if one already exists."
         ))
 
 (require 'ox-beamer)
+;; (setq org-beamer-frame-default-options "allowframebreaks")
 
 (use-package oc-csl
   :ensure nil)
@@ -1459,7 +1462,8 @@ if one already exists."
 ;; Optional: Add to org-babel-do-load-languages
 (org-babel-do-load-languages
  'org-babel-load-languages
- '((lean4 . t)))
+ '((lean4 . t)
+   (python . t)))
 
 ;;;; Links
 
@@ -1706,21 +1710,24 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(package-selected-packages
-   '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
-                 comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
-                 direnv dockerfile-mode edit-indirect ef-themes eglot eldoc-box
-                 elfeed-org elfeed-score elfeed-tube-mpv elfeed-web elpher
-                 fish-mode git-gutter gptel gruber-darker-theme hide-mode-line
-                 htmlize jsdoc json-mode kbd-mode ligature link-hint marginalia
-                 markdown-mode markdown-ts-mode math-preview mermaid-mode
-                 mixed-pitch mlscroll muse nael olivetti openwith orderless
-                 org-appear org-caldav org-contrib org-download org-mode
-                 org-modern outshine pet rg ruff-format rust-mode selectric-mode
-                 sicp simple-httpd solidity-mode telephone-line
-                 tree-sitter-langs treesit-auto typescript-mode typst-ts-mode
-                 valign vertico vterm vundo yaml-mode yasnippet zk-desktop))
+   '(agent-shell apheleia auctex buffer-to-pdf cape cdlatex centered-cursor-mode
+                 citar-embark comment-tags corfu csv-mode darkroom dashboard
+                 devdocs diff-hl direnv dockerfile-mode edit-indirect ef-themes
+                 eglot eldoc-box elfeed-org elfeed-score elfeed-tube-mpv
+                 elfeed-web elpher fish-mode git-gutter gnuplot gptel
+                 gruber-darker-theme hide-mode-line htmlize jsdoc json-mode
+                 kbd-mode ligature link-hint marginalia markdown-mode
+                 markdown-ts-mode math-preview mermaid-mode mixed-pitch mlscroll
+                 muse nael olivetti openwith orderless org-appear org-caldav
+                 org-contrib org-download org-mode org-modern outshine pet rg
+                 ruff-format rust-mode selectric-mode sicp simple-httpd
+                 solidity-mode telephone-line tree-sitter-langs treesit-auto
+                 typescript-mode typst-ts-mode valign vertico vterm vundo
+                 yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
-   '((agent-shell-sidebar :url "https://github.com/cmacrae/agent-shell-sidebar")
+   '((buffer-to-pdf :vc-backend Git :url
+                    "https://github.com/protesilaos/buffer-to-pdf.git")
+     (agent-shell-sidebar :url "https://github.com/cmacrae/agent-shell-sidebar")
      (kbd-mode :url "https://github.com/kmonad/kbd-mode")
      (org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
      (org-timeblock :vc-backend Git :url
