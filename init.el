@@ -1054,7 +1054,7 @@ if one already exists."
         org-export-with-smart-quotes t
         org-cite-csl-link-cites t
         org-cite-export-processors '((latex . (csl "ieee.csl" "ieee.csl")) (t . (csl "ieee.csl" "ieee.csl")))
-        ;; org-cite-global-bibliography '("/home/kchou/Documents/03-Resources/Slipbox/Attachments/biblio.bib")
+        org-cite-global-bibliography '("~/Library/References/biblio.bib")
         org-html-toplevel-hlevel 1
         org-html-footnotes-section
         "<div id=\"footnotes\">
