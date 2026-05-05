@@ -120,7 +120,8 @@
               use-file-dialog nil
               pop-up-windows t
               delete-by-moving-to-trash t
-              column-number-mode t
+              line-number-mode nil
+              column-number-mode nil
               fringe-indicator-alist nil)
 
 
@@ -1388,7 +1389,7 @@ if one already exists."
          pdfsubject={%d},
          pdfcreator={%c},
          pdflang={%L},
-         colorlinks=true,
+         colorlinks=false,
          linkcolor={purple},
          filecolor={cyan},
          citecolor={red},
