@@ -1090,7 +1090,7 @@ if one already exists."
 (setq org-todo-keywords
       '((sequence "RUNNING(r)" "NEXT(n)" "TODO(t)" "PROJ(p)" "IDEA(i)" "MAYBE(m)" "WAIT(w)" "|" "DONE(d!)" "CANC(c)")))
 
-(setq org-stuck-projects '("/+PROJ-MAYBE-DONE" ("NEXT" "RUNNING") nil ""))
+(setq org-stuck-projects '("/+PROJ-MAYBE-DONE" ("NEXT" "RUNNING") nil "SCHEDULED:"))
 
 (global-set-key (kbd "C-c a") #'org-agenda)
 (setq org-agenda-files '("~/Documents/01-Projects/Projects.org"
@@ -1357,6 +1357,30 @@ if one already exists."
 ;; (add-hook 'org-mode-hook 'org-appear-mode)
 
 ;;;; Exporting
+
+(require 'org-colored-text)
+
+;; Taken and adapted from org-colored-text
+(org-add-link-type
+ "color"
+ (lambda (path)
+   "No follow action.")
+ (lambda (color description backend)
+   (cond
+    ((eq backend 'latex)                  ; added by TL
+     (format "{\\color{%s}%s}" color description)) ; added by TL
+    ((eq backend 'html)
+     (let ((rgb (assoc color color-name-rgb-alist))
+           r g b)
+       (if rgb
+           (progn
+             (setq r (* 255 (/ (nth 1 rgb) 65535.0))
+                   g (* 255 (/ (nth 2 rgb) 65535.0))
+                   b (* 255 (/ (nth 3 rgb) 65535.0)))
+             (format "<span style=\"color: rgb(%s,%s,%s)\">%s</span>"
+                     (truncate r) (truncate g) (truncate b)
+                     (or description color)))
+         (format "No Color RGB for %s" color)))))))
 
 (use-package org-contrib)
 (require 'ox-extra)
@@ -1701,7 +1725,10 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("d2c76098def8b2b10b45d2092c86ca9c8b95d58fabbc8850d28899181d8f6581"
+   '("f693c100eed9a8dc13f020997530737c67581fa524da6fb3ca7e9afc48fa485d"
+     "05dd18cce7247eefa694037a6f73aa3574a9f8735e2dcc67bc47abb07ff7a9d4"
+     "aa36026e7cfc43b58fb6ea3683042f96e50d803eb76efe6e18d1f24002ac14d4"
+     "d2c76098def8b2b10b45d2092c86ca9c8b95d58fabbc8850d28899181d8f6581"
      "a68ec832444ed19b83703c829e60222c9cfad7186b7aea5fd794b79be54146e6"
      "01a9797244146bbae39b18ef37e6f2ca5bebded90d9fe3a2f342a9e863aaa4fd"
      "1ad12cda71588cc82e74f1cabeed99705c6a60d23ee1bb355c293ba9c000d4ac"
@@ -1711,16 +1738,16 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(package-selected-packages
-   '(agent-shell apheleia auctex buffer-to-pdf cape cdlatex centered-cursor-mode
-                 citar-embark comment-tags corfu csv-mode darkroom dashboard
-                 devdocs diff-hl direnv dockerfile-mode edit-indirect ef-themes
-                 eglot eldoc-box elfeed-org elfeed-score elfeed-tube-mpv
-                 elfeed-web elpher fish-mode git-gutter gnuplot gptel
-                 gruber-darker-theme hide-mode-line htmlize jsdoc json-mode
-                 kbd-mode ligature link-hint marginalia markdown-mode
-                 markdown-ts-mode math-preview mermaid-mode mixed-pitch mlscroll
-                 muse nael olivetti openwith orderless org-appear org-caldav
-                 org-contrib org-download org-mode org-modern outshine pet rg
+   '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
+                 comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
+                 direnv dockerfile-mode edit-indirect ef-themes eglot eldoc-box
+                 elfeed-org elfeed-score elfeed-tube-mpv elfeed-web elpher
+                 fish-mode git-gutter gnuplot gptel gruber-darker-theme
+                 hide-mode-line htmlize jsdoc json-mode kbd-mode ligature
+                 link-hint marginalia markdown-mode markdown-ts-mode
+                 math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
+                 nael olivetti openwith orderless org-appear org-caldav
+                 org-contrib org-download org-mode org-modern outshine ov pet rg
                  ruff-format rust-mode selectric-mode sicp simple-httpd
                  solidity-mode telephone-line tree-sitter-langs treesit-auto
                  typescript-mode typst-ts-mode valign vertico vterm vundo
