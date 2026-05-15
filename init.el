@@ -397,47 +397,55 @@
 
 ;;; Theme and Appearance
 
-(use-package modus-themes
+(use-package standard-themes
   :ensure t
-  :init
   :config
-  (setq
+  (setq standard-themes-to-toggle '(standard-light standard-dark))
+  (define-key global-map (kbd "<f5>") #'standard-themes-toggle)
 
-   ;; modus-themes-headings
-   ;;      '((1 . (1.2))
-   ;;        (2 . (1.15))
-   ;;        (3 . (1.1))
-   ;;        (4 . (1.05))
-   ;;        (t . (1.0)))
+  (load-theme 'standard-light t))
 
-   modus-themes-italic-constructs nil
-   modus-themes-bold-constructs t
-   modus-themes-mixed-fonts t
-   modus-themes-subtle-line-numbers t
-   modus-themes-fringes nil ; {nil,'subtle,'intense}
+;; (use-package modus-themes
+;;   :ensure t
+;;   :init
+;;   :config
+;;   (setq
 
-   ;; mode-line settings
-   modus-themes-common-palette-overrides
-   '(
-     ;;   ;;   ;; make border same color (e.g. borderless)
-     ;;   ;;   ;; (border-mode-line-active bg-mode-line-active)
-     ;;   ;;   ;; (border-mode-line-inactive bg-mode-line-inactive)
-     ;;   ;;   ;; make active window's mode-line purple
-     ;;   ;;   (bg-mode-line-active bg-lavender)
-     ;;   ;;   (fg-mode-line-active fg-main)
-     ;;   ;;   (border-mode-line-active bg-magenta-intense)
+;;    ;; modus-themes-headings
+;;    ;;      '((1 . (1.2))
+;;    ;;        (2 . (1.15))
+;;    ;;        (3 . (1.1))
+;;    ;;        (4 . (1.05))
+;;    ;;        (t . (1.0)))
 
-     (comment fg-alt)
+;;    modus-themes-italic-constructs nil
+;;    modus-themes-bold-constructs t
+;;    modus-themes-mixed-fonts t
+;;    modus-themes-subtle-line-numbers t
+;;    modus-themes-fringes nil ; {nil,'subtle,'intense}
 
-     ;; Make line numbers less intense
-     (fg-line-number-inactive "gray50")
-     (fg-line-number-active fg-main)
-     (bg-line-number-inactive unspecified)
-     (bg-line-number-active unspecified)
-     ))
-  (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
-  (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
-  (modus-themes-load-theme 'modus-operandi))
+;;    ;; mode-line settings
+;;    modus-themes-common-palette-overrides
+;;    '(
+;;      ;;   ;;   ;; make border same color (e.g. borderless)
+;;      ;;   ;;   ;; (border-mode-line-active bg-mode-line-active)
+;;      ;;   ;;   ;; (border-mode-line-inactive bg-mode-line-inactive)
+;;      ;;   ;;   ;; make active window's mode-line purple
+;;      ;;   ;;   (bg-mode-line-active bg-lavender)
+;;      ;;   ;;   (fg-mode-line-active fg-main)
+;;      ;;   ;;   (border-mode-line-active bg-magenta-intense)
+
+;;      (comment fg-alt)
+
+;;      ;; Make line numbers less intense
+;;      (fg-line-number-inactive "gray50")
+;;      (fg-line-number-active fg-main)
+;;      (bg-line-number-inactive unspecified)
+;;      (bg-line-number-active unspecified)
+;;      ))
+;;   (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
+;;   (define-key global-map (kbd "<f5>") #'modus-themes-toggle)
+;;   (modus-themes-load-theme 'modus-operandi))
 
 ;;; Files
 
@@ -713,6 +721,8 @@ if one already exists."
 (add-hook 'markdown-mode-hook #'my-prose-setup)
 
 ;;; Markdown
+(use-package markdown-ts-mode)
+
 (use-package markdown-mode
   :mode ("\\.md\\'" "\\.qmd\\'")
   :hook ((markdown-mode . olivetti-mode)
@@ -1132,7 +1142,7 @@ if one already exists."
 (setf (cdr (assoc 'note org-log-note-headings)) "%t")
 
 (setq org-agenda-sorting-strategy
-      '(habit-down todo-state-up priority-down time-up deadline-up effort-up category-keep))
+      '(habit-down deadline-up todo-state-up priority-down time-up effort-up category-keep))
 
 
 (setq org-agenda-breadcrumbs-separator " ➤ "
@@ -1725,7 +1735,10 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(custom-safe-themes
-   '("f693c100eed9a8dc13f020997530737c67581fa524da6fb3ca7e9afc48fa485d"
+   '("3799f9b2e997c7cf7d1a5d9846095c8976bce96852eda40d8bf9248157c2615f"
+     "17570f818a8a3877994453342e3425a3b4fa4b3ebac050b4ecbbee958f1ca133"
+     "fb232a8ae1311f1b8acecb1f766880d12d7a01b7d8d547e7c09325a074a31237"
+     "f693c100eed9a8dc13f020997530737c67581fa524da6fb3ca7e9afc48fa485d"
      "05dd18cce7247eefa694037a6f73aa3574a9f8735e2dcc67bc47abb07ff7a9d4"
      "aa36026e7cfc43b58fb6ea3683042f96e50d803eb76efe6e18d1f24002ac14d4"
      "d2c76098def8b2b10b45d2092c86ca9c8b95d58fabbc8850d28899181d8f6581"
@@ -1749,9 +1762,9 @@ if one already exists."
                  nael olivetti openwith orderless org-appear org-caldav
                  org-contrib org-download org-mode org-modern outshine ov pet rg
                  ruff-format rust-mode selectric-mode sicp simple-httpd
-                 solidity-mode telephone-line tree-sitter-langs treesit-auto
-                 typescript-mode typst-ts-mode valign vertico vterm vundo
-                 yaml-mode yasnippet zk-desktop))
+                 solidity-mode standard-themes telephone-line tree-sitter-langs
+                 treesit-auto typescript-mode typst-ts-mode valign vertico vterm
+                 vundo yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((buffer-to-pdf :vc-backend Git :url
                     "https://github.com/protesilaos/buffer-to-pdf.git")
