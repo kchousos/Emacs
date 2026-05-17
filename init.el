@@ -1122,7 +1122,7 @@ if one already exists."
       org-log-state-notes-insert-after-drawers t
       org-agenda-include-deadlines t
       org-agenda-todo-ignore-scheduled 'all
-      org-agenda-skip-deadline-prewarning-if-scheduled 5
+      org-agenda-skip-deadline-prewarning-if-scheduled 2
       org-agenda-skip-scheduled-if-deadline-is-shown 'not-today
       org-agenda-skip-scheduled-if-done t
       org-agenda-skip-deadline-if-done t
@@ -1750,21 +1750,7 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(package-selected-packages
-   '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
-                 comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
-                 direnv dockerfile-mode edit-indirect ef-themes eglot eldoc-box
-                 elfeed-org elfeed-score elfeed-tube-mpv elfeed-web elpher
-                 fish-mode git-gutter gnuplot gptel gruber-darker-theme
-                 hide-mode-line htmlize jsdoc json-mode kbd-mode ligature
-                 link-hint marginalia markdown-mode markdown-ts-mode
-                 math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
-                 nael olivetti openwith orderless org-appear org-caldav
-                 org-contrib org-download org-mode org-modern outshine ov pet rg
-                 ruff-format rust-mode selectric-mode sicp simple-httpd
-                 solidity-mode standard-themes telephone-line tree-sitter-langs
-                 treesit-auto typescript-mode typst-ts-mode valign vertico vterm
-                 vundo yaml-mode yasnippet zk-desktop))
+ '(package-selected-packages nil)
  '(package-vc-selected-packages
    '((buffer-to-pdf :vc-backend Git :url
                     "https://github.com/protesilaos/buffer-to-pdf.git")
