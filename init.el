@@ -1142,7 +1142,7 @@ if one already exists."
 (setf (cdr (assoc 'note org-log-note-headings)) "%t")
 
 (setq org-agenda-sorting-strategy
-      '(habit-down deadline-up todo-state-up priority-down time-up effort-up category-keep))
+      '(habit-down time-up deadline-up todo-state-up priority-down effort-up category-keep))
 
 
 (setq org-agenda-breadcrumbs-separator " ➤ "
