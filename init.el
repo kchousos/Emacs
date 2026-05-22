@@ -1142,7 +1142,7 @@ if one already exists."
 (setf (cdr (assoc 'note org-log-note-headings)) "%t")
 
 (setq org-agenda-sorting-strategy
-      '(habit-down time-up deadline-up todo-state-up priority-down effort-up category-keep))
+      '(habit-down deadline-up time-up todo-state-up priority-down effort-up category-keep))
 
 
 (setq org-agenda-breadcrumbs-separator " ➤ "
@@ -1750,9 +1750,10 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
- '(package-selected-packages nil)
+ '(package-selected-packages '(4g))
  '(package-vc-selected-packages
-   '((buffer-to-pdf :vc-backend Git :url
+   '((4g :vc-backend Git :url "https://github.com/eNotchy/4g")
+     (buffer-to-pdf :vc-backend Git :url
                     "https://github.com/protesilaos/buffer-to-pdf.git")
      (agent-shell-sidebar :url "https://github.com/cmacrae/agent-shell-sidebar")
      (kbd-mode :url "https://github.com/kmonad/kbd-mode")
