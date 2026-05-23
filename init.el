@@ -1137,6 +1137,7 @@ if one already exists."
       org-extend-today-until 4
       org-sort-agenda-notime-is-late nil
       org-agenda-entry-text-leaders "    "
+      org-use-property-inheritance '( "ID")
       )
 
 (setf (cdr (assoc 'note org-log-note-headings)) "%t")
@@ -1750,6 +1751,11 @@ if one already exists."
      "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
+ '(org-agenda-files
+   '("~/Documents/01-Projects/ALMA - Blockchains - Theory Exercise 3/Chousos_blockchains_theory_3.org"
+     "/home/kchou/Documents/01-Projects/Projects.org"
+     "/home/kchou/Documents/02-Areas/Areas.org"
+     "/home/kchou/Documents/00-Inbox/Inbox.org"))
  '(package-selected-packages '(4g))
  '(package-vc-selected-packages
    '((4g :vc-backend Git :url "https://github.com/eNotchy/4g")
