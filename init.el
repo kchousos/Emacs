@@ -533,7 +533,7 @@
 (use-package project
   :ensure nil
   :custom
-  (project-vc-extra-root-markers '(".envrc" ".project" ".git")))
+  (project-vc-extra-root-markers '(".envrc" ".project" ".git" "node_modules")))
 
 ;;; Direnv
 
