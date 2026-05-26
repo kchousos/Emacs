@@ -103,10 +103,12 @@
 (setq inhibit-startup-message t
       inhibit-startup-echo-area-message t)
 
-;; Maximize frame
-(add-to-list 'default-frame-alist '(fullscreen . maximized))
+;;; Default frame size
+;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
+(add-to-list 'default-frame-alist '(width . 240))
+(add-to-list 'default-frame-alist '(height . 60))
 
-;; Disable unnecessary UI elements
+;;; UI elements
 (tool-bar-mode -1)
 (tooltip-mode 1)
 (menu-bar-mode 1)
@@ -616,7 +618,10 @@
 
 ;; Lean4
 
-(use-package nael)
+(use-package nael
+  :hook (nael-mode . (lambda ()
+                       (setq-local eldoc-display-functions
+                                   '(eldoc-display-in-buffer)))))
 
 ;; Datalog
 
@@ -1424,7 +1429,6 @@ if one already exists."
          pdfsubject={%d},
          pdfcreator={%c},
          pdflang={%L},
-         colorlinks=false,
          linkcolor={purple},
          filecolor={cyan},
          citecolor={red},
@@ -1499,6 +1503,7 @@ if one already exists."
 (org-babel-do-load-languages
  'org-babel-load-languages
  '((lean4 . t)
+   (shell . t)
    (python . t)))
 
 ;;;; Links
@@ -1752,7 +1757,7 @@ if one already exists."
      "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
      "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
-   '("~/Documents/01-Projects/ALMA - Blockchains - Theory Exercise 3/Chousos_blockchains_theory_3.org"
+   '("~/Documents/01-Projects/ALMA - Smart Contracts - Presentation/Chousos_2026_MEV.org"
      "/home/kchou/Documents/01-Projects/Projects.org"
      "/home/kchou/Documents/02-Areas/Areas.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"))
@@ -1768,6 +1773,7 @@ if one already exists."
                     "https://github.com/ichernyshovvv/org-timeblock/")
      (typst-ts-mode :vc-backend Git :url
                     "https://codeberg.org/meow_king/typst-ts-mode.git")))
+ '(safe-local-variable-values '((org-cite-global-bibliography)))
  '(send-mail-function 'mailclient-send-it))
 
 ;; Enable previously disabled commands
