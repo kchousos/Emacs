@@ -1018,7 +1018,8 @@ if one already exists."
 ;;; Org-Mode
 
 ;; (package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))
-(use-package org :load-path "~/.config/emacs/elpa/org-mode/lisp/"
+(use-package org
+  :vc (:url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
   :hook ((org-mode . olivetti-mode)
          (org-mode . my/markdown-highlight-tags)
          (org-mode . save-place-local-mode)
@@ -1069,7 +1070,7 @@ if one already exists."
         org-export-with-section-numbers nil
         org-export-with-smart-quotes t
         org-cite-csl-link-cites t
-        org-cite-export-processors '((latex . (csl "ieee.csl" "ieee.csl")) (t . (csl "ieee.csl" "ieee.csl")))
+        org-cite-export-processors '((latex . (biblatex)) (t . (csl "ieee.csl" "ieee.csl")))
         org-cite-global-bibliography '("~/Library/References/biblio.bib")
         org-html-toplevel-hlevel 1
         org-html-footnotes-section
@@ -1235,6 +1236,8 @@ if one already exists."
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "~/Documents/00-Inbox/Inbox.org")
          "* %?" :prepend t :empty-lines 0)
+        ("I" "Inbox (timestamped)" entry (file "~/Documents/00-Inbox/Inbox.org")
+         "* %?\nSCHEDULED: %t" :prepend t :empty-lines 0)
         ;; ("s" "Slipbox" entry (file "~/Documents/03-Resources/Slipbox/Slipbox.org")
         ;;  "* %?" :prepend t :empty-lines 1)
         ;; ("t" "Task" entry (file "Agenda.org")
@@ -1263,26 +1266,19 @@ if one already exists."
 
 ;;;; LaTeX previews
 
-(use-package org-latex-preview
-  :ensure nil
-  :config
-  (plist-put org-format-latex-options :zoom 1.4)
-  (plist-put org-format-latex-options :page-width 0.8)
+(plist-put org-format-latex-options :zoom 1.4)
+(plist-put org-format-latex-options :page-width 0.8)
+(add-hook 'org-mode-hook 'org-latex-preview-mode)
 
-  (add-hook 'org-mode-hook 'org-latex-preview-auto-mode)
+;; Enable consistent equation numbering
+(setq org-latex-preview-numbered t)
 
-  ;; Enable consistent equation numbering
-  (setq org-latex-preview-numbered t)
+(setq org-latex-preview-live t)
 
-  ;; Bonus: Turn on live previews.  This shows you a live preview of a LaTeX
-  ;; fragment and updates the preview in real-time as you edit it.
-  ;; To preview only environments, set it to '(block edit-special) instead
-  (setq org-latex-preview-live t)
+(setq org-startup-with-latex-preview t)
 
-  (setq org-startup-with-latex-preview t)
-
-  ;; More immediate live-previews -- the default delay is 1 second
-  (setq org-latex-preview-live-debounce 0.25))
+;; More immediate live-previews -- the default delay is 1 second
+(setq org-latex-preview-live-debounce 0.25)
 
 ;;;; Zotero integration
 
@@ -1374,7 +1370,8 @@ if one already exists."
 
 ;;;; Exporting
 
-(require 'org-colored-text)
+(use-package org-colored-text
+  :ensure nil)
 
 ;; Taken and adapted from org-colored-text
 (org-add-link-type
@@ -1740,41 +1737,29 @@ if one already exists."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(custom-safe-themes
-   '("3799f9b2e997c7cf7d1a5d9846095c8976bce96852eda40d8bf9248157c2615f"
-     "17570f818a8a3877994453342e3425a3b4fa4b3ebac050b4ecbbee958f1ca133"
-     "fb232a8ae1311f1b8acecb1f766880d12d7a01b7d8d547e7c09325a074a31237"
-     "f693c100eed9a8dc13f020997530737c67581fa524da6fb3ca7e9afc48fa485d"
-     "05dd18cce7247eefa694037a6f73aa3574a9f8735e2dcc67bc47abb07ff7a9d4"
-     "aa36026e7cfc43b58fb6ea3683042f96e50d803eb76efe6e18d1f24002ac14d4"
-     "d2c76098def8b2b10b45d2092c86ca9c8b95d58fabbc8850d28899181d8f6581"
-     "a68ec832444ed19b83703c829e60222c9cfad7186b7aea5fd794b79be54146e6"
-     "01a9797244146bbae39b18ef37e6f2ca5bebded90d9fe3a2f342a9e863aaa4fd"
-     "1ad12cda71588cc82e74f1cabeed99705c6a60d23ee1bb355c293ba9c000d4ac"
-     "da69584c7fe6c0acadd7d4ce3314d5da8c2a85c5c9d0867c67f7924d413f4436"
-     "df39cc8ecf022613fc2515bccde55df40cb604d7568cb96cd7fe1eff806b863b"
-     "c038d994d271ebf2d50fa76db7ed0f288f17b9ad01b425efec09519fa873af53"
-     "5e39e95c703e17a743fb05a132d727aa1d69d9d2c9cde9353f5350e545c793d4"
-     "77f281064ea1c8b14938866e21c4e51e4168e05db98863bd7430f1352cab294a" default))
  '(org-agenda-files
    '("~/Documents/01-Projects/ALMA - Smart Contracts - Presentation/Chousos_2026_MEV.org"
      "/home/kchou/Documents/01-Projects/Projects.org"
      "/home/kchou/Documents/02-Areas/Areas.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"))
- '(package-selected-packages '(4g))
+ '(package-selected-packages
+   '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
+                 comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
+                 direnv dockerfile-mode edit-indirect ef-themes eldoc-box
+                 elfeed-org elfeed-score elfeed-tube-mpv elfeed-web elpher
+                 fish-mode git-gutter gnuplot gptel gruber-darker-theme
+                 hide-mode-line htmlize jsdoc json-mode kbd-mode ligature
+                 link-hint marginalia markdown-mode markdown-ts-mode
+                 math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
+                 nael olivetti openwith orderless org-appear org-caldav
+                 org-contrib org-download org-mode org-modern outshine ov pet rg
+                 ruff-format rust-mode selectric-mode solidity-mode
+                 standard-themes telephone-line tree-sitter-langs treesit-auto
+                 typescript-mode typst-ts-mode valign vertico vterm vundo
+                 yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
-   '((4g :vc-backend Git :url "https://github.com/eNotchy/4g")
-     (buffer-to-pdf :vc-backend Git :url
-                    "https://github.com/protesilaos/buffer-to-pdf.git")
-     (agent-shell-sidebar :url "https://github.com/cmacrae/agent-shell-sidebar")
-     (kbd-mode :url "https://github.com/kmonad/kbd-mode")
-     (org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")
-     (org-timeblock :vc-backend Git :url
-                    "https://github.com/ichernyshovvv/org-timeblock/")
-     (typst-ts-mode :vc-backend Git :url
-                    "https://codeberg.org/meow_king/typst-ts-mode.git")))
- '(safe-local-variable-values '((org-cite-global-bibliography)))
- '(send-mail-function 'mailclient-send-it))
+   '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")))
+ '(safe-local-variable-values '((org-cite-global-bibliography))))
 
 ;; Enable previously disabled commands
 (put 'narrow-to-region 'disabled nil)
