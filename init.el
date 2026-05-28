@@ -301,6 +301,8 @@
 
 ;; Window navigation
 (global-set-key (kbd "M-o") 'other-window)
+(global-set-key (kbd "M-O")
+                (lambda () (interactive) (other-window -1)))
 
 ;; Line numbers toggle
 (global-set-key (kbd "M-<f2>")
@@ -1121,7 +1123,7 @@ if one already exists."
       org-agenda-block-separator 9472
       org-agenda-tags-column 'auto
       org-agenda-hide-tags-regexp "noexport\\|ignore"
-      org-agenda-use-time-grid nil
+      org-agenda-use-time-grid t
       org-agenda-start-with-log-mode nil
       org-agenda-log-mode-items '(clock)
       org-log-into-drawer t
