@@ -105,8 +105,8 @@
 
 ;;; Default frame size
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(width . 240))
-(add-to-list 'default-frame-alist '(height . 60))
+(add-to-list 'default-frame-alist '(width . 180))
+(add-to-list 'default-frame-alist '(height . 45))
 
 ;;; UI elements
 (tool-bar-mode -1)
@@ -1124,7 +1124,7 @@ if one already exists."
       org-agenda-tags-column 'auto
       org-agenda-hide-tags-regexp "noexport\\|ignore"
       org-agenda-use-time-grid t
-      org-agenda-start-with-log-mode nil
+      org-agenda-start-with-log-mode t
       org-agenda-log-mode-items '(clock)
       org-log-into-drawer t
       org-log-state-notes-insert-after-drawers t
