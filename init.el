@@ -1028,6 +1028,7 @@ if one already exists."
          ;; (org-mode . flyspell-mode)
          (org-mode . org-cdlatex-mode))
   :config
+  (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
   (setq org-image-actual-width (list 0.5)
         org-export-with-broken-links 'mark
         org-image-align 'center
@@ -1739,11 +1740,6 @@ if one already exists."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(org-agenda-files
-   '("~/Documents/01-Projects/ALMA - Smart Contracts - Presentation/Chousos_2026_MEV.org"
-     "/home/kchou/Documents/01-Projects/Projects.org"
-     "/home/kchou/Documents/02-Areas/Areas.org"
-     "/home/kchou/Documents/00-Inbox/Inbox.org"))
  '(package-selected-packages
    '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
                  comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
