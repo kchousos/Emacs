@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Org timestamp heading
+# key: ts
+# --
+* `(format-time-string "%H:%M:%S %a %d %b")` ($1)
+$0

@@ -105,8 +105,8 @@
 
 ;;; Default frame size
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(width . 180))
-(add-to-list 'default-frame-alist '(height . 45))
+(add-to-list 'default-frame-alist '(width . 220))
+(add-to-list 'default-frame-alist '(height . 60))
 
 ;;; UI elements
 (tool-bar-mode -1)
@@ -1163,7 +1163,14 @@ if one already exists."
                                  (search . " %-18:c")))
 
 (setq org-agenda-custom-commands
-      '(("A" "Running, Next Actions"
+      '(("A" "My agenda"
+         ((agenda "")
+          (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
+          (todo "NEXT" ((org-agenda-overriding-header "Next actions")))
+          (todo "WAIT" ((org-agenda-overriding-header "Waiting on")))
+          (todo "PROJ" ((org-agenda-overriding-header "Projects")))
+          (stuck "" ((org-agenda-overriding-header "Stuck projects")))) nil)
+        ("R" "Running, Next Actions"
          ((todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
         ("W" "Waiting on"
@@ -1238,9 +1245,11 @@ if one already exists."
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
       `(("i" "Inbox" entry (file "~/Documents/00-Inbox/Inbox.org")
-         "* %?" :prepend t :empty-lines 0)
-        ("I" "Inbox (timestamped)" entry (file "~/Documents/00-Inbox/Inbox.org")
-         "* %?\nSCHEDULED: %t" :prepend t :empty-lines 0)
+         "* %U %?" :prepend t :empty-lines 1)
+        ("t" "Task" entry (file "~/Documents/00-Inbox/Inbox.org")
+         "* TODO %?" :prepend t :empty-lines 1)
+        ("s" "Task (scheduled)" entry (file "~/Documents/00-Inbox/Inbox.org")
+         "* TODO %?\nSCHEDULED: %t" :prepend t :empty-lines 1)
         ;; ("s" "Slipbox" entry (file "~/Documents/03-Resources/Slipbox/Slipbox.org")
         ;;  "* %?" :prepend t :empty-lines 1)
         ;; ("t" "Task" entry (file "Agenda.org")
@@ -1441,7 +1450,7 @@ if one already exists."
       org-export-with-section-numbers nil
       org-export-with-toc nil
       org-export-with-date nil
-      org-export-with-title nil
+      org-export-with-title t
       org-export-with-author nil
       org-export-with-planning nil          ;; corresponds to p:nil in many setups
       org-export-with-todo-keywords nil
