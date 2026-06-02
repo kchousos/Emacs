@@ -487,19 +487,21 @@
   ;; (vundo-popup-mode)
   )
 
-(use-package dashboard
-  :custom
-  (dashboard-startup-banner '(official))
-  (dashboard-center-content t)
-  (dashboard-vertically-center-content t)
-  (dashboard-startupify-list '(dashboard-insert-banner
-                               ;; dashboard-insert-newline
-                               ;; dashboard-insert-items
-                               ))
-  (dashboard-items '((registers    . 10)))
-  :config
-  (dashboard-setup-startup-hook)
-  (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
+;;; Dashboard
+
+;; (use-package dashboard
+;;   :custom
+;;   (dashboard-startup-banner '(official))
+;;   (dashboard-center-content t)
+;;   (dashboard-vertically-center-content t)
+;;   (dashboard-startupify-list '(dashboard-insert-banner
+;;                                ;; dashboard-insert-newline
+;;                                ;; dashboard-insert-items
+;;                                ))
+;;   (dashboard-items '((registers    . 10)))
+;;   :config
+;;   (dashboard-setup-startup-hook)
+;;   (setq initial-buffer-choice (lambda () (get-buffer-create "*dashboard*"))))
 
 ;;; Completion Framework
 
@@ -1254,8 +1256,8 @@ if one already exists."
 
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
-      `(("i" "Inbox" entry (file "~/Documents/00-Inbox/Inbox.org")
-         "* %U %?" :prepend t :empty-lines 1)
+      `(("i" "Idea" entry (file "~/Documents/03-Resources/Slipbox/00000000000000 Inbox.org")
+         "* %U\n%?" :prepend t :empty-lines 1)
         ("t" "Task" entry (file "~/Documents/00-Inbox/Inbox.org")
          "* TODO %?" :prepend t :empty-lines 1)
         ("s" "Task (scheduled)" entry (file "~/Documents/00-Inbox/Inbox.org")
