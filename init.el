@@ -1126,7 +1126,8 @@ if one already exists."
 (global-set-key (kbd "C-c a") #'org-agenda)
 (setq org-agenda-files '("~/Documents/01-Projects/Projects.org"
                          "~/Documents/02-Areas/Areas.org"
-                         "~/Documents/00-Inbox/Inbox.org"))
+                         "~/Documents/00-Inbox/Inbox.org"
+                         "~/Documents/03-Resources/Slipbox/00000000000000 Inbox.org"))
 
 (setq org-log-done 'time
       org-agenda-current-time-string "← Now ─────────────────────────────────────────────────────────"
@@ -1138,7 +1139,7 @@ if one already exists."
       org-agenda-hide-tags-regexp "noexport\\|ignore"
       org-agenda-use-time-grid t
       org-agenda-start-with-log-mode t
-      org-agenda-log-mode-items '(clock)
+      org-agenda-log-mode-items '(closed clock)
       org-log-into-drawer t
       org-log-state-notes-insert-after-drawers t
       org-agenda-include-deadlines t
@@ -1256,11 +1257,11 @@ if one already exists."
 
 (global-set-key (kbd "C-c c") #'org-capture)
 (setq org-capture-templates
-      `(("i" "Idea" entry (file "~/Documents/03-Resources/Slipbox/00000000000000 Inbox.org")
+      `(("s" "Idea for slipbox" entry (file "~/Documents/03-Resources/Slipbox/00000000000000 Inbox.org")
          "* %U\n%?" :prepend t :empty-lines 1)
-        ("t" "Task" entry (file "~/Documents/00-Inbox/Inbox.org")
+        ("i" "Inbox" entry (file "~/Documents/00-Inbox/Inbox.org")
          "* TODO %?" :prepend t :empty-lines 1)
-        ("s" "Task (scheduled)" entry (file "~/Documents/00-Inbox/Inbox.org")
+        ("t" "Task (scheduled)" entry (file "~/Documents/00-Inbox/Inbox.org")
          "* TODO %?\nSCHEDULED: %t" :prepend t :empty-lines 1)
         ;; ("s" "Slipbox" entry (file "~/Documents/03-Resources/Slipbox/Slipbox.org")
         ;;  "* %?" :prepend t :empty-lines 1)
