@@ -1180,8 +1180,8 @@ if one already exists."
          ((agenda "")
           (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))
-          (todo "WAIT" ((org-agenda-overriding-header "Waiting on")))
           (todo "PROJ" ((org-agenda-overriding-header "Projects")))
+          (todo "WAIT" ((org-agenda-overriding-header "Waiting on")))
           (stuck "" ((org-agenda-overriding-header "Stuck projects")))) nil)
         ("R" "Running, Next Actions"
          ((todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
