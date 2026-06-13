@@ -105,8 +105,8 @@
 
 ;;; Default frame size
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(width . 220))
-(add-to-list 'default-frame-alist '(height . 60))
+(add-to-list 'default-frame-alist '(width . 160))
+(add-to-list 'default-frame-alist '(height . 45))
 
 ;;; UI elements
 (tool-bar-mode -1)
@@ -1520,6 +1520,7 @@ if one already exists."
 
 (require 'ob-lean4)
 (add-to-list 'org-src-lang-modes '("lean4" . nael))
+(add-to-list 'org-src-lang-modes '("datalog" . souffle))
 
 ;; Optional: Add to org-babel-do-load-languages
 (org-babel-do-load-languages
