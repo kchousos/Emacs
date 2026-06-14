@@ -105,8 +105,8 @@
 
 ;;; Default frame size
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(width . 160))
-(add-to-list 'default-frame-alist '(height . 45))
+(add-to-list 'default-frame-alist '(width . 220))
+(add-to-list 'default-frame-alist '(height . 60))
 
 ;;; UI elements
 (tool-bar-mode -1)
@@ -1180,9 +1180,10 @@ if one already exists."
          ((agenda "")
           (todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))
-          (todo "PROJ" ((org-agenda-overriding-header "Projects")))
           (todo "WAIT" ((org-agenda-overriding-header "Waiting on")))
-          (stuck "" ((org-agenda-overriding-header "Stuck projects")))) nil)
+          (stuck "" ((org-agenda-overriding-header "Stuck projects")))
+          (todo "PROJ" ((org-agenda-overriding-header "All projects")))
+          ) nil)
         ("R" "Running, Next Actions"
          ((todo "RUNNING" ((org-agenda-overriding-header "Running tasks")))
           (todo "NEXT" ((org-agenda-overriding-header "Next actions")))) nil)
