@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Basic flaschard (greek kbd)
+# key: ;α
+# --
+Q: $1
+A: $0

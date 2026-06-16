@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Cloze flashcard
+# key: c
+# --
+C: $1 [$2] $0.

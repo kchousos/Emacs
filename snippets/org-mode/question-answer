@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Basic flaschard
+# key: qa
+# --
+Q: $1
+A: $0

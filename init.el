@@ -1764,6 +1764,12 @@ if one already exists."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
+ '(org-agenda-files
+   '("~/Documents/01-Projects/ALMA - Blockchains - Theory exercise 4/Chousos_blockchains_theory_4.org"
+     "/home/kchou/Documents/01-Projects/Projects.org"
+     "/home/kchou/Documents/02-Areas/Areas.org"
+     "/home/kchou/Documents/00-Inbox/Inbox.org"
+     "/home/kchou/Documents/03-Resources/Slipbox/00000000000000 Inbox.org"))
  '(package-selected-packages
    '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
                  comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
