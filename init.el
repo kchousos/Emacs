@@ -1452,6 +1452,7 @@ if one already exists."
          pdfsubject={%d},
          pdfcreator={%c},
          pdflang={%L},
+         colorlinks=true,
          linkcolor={purple},
          filecolor={cyan},
          citecolor={red},
@@ -1765,8 +1766,7 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("~/Documents/01-Projects/ALMA - Blockchains - Theory exercise 4/Chousos_blockchains_theory_4.org"
-     "/home/kchou/Documents/01-Projects/Projects.org"
+   '("/home/kchou/Documents/01-Projects/Projects.org"
      "/home/kchou/Documents/02-Areas/Areas.org"
      "/home/kchou/Documents/00-Inbox/Inbox.org"
      "/home/kchou/Documents/03-Resources/Slipbox/00000000000000 Inbox.org"))
