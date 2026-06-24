@@ -1787,7 +1787,8 @@ if one already exists."
                  yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")))
- '(safe-local-variable-values '((org-cite-global-bibliography))))
+ '(safe-local-variable-values '((org-cite-global-bibliography)))
+ '(send-mail-function 'mailclient-send-it))
 
 ;; Enable previously disabled commands
 (put 'narrow-to-region 'disabled nil)
