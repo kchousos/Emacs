@@ -1041,6 +1041,14 @@ if one already exists."
          (org-mode . org-cdlatex-mode))
   :config
   (set-face-attribute 'org-table nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-block nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-block-begin-line nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-block-end-line nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-code nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-verbatim nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-meta-line nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-formula nil :inherit 'fixed-pitch)
+  (set-face-attribute 'org-checkbox nil :inherit 'fixed-pitch)
   (setq org-image-actual-width (list 0.5)
         org-export-with-broken-links 'mark
         org-image-align 'center
