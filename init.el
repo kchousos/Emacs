@@ -740,34 +740,44 @@ if one already exists."
 (add-hook 'markdown-mode-hook #'my-prose-setup)
 
 ;;; Markdown
-(use-package markdown-ts-mode)
-
-(use-package markdown-mode
-  :mode ("\\.md\\'" "\\.qmd\\'")
-  :hook ((markdown-mode . olivetti-mode)
-         (markdown-mode . save-place-local-mode)
-         (Info-mode . olivetti-mode)
-         ;; (markdown-mode . flyspell-mode)
+(use-package markdown-ts-mode
+  :mode ("\\.md\\'" . markdown-ts-mode)
+  :defer 't
+  :hook ((markdown-ts-mode . olivetti-mode)
+         (markdown-ts-mode . save-place-local-mode)
          (markdown-mode . my/markdown-highlight-tags))
   :bind
   (("C-c C-x @" . citar-insert-citation))
-  :custom
-  (markdown-enable-math t)
-  (markdown-command "pandoc --katex -s")
-  (markdown-max-image-size '(800 . 600))
-  (markdown-asymmetric-header t)
-  (markdown-fontify-code-blocks-natively t)
-  (markdown-enable-highlighting-syntax t)
-  (markdown-enable-wiki-links t)
-  (markdown-unordered-list-item-prefix "- ")
-  (markdown-wiki-link-alias-first nil))
+  :config
+  (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
+  (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
 
-(setq-default markdown-hide-markup t)
+;; (use-package markdown-mode
+;;   :mode ("\\.md\\'" "\\.qmd\\'")
+;;   :hook ((markdown-mode . olivetti-mode)
+;;          (markdown-mode . save-place-local-mode)
+;;          (Info-mode . olivetti-mode)
+;;          ;; (markdown-mode . flyspell-mode)
+;;          (markdown-mode . my/markdown-highlight-tags))
+;;   :bind
+;;   (("C-c C-x @" . citar-insert-citation))
+;;   :custom
+;;   (markdown-enable-math t)
+;;   (markdown-command "pandoc --katex -s")
+;;   (markdown-max-image-size '(800 . 600))
+;;   (markdown-asymmetric-header t)
+;;   (markdown-fontify-code-blocks-natively t)
+;;   (markdown-enable-highlighting-syntax t)
+;;   (markdown-enable-wiki-links t)
+;;   (markdown-unordered-list-item-prefix "- ")
+;;   (markdown-wiki-link-alias-first nil))
+
+;; (setq-default markdown-hide-markup t)
 
 ;; Markdown customizations
-(with-eval-after-load 'markdown-mode
+(with-eval-after-load 'markdown-ts-mode
   ;; Highlight pandoc-style citations
-  (font-lock-add-keywords 'markdown-mode
+  (font-lock-add-keywords 'markdown-ts-mode
                           '(("\\(@[^][:space:]]+\\)" 1 font-lock-keyword-face)))
 
   ;; Tag highlighting
