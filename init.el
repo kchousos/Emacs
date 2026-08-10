@@ -505,6 +505,11 @@
 
 ;;; Completion Framework
 
+(setq package-install-upgrade-built-in t)
+(use-package compat
+  :ensure t
+  :demand t) ; force immediate load, not lazy/autoload
+
 (use-package vertico
   :init
   (vertico-mode)
@@ -1793,7 +1798,7 @@ if one already exists."
                  comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
                  direnv dockerfile-mode edit-indirect ef-themes eldoc-box
                  elfeed-org elfeed-score elfeed-tube-mpv elfeed-web elpher
-                 fish-mode git-gutter gnuplot gptel gruber-darker-theme
+                 fish-mode ghostel git-gutter gnuplot gptel gruber-darker-theme
                  hide-mode-line htmlize jsdoc json-mode kbd-mode ligature
                  link-hint marginalia markdown-mode markdown-ts-mode
                  math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
