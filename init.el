@@ -1498,6 +1498,10 @@ if one already exists."
       org-latex-default-class "koma-article")
 
 (with-eval-after-load 'ox-latex
+  (setq org-latex-default-packages-alist
+        (remove '("" "capt-of" nil) org-latex-default-packages-alist)))
+
+(with-eval-after-load 'ox-latex
   ;; Needed for polyglossia/unicode-math font setup
   (setq org-latex-compiler "xelatex")
 
@@ -1734,6 +1738,7 @@ if one already exists."
 (add-hook 'elfeed-show-mode-hook #'olivetti-mode)
 (setq-default elfeed-search-filter "+unread "
               elfeed-search-title-max-width 150
+              elfeed-search-separator-date-format nil
               elfeed-db-directory "~/Documents/03-Resources/RSS feeds/elfeed-db")
 
 (use-package elfeed-org
@@ -1796,18 +1801,20 @@ if one already exists."
  '(package-selected-packages
    '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
                  comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
-                 direnv dockerfile-mode edit-indirect ef-themes eldoc-box
-                 elfeed-org elfeed-score elfeed-tube-mpv elfeed-web elpher
-                 fish-mode ghostel git-gutter gnuplot gptel gruber-darker-theme
-                 hide-mode-line htmlize jsdoc json-mode kbd-mode ligature
+                 direnv dockerfile-mode edit-indirect editorconfig ef-themes
+                 eglot eldoc eldoc-box elfeed-org elfeed-score elfeed-tube-mpv
+                 elfeed-web elpher erc faceup fish-mode flymake ghostel
+                 git-gutter gnuplot gptel gruber-darker-theme hide-mode-line
+                 htmlize idlwave jsdoc json-mode jsonrpc kbd-mode ligature
                  link-hint marginalia markdown-mode markdown-ts-mode
                  math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
-                 nael olivetti openwith orderless org-appear org-caldav
-                 org-contrib org-download org-mode org-modern outshine ov pet rg
-                 ruff-format rust-mode selectric-mode solidity-mode
-                 standard-themes telephone-line tree-sitter-langs treesit-auto
-                 typescript-mode typst-ts-mode valign vertico vterm vundo
-                 yaml-mode yasnippet zk-desktop))
+                 nael olivetti openwith orderless org org-appear org-caldav
+                 org-contrib org-download org-mode org-modern outshine ov peg
+                 pet project python rg ruff-format rust-mode selectric-mode
+                 solidity-mode standard-themes telephone-line track-changes
+                 tramp tree-sitter-langs treesit-auto typescript-mode
+                 typst-ts-mode valign verilog-mode vertico vterm vundo which-key
+                 window-tool-bar yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")))
  '(safe-local-variable-values '((org-cite-global-bibliography)))
