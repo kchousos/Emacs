@@ -1024,15 +1024,6 @@ if one already exists."
 
 (setq cdlatex-math-symbol-alist '((93 ("\\Rightarrow" "\\implies"))))
 
-;;; Math rendering
-
-(use-package math-preview
-  ;; :hook ((markdown-mode . math-preview-all))
-  :custom
-  (math-preview-mathjax-tags "ams"))
-
-(advice-add #'math-preview-all :before (lambda () (math-preview-reset-numbering 1)))
-
 ;;; Org-Mode
 
 ;; (package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))
@@ -1488,7 +1479,9 @@ if one already exists."
 
 (with-eval-after-load 'ox-latex
   (setq org-latex-default-packages-alist
-        (remove '("" "capt-of" nil) org-latex-default-packages-alist)))
+        (remove '("" "capt-of" nil) org-latex-default-packages-alist))
+  (add-to-list 'org-latex-default-packages-alist '("" "amsmath" t))
+  (add-to-list 'org-latex-default-packages-alist '("" "amssymb" t)))
 
 (with-eval-after-load 'ox-latex
   ;; Needed for polyglossia/unicode-math font setup
@@ -1799,18 +1792,21 @@ if one already exists."
                  elfeed-web elpher erc faceup fish-mode flymake ghostel
                  git-gutter gnuplot gptel gruber-darker-theme hide-mode-line
                  htmlize idlwave jsdoc json-mode jsonrpc kbd-mode ligature
-                 link-hint marginalia markdown-mode math-preview mermaid-mode
-                 mixed-pitch mlscroll moe-theme muse
+                 link-hint marginalia markdown-mode markdown-ts-mode
+                 math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
                  nael olivetti openwith orderless org org-appear org-caldav
                  org-contrib org-download org-mode org-modern outshine ov ox-gfm
-                 peg pet project python rg ruff-format rust-mode selectric-mode
-                 solidity-mode standard-themes telephone-line track-changes
-                 tramp tree-sitter-langs treesit-auto typescript-mode
-                 typst-ts-mode valign verilog-mode vertico vterm vundo which-key
-                 window-tool-bar yaml-mode yasnippet zk-desktop))
+                 ox-pandoc peg pet project python rg ruff-format rust-mode
+                 selectric-mode solidity-mode standard-themes telephone-line
+                 track-changes tramp tree-sitter-langs treesit-auto
+                 typescript-mode typst-ts-mode valign verilog-mode vertico vterm
+                 vundo which-key window-tool-bar yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")))
- '(safe-local-variable-values '((org-cite-global-bibliography)))
+ '(safe-local-variable-values
+   '((eval progn (require 'ox-gfm)
+           (add-hook 'after-save-hook #'org-gfm-export-to-markdown nil t))
+     (org-cite-global-bibliography)))
  '(send-mail-function 'mailclient-send-it))
 
 ;; Enable previously disabled commands
