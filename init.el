@@ -148,13 +148,13 @@
 
 (global-set-key (kbd "C-x x s") #'scratch-buffer)
 
-(add-hook 'kill-buffer-query-functions #'my/dont-kill-scratch)
-(defun my/dont-kill-scratch ()
-  (if (not (equal (buffer-name) "*scratch*"))
-      t
-    (message "Not allowed to kill %s, burying instead" (buffer-name))
-    (bury-buffer)
-    nil))
+;; (add-hook 'kill-buffer-query-functions #'my/dont-kill-scratch)
+;; (defun my/dont-kill-scratch ()
+;;   (if (not (equal (buffer-name) "*scratch*"))
+;;       t
+;;     (message "Not allowed to kill %s, burying instead" (buffer-name))
+;;     (bury-buffer)
+;;     nil))
 
 ;; Hide minor modes in modeline
 (setq-default mode-line-format '("%e" mode-line-front-space
