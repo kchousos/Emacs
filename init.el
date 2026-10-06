@@ -745,44 +745,33 @@ if one already exists."
 (add-hook 'markdown-mode-hook #'my-prose-setup)
 
 ;;; Markdown
-(use-package markdown-ts-mode
-  :mode ("\\.md\\'" . markdown-ts-mode)
-  :defer 't
-  :hook ((markdown-ts-mode . olivetti-mode)
-         (markdown-ts-mode . save-place-local-mode)
+
+(use-package markdown-mode
+  :mode ("\\.md\\'" "\\.qmd\\'")
+  :hook ((markdown-mode . olivetti-mode)
+         (markdown-mode . save-place-local-mode)
+         (Info-mode . olivetti-mode)
+         ;; (markdown-mode . flyspell-mode)
          (markdown-mode . my/markdown-highlight-tags))
   :bind
   (("C-c C-x @" . citar-insert-citation))
-  :config
-  (add-to-list 'treesit-language-source-alist '(markdown "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown/src"))
-  (add-to-list 'treesit-language-source-alist '(markdown-inline "https://github.com/tree-sitter-grammars/tree-sitter-markdown" "split_parser" "tree-sitter-markdown-inline/src")))
-
-;; (use-package markdown-mode
-;;   :mode ("\\.md\\'" "\\.qmd\\'")
-;;   :hook ((markdown-mode . olivetti-mode)
-;;          (markdown-mode . save-place-local-mode)
-;;          (Info-mode . olivetti-mode)
-;;          ;; (markdown-mode . flyspell-mode)
-;;          (markdown-mode . my/markdown-highlight-tags))
-;;   :bind
-;;   (("C-c C-x @" . citar-insert-citation))
-;;   :custom
-;;   (markdown-enable-math t)
-;;   (markdown-command "pandoc --katex -s")
-;;   (markdown-max-image-size '(800 . 600))
-;;   (markdown-asymmetric-header t)
-;;   (markdown-fontify-code-blocks-natively t)
-;;   (markdown-enable-highlighting-syntax t)
-;;   (markdown-enable-wiki-links t)
-;;   (markdown-unordered-list-item-prefix "- ")
-;;   (markdown-wiki-link-alias-first nil))
+  :custom
+  (markdown-enable-math t)
+  (markdown-command "pandoc --katex -s")
+  (markdown-max-image-size '(800 . 600))
+  (markdown-asymmetric-header t)
+  (markdown-fontify-code-blocks-natively t)
+  (markdown-enable-highlighting-syntax t)
+  (markdown-enable-wiki-links t)
+  (markdown-unordered-list-item-prefix "- ")
+  (markdown-wiki-link-alias-first nil))
 
 ;; (setq-default markdown-hide-markup t)
 
 ;; Markdown customizations
-(with-eval-after-load 'markdown-ts-mode
+(with-eval-after-load 'markdown-mode
   ;; Highlight pandoc-style citations
-  (font-lock-add-keywords 'markdown-ts-mode
+  (font-lock-add-keywords 'markdown-mode
                           '(("\\(@[^][:space:]]+\\)" 1 font-lock-keyword-face)))
 
   ;; Tag highlighting
@@ -1810,8 +1799,8 @@ if one already exists."
                  elfeed-web elpher erc faceup fish-mode flymake ghostel
                  git-gutter gnuplot gptel gruber-darker-theme hide-mode-line
                  htmlize idlwave jsdoc json-mode jsonrpc kbd-mode ligature
-                 link-hint marginalia markdown-mode markdown-ts-mode
-                 math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
+                 link-hint marginalia markdown-mode math-preview mermaid-mode
+                 mixed-pitch mlscroll moe-theme muse
                  nael olivetti openwith orderless org org-appear org-caldav
                  org-contrib org-download org-mode org-modern outshine ov ox-gfm
                  peg pet project python rg ruff-format rust-mode selectric-mode
