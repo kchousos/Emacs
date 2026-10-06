@@ -105,8 +105,8 @@
 
 ;;; Default frame size
 ;; (add-to-list 'default-frame-alist '(fullscreen . maximized))
-(add-to-list 'default-frame-alist '(width . 220))
-(add-to-list 'default-frame-alist '(height . 60))
+(add-to-list 'default-frame-alist '(width . 180))
+(add-to-list 'default-frame-alist '(height . 50))
 
 ;;; UI elements
 (tool-bar-mode -1)
@@ -1545,6 +1545,10 @@ if one already exists."
   ;;         ))
   )
 
+(use-package ox-gfm
+  :ensure t
+  :after org)
+
 ;;;; Org-Babel
 
 (require 'ob-lean4)
@@ -1809,8 +1813,8 @@ if one already exists."
                  link-hint marginalia markdown-mode markdown-ts-mode
                  math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
                  nael olivetti openwith orderless org org-appear org-caldav
-                 org-contrib org-download org-mode org-modern outshine ov peg
-                 pet project python rg ruff-format rust-mode selectric-mode
+                 org-contrib org-download org-mode org-modern outshine ov ox-gfm
+                 peg pet project python rg ruff-format rust-mode selectric-mode
                  solidity-mode standard-themes telephone-line track-changes
                  tramp tree-sitter-langs treesit-auto typescript-mode
                  typst-ts-mode valign verilog-mode vertico vterm vundo which-key
