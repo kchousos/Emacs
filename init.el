@@ -619,12 +619,15 @@
 (use-package yaml-mode)
 
 ;; Rust
-(use-package rust-mode)
-;; (add-hook 'rust-mode-hook 'eglot-ensure)
-(with-eval-after-load 'eglot
-  (add-to-list 'eglot-server-programs
-               '((rust-ts-mode rust-mode) .
-                 ("rust-analyzer" :initializationOptions (:check (:command "clippy"))))))
+(use-package rust-mode
+  :init
+  (setq rust-mode-treesitter-derive t)
+  :config
+  ;; (add-hook 'rust-mode-hook 'eglot-ensure)
+  (with-eval-after-load 'eglot
+    (add-to-list 'eglot-server-programs
+                 '((rust-ts-mode rust-mode) .
+                   ("rust-analyzer" :initializationOptions (:check (:command "clippy")))))))
 
 ;; Solidity
 
