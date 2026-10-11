@@ -1,0 +1,6 @@
+# -*- mode: snippet -*-
+# name: Term-definition
+# key: td
+# --
+T: $1
+D: $0
