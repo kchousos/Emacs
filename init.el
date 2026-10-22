@@ -1755,8 +1755,8 @@ if one already exists."
 
 (use-package elfeed-score
   :config
-  (setq elfeed-score-rule-stats-file "/home/kchou/Documents/03-Resources/RSS feeds/elfeed.stats"
-        elfeed-score-serde-score-file "/home/kchou/Documents/03-Resources/RSS feeds/elfeed.score")
+  (setq elfeed-score-rule-stats-file "/home/kchousos/Documents/03-Resources/RSS feeds/elfeed.stats"
+        elfeed-score-serde-score-file "/home/kchousos/Documents/03-Resources/RSS feeds/elfeed.score")
   (setq elfeed-search-print-entry-function #'elfeed-score-print-entry)
   (progn
     (elfeed-score-enable)
@@ -1783,10 +1783,10 @@ if one already exists."
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
  '(org-agenda-files
-   '("/home/kchou/Documents/01-Projects/Projects.org"
-     "/home/kchou/Documents/02-Areas/Areas.org"
-     "/home/kchou/Documents/00-Inbox/Inbox.org"
-     "/home/kchou/Documents/03-Resources/Slipbox/00000000000000 Inbox.org"))
+   '("/home/kchousos/Documents/01-Projects/Projects.org"
+     "/home/kchousos/Documents/02-Areas/Areas.org"
+     "/home/kchousos/Documents/00-Inbox/Inbox.org"
+     "/home/kchousos/Documents/03-Resources/Slipbox/00000000000000 Inbox.org"))
  '(package-selected-packages
    '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
                  comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
