@@ -11,7 +11,7 @@
 #+options: num:t toc:nil date:t title:t author:nil
 #+export_file_name: $4
 
-#+bibliography: /home/kchou/HDD/Library/References/biblio.bib
+#+bibliography: /home/kchousos/HDD/Library/References/biblio.bib
 #+latex_compiler: xelatex
 #+latex_class: koma-article
 #+latex_class_options: [paper=a4, parskip=half]

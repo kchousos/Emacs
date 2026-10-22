@@ -1807,7 +1807,8 @@ if one already exists."
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")))
  '(safe-local-variable-values
-   '((eval progn (require 'ox-gfm)
+   '((org-download-image-dir . "../static")
+     (eval progn (require 'ox-gfm)
            (add-hook 'after-save-hook #'org-gfm-export-to-markdown nil t))
      (org-cite-global-bibliography)))
  '(send-mail-function 'mailclient-send-it))
