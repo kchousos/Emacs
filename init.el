@@ -644,6 +644,14 @@
   :hook (nael-mode . (lambda ()
                        (setq-local eldoc-display-functions
                                    '(eldoc-display-in-buffer)))))
+;; Rocq
+
+(use-package proof-general
+  :custom
+  (coq-prog-name (expand-file-name "~/.opam/default/bin/rocq"))
+  (proof-splash-enable nil)
+  (proof-three-window-mode-policy 'hybrid)
+  (proof-electric-terminator-enable t))
 
 ;; Datalog
 
@@ -1799,11 +1807,12 @@ if one already exists."
                  math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
                  nael olivetti openwith orderless org org-appear org-caldav
                  org-contrib org-download org-mode org-modern outshine ov ox-gfm
-                 ox-pandoc peg pet project python rg ruff-format rust-mode
-                 selectric-mode solidity-mode standard-themes telephone-line
-                 track-changes tramp tree-sitter-langs treesit-auto
-                 typescript-mode typst-ts-mode valign verilog-mode vertico vterm
-                 vundo which-key window-tool-bar yaml-mode yasnippet zk-desktop))
+                 ox-pandoc peg pet project proof-general python rg ruff-format
+                 rust-mode selectric-mode solidity-mode standard-themes
+                 telephone-line track-changes tramp tree-sitter-langs
+                 treesit-auto typescript-mode typst-ts-mode valign verilog-mode
+                 vertico vterm vundo which-key window-tool-bar yaml-mode
+                 yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")))
  '(safe-local-variable-values
