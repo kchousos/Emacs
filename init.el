@@ -647,11 +647,20 @@
 ;; Rocq
 
 (use-package proof-general
+  :init
+  (let ((opam-bin (expand-file-name "~/.opam/default/bin")))
+    (setenv "PATH" (concat opam-bin path-separator (getenv "PATH")))
+    (add-to-list 'exec-path opam-bin))
+  :config
+  (setq proof-splash-enable nil)
+  (setq proof-three-window-mode-policy 'hybrid)
+  (setq proof-electric-terminator-enable t))
+
+;; Dafny
+
+(use-package boogie-friends
   :custom
-  (coq-prog-name (expand-file-name "~/.opam/default/bin/rocq"))
-  (proof-splash-enable nil)
-  (proof-three-window-mode-policy 'hybrid)
-  (proof-electric-terminator-enable t))
+  (flycheck-dafny-executable "dafny"))
 
 ;; Datalog
 
@@ -1455,6 +1464,9 @@ if one already exists."
                ("\\paragraph{%s}" . "\\paragraph*{%s}")
                ("\\subparagraph{%s}" . "\\subparagraph*{%s}")))
 
+(setq org-latex-subtitle-separate t
+      org-latex-subtitle-format "\\subtitle{%s}")
+
 (setq org-latex-tables-booktabs t
       org-latex-with-hyperref
       "\\hypersetup{
@@ -1796,23 +1808,23 @@ if one already exists."
      "/home/kchousos/Documents/00-Inbox/Inbox.org"
      "/home/kchousos/Documents/03-Resources/Slipbox/00000000000000 Inbox.org"))
  '(package-selected-packages
-   '(agent-shell apheleia auctex cape cdlatex centered-cursor-mode citar-embark
-                 comment-tags corfu csv-mode darkroom dashboard devdocs diff-hl
-                 direnv dockerfile-mode edit-indirect editorconfig ef-themes
-                 eglot eldoc eldoc-box elfeed-org elfeed-score elfeed-tube-mpv
-                 elfeed-web elpher erc faceup fish-mode flymake ghostel
-                 git-gutter gnuplot gptel gruber-darker-theme hide-mode-line
-                 htmlize idlwave jsdoc json-mode jsonrpc kbd-mode ligature
-                 link-hint marginalia markdown-mode markdown-ts-mode
-                 math-preview mermaid-mode mixed-pitch mlscroll moe-theme muse
-                 nael olivetti openwith orderless org org-appear org-caldav
-                 org-contrib org-download org-mode org-modern outshine ov ox-gfm
-                 ox-pandoc peg pet project proof-general python rg ruff-format
-                 rust-mode selectric-mode solidity-mode standard-themes
-                 telephone-line track-changes tramp tree-sitter-langs
-                 treesit-auto typescript-mode typst-ts-mode valign verilog-mode
-                 vertico vterm vundo which-key window-tool-bar yaml-mode
-                 yasnippet zk-desktop))
+   '(agent-shell apheleia auctex boogie-friends cape cdlatex centered-cursor-mode
+                 citar-embark comment-tags corfu csv-mode darkroom dashboard
+                 devdocs diff-hl direnv dockerfile-mode edit-indirect
+                 editorconfig ef-themes eglot eldoc eldoc-box elfeed-org
+                 elfeed-score elfeed-tube-mpv elfeed-web elpher erc faceup
+                 fish-mode flymake ghostel git-gutter gnuplot gptel
+                 gruber-darker-theme hide-mode-line htmlize idlwave jsdoc
+                 json-mode jsonrpc kbd-mode ligature link-hint marginalia
+                 markdown-mode markdown-ts-mode math-preview mermaid-mode
+                 mixed-pitch mlscroll moe-theme muse nael olivetti openwith
+                 orderless org org-appear org-caldav org-contrib org-download
+                 org-mode org-modern outshine ov ox-gfm ox-pandoc peg pet
+                 project proof-general python rg ruff-format rust-mode
+                 selectric-mode solidity-mode standard-themes telephone-line
+                 track-changes tramp tree-sitter-langs treesit-auto
+                 typescript-mode typst-ts-mode valign verilog-mode vertico vterm
+                 vundo which-key window-tool-bar yaml-mode yasnippet zk-desktop))
  '(package-vc-selected-packages
    '((org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev")))
  '(safe-local-variable-values

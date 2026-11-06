@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: Sigma* alphabet
+# key: sal
+# --
+\\{0,1\\}^*
