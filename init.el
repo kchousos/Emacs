@@ -1044,6 +1044,21 @@ if one already exists."
 
 (setq cdlatex-math-symbol-alist '((93 ("\\Rightarrow" "\\implies"))))
 
+(defun tjh/cdlatex-yas-expand ()
+  "Resolve the conflict between cdlatex and yasnippet. When this
+function returns true, the default `cdlatex-tab` will not be
+executed. The effect of function is to first try yasnippet
+expansion, then cdlatex expansion."
+  (interactive)
+  (if (or (bound-and-true-p yas-minor-mode)
+          (bound-and-true-p yas-global-mode))
+      (if (yas-expand)
+          t
+        nil)
+    nil))
+
+(add-hook 'cdlatex-tab-hook 'tjh/cdlatex-yas-expand)
+
 ;;; Org-Mode
 
 ;; (package-vc-install '(org-mode :url "https://code.tecosaur.net/tec/org-mode" :branch "dev"))
